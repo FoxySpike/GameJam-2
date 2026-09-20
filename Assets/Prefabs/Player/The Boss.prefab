@@ -221,6 +221,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: The Boss
       objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: ccf4dba40d6576b4b821f72a550ad9b2, type: 2}
+    - target: {fileID: 5866666021909216657, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -233,14 +241,34 @@ PrefabInstance:
       addedObject: {fileID: 4292906758101219564}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2173383450849684928}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 6400959714932991549}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2287116372719559678}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6279258555779143351}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6816280125691406241}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5180927123437118852}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4897165221593040674}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7651058800010810997}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8687380214428255266}
   m_SourcePrefab: {fileID: 100100000, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
+--- !u!95 &652678721022783696 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
+  m_PrefabInstance: {fileID: 6369306479710981441}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &6099346891685326864 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
@@ -271,52 +299,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &2173383450849684928
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6099346891685326864}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.PlayerInput
-  m_Actions: {fileID: -944628639613478452, guid: 8510ae61a5245e34fa1434c097fbc5a4, type: 3}
-  m_NotificationBehavior: 2
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents:
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: ed09e130-81f7-4b4d-a4a3-3e2505de2af7
-    m_ActionName: 'Player/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]'
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 6d59594c-0ff9-412f-8b03-9d107b938389
-    m_ActionName: 'Player/Look[/Mouse/delta]'
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: c2129a29-3455-4095-8115-648dae4b14d8
-    m_ActionName: 'Player/Interact[/Keyboard/e]'
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 8f1ee9a5-da66-47c1-8f4f-3fccd63f8a66
-    m_ActionName: 'Player/Sprint[/Keyboard/leftShift]'
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Player
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!114 &6400959714932991549
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -331,6 +313,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   walkSpeed: 3
   sprintSpeed: 6
+  inputReader: {fileID: 6279258555779143351}
+  alcoholSystem: {fileID: 6816280125691406241}
+  stateProfiles:
+  - state: 0
+    speedMultiplier: 1
+    lateralAmplitude: 0
+    lateralFrequency: 0
+  - state: 1
+    speedMultiplier: 1
+    lateralAmplitude: 0.04
+    lateralFrequency: 1.4
+  - state: 2
+    speedMultiplier: 0.9
+    lateralAmplitude: 0.12
+    lateralFrequency: 1.8
+  - state: 3
+    speedMultiplier: 0.75
+    lateralAmplitude: 0.22
+    lateralFrequency: 2.2
 --- !u!114 &2287116372719559678
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -348,6 +349,96 @@ MonoBehaviour:
   maxCameraAngle: 60
   minLookAngle: -3
   maxLookAngle: 30
+  inputReader: {fileID: 6279258555779143351}
+--- !u!114 &6279258555779143351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6099346891685326864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf3adee24166d2f4d865f00b8f2fcf0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInputReader
+--- !u!114 &6816280125691406241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6099346891685326864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2c93d441e2c1af479cce88a7627572e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AlcoholSystem
+  maxAlcohol: 100
+  startingAlcohol: 0
+  tipsyThreshold: 20
+  drunkThreshold: 40
+  wastedThreshold: 70
+--- !u!114 &5180927123437118852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6099346891685326864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 526455c72908f5e4f929e3b7f6e6d148, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DrinkingSystem
+  alcoholSystem: {fileID: 6816280125691406241}
+--- !u!114 &4897165221593040674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6099346891685326864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fcc8315c1a7da9448192e70d530d9de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AdulteratedDrinkTracker
+  drinkingSystem: {fileID: 5180927123437118852}
+  requiredAdulteratedDrinks: 2
+--- !u!114 &7651058800010810997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6099346891685326864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8dc1843a5ede7e74abaf82aaaf378bf2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimationController
+  movement: {fileID: 6400959714932991549}
+  alcoholSystem: {fileID: 6816280125691406241}
+  animator: {fileID: 652678721022783696}
+--- !u!114 &8687380214428255266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6099346891685326864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eee7ad44e4b8c4742b1e8927ed28c1ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInteraction
+  inputReader: {fileID: 6279258555779143351}
+  interactionCamera: {fileID: 726483244399513207}
+  maxInteractionDistance: 3
+  raycastMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!4 &6912720872729553578 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
