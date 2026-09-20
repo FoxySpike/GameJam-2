@@ -3,11 +3,12 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour
 {
-    [Header("Movimiento")]
+    [Header("Movement")]
     [SerializeField] private float walkSpeed = 3f;
     [SerializeField] private float sprintSpeed = 6f;
 
     private CharacterController characterController;
+    private Animator animator;
     private NIS inputActions;
 
     private Vector2 moveInput;
@@ -15,6 +16,8 @@ public class PlayerMovement : MonoBehaviour
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
+
+        animator = GetComponentInChildren<Animator>();
 
         inputActions = new NIS();
 
@@ -43,6 +46,7 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         Move();
+        UpdateAnimation();
     }
 
     private void OnMove(UnityEngine.InputSystem.InputAction.CallbackContext context)
@@ -68,5 +72,12 @@ public class PlayerMovement : MonoBehaviour
         movement += transform.forward * moveInput.y;
 
         characterController.Move(movement * currentSpeed * Time.deltaTime);
+    }
+
+    private void UpdateAnimation()
+    {
+        bool isWalking = moveInput != Vector2.zero;
+
+        animator.SetBool("IsWalking", isWalking);
     }
 }
