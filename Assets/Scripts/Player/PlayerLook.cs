@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(PlayerInputReader))]
 public class PlayerLook : MonoBehaviour
 {
     [Header("Camera")]
@@ -15,56 +16,31 @@ public class PlayerLook : MonoBehaviour
     [SerializeField] private float minLookAngle = -25f;
     [SerializeField] private float maxLookAngle = 25f;
 
-    private NIS inputActions;
-
-    private Vector2 lookInput;
+    [SerializeField] private PlayerInputReader inputReader;
 
     private float cameraRotationX;
     private float cameraRotationY;
 
     private void Awake()
     {
-        inputActions = new NIS();
+        if (inputReader == null) inputReader = GetComponent<PlayerInputReader>();
+        if (cameraPivot == null)
+        {
+            Debug.LogError("PlayerLook requires a cameraPivot reference.", this);
+            enabled = false;
+        }
 
-        inputActions.Player.Look.performed += OnLook;
-        inputActions.Player.Look.canceled += OnLookCanceled;
-    }
-
-    private void OnEnable()
-    {
-        inputActions.Enable();
-    }
-
-    private void OnDisable()
-    {
-        inputActions.Disable();
-    }
-
-    private void OnDestroy()
-    {
-        inputActions.Player.Look.performed -= OnLook;
-        inputActions.Player.Look.canceled -= OnLookCanceled;
-
-        inputActions.Dispose();
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Update()
     {
-        Look();
-    }
-
-    private void OnLook(UnityEngine.InputSystem.InputAction.CallbackContext context)
-    {
-        lookInput = context.ReadValue<Vector2>();
-    }
-
-    private void OnLookCanceled(UnityEngine.InputSystem.InputAction.CallbackContext context)
-    {
-        lookInput = Vector2.zero;
+        if (inputReader.GameplayEnabled) Look();
     }
 
     private void Look()
     {
+        Vector2 lookInput = inputReader.LookInput;
         float mouseX = lookInput.x * lookSensitivity * Time.deltaTime;
         float mouseY = lookInput.y * lookSensitivity * Time.deltaTime;
 
