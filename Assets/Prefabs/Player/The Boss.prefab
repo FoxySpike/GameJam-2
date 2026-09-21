@@ -179,15 +179,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.07
+      value: -46.132164
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.00000032703315
+      value: 10.51
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2.38
+      value: -23.572952
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
       propertyPath: m_LocalRotation.w
@@ -393,22 +393,18 @@ MonoBehaviour:
     swayForce: 0
     swaySpeed: 0
     instabilityFactor: 0
-    maxIdleSway: 0
   - estado: 1
     swayForce: 0.2
     swaySpeed: 0.8
     instabilityFactor: 0.35
-    maxIdleSway: 0.15
   - estado: 2
     swayForce: 0.4
     swaySpeed: 1
     instabilityFactor: 0.65
-    maxIdleSway: 0.3
   - estado: 3
     swayForce: 0.55
     swaySpeed: 1.2
     instabilityFactor: 0.95
-    maxIdleSway: 0.45
   inputReader: {fileID: 6279258555779143351}
   alcoholSystem: {fileID: 6816280125691406241}
   playerControlPower: 1.8

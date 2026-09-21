@@ -10,13 +10,16 @@ public class PlayerMovementV3 : MonoBehaviour
         public NivelBorrachera estado;
         [Min(0.1f)] public float walkSpeed;
         [Min(0.1f)] public float sprintSpeed;
-        public float driftAngleMax; // Ángulo máximo de desvío según el nivel de ebriedad
+        public float driftAngleMax;
         [Range(0f, 1f)] public float strafeWeight;
 
         public PerfilBorrachera(NivelBorrachera e, float wSpd, float sSpd, float dAngle, float sWeight)
         {
-            estado = e; walkSpeed = wSpd; sprintSpeed = sSpd;
-            driftAngleMax = dAngle; strafeWeight = sWeight;
+            estado = e;
+            walkSpeed = wSpd;
+            sprintSpeed = sSpd;
+            driftAngleMax = dAngle;
+            strafeWeight = sWeight;
         }
     }
 
@@ -36,9 +39,12 @@ public class PlayerMovementV3 : MonoBehaviour
     [SerializeField] private AlcoholSystem alcoholSystem;
     [SerializeField] private PlayerBalanceSystem balanceSystem;
 
-    [Header("Configuración Extra")]
+    [Header("ConfiguraciÃ³n Extra")]
     [SerializeField] private float rotationSpeed = 10f;
     [SerializeField] private float transitionSpeed = 2f;
+
+    [Header("Gravedad")]
+    [SerializeField] private float gravity = -20f;
 
     public event Action<bool> OnMovingChanged;
 
@@ -50,13 +56,17 @@ public class PlayerMovementV3 : MonoBehaviour
     private float currentDriftAngleMax;
     private float currentStrafeWeight;
 
+    private float verticalVelocity;
+
     private bool isMoving;
+
     public bool IsMoving
     {
         get => isMoving;
         private set
         {
             if (isMoving == value) return;
+
             isMoving = value;
             OnMovingChanged?.Invoke(isMoving);
         }
@@ -66,9 +76,14 @@ public class PlayerMovementV3 : MonoBehaviour
     {
         characterController = GetComponent<CharacterController>();
 
-        if (inputReader == null) inputReader = GetComponent<PlayerInputReader>();
-        if (alcoholSystem == null) alcoholSystem = GetComponent<AlcoholSystem>();
-        if (balanceSystem == null) balanceSystem = GetComponent<PlayerBalanceSystem>();
+        if (inputReader == null)
+            inputReader = GetComponent<PlayerInputReader>();
+
+        if (alcoholSystem == null)
+            alcoholSystem = GetComponent<AlcoholSystem>();
+
+        if (balanceSystem == null)
+            balanceSystem = GetComponent<PlayerBalanceSystem>();
 
         if (cameraTransform == null && Camera.main != null)
             cameraTransform = Camera.main.transform;
@@ -81,7 +96,12 @@ public class PlayerMovementV3 : MonoBehaviour
 
         inputReader.InputAvailabilityChanged += OnInputAvailabilityChanged;
 
-        SetTargetProfile(alcoholSystem != null ? alcoholSystem.CurrentState : NivelBorrachera.Sobrio);
+        SetTargetProfile(
+            alcoholSystem != null
+                ? alcoholSystem.CurrentState
+                : NivelBorrachera.Sobrio
+        );
+
         SnapToTargetProfile();
     }
 
@@ -102,61 +122,127 @@ public class PlayerMovementV3 : MonoBehaviour
 
     private void LerpTowardsTargetProfile()
     {
-        currentWalkSpeed = Mathf.Lerp(currentWalkSpeed, perfilObjetivo.walkSpeed, Time.deltaTime * transitionSpeed);
-        currentSprintSpeed = Mathf.Lerp(currentSprintSpeed, perfilObjetivo.sprintSpeed, Time.deltaTime * transitionSpeed);
-        currentDriftAngleMax = Mathf.Lerp(currentDriftAngleMax, perfilObjetivo.driftAngleMax, Time.deltaTime * transitionSpeed);
-        currentStrafeWeight = Mathf.Lerp(currentStrafeWeight, perfilObjetivo.strafeWeight, Time.deltaTime * transitionSpeed);
+        currentWalkSpeed = Mathf.Lerp(
+            currentWalkSpeed,
+            perfilObjetivo.walkSpeed,
+            Time.deltaTime * transitionSpeed
+        );
+
+        currentSprintSpeed = Mathf.Lerp(
+            currentSprintSpeed,
+            perfilObjetivo.sprintSpeed,
+            Time.deltaTime * transitionSpeed
+        );
+
+        currentDriftAngleMax = Mathf.Lerp(
+            currentDriftAngleMax,
+            perfilObjetivo.driftAngleMax,
+            Time.deltaTime * transitionSpeed
+        );
+
+        currentStrafeWeight = Mathf.Lerp(
+            currentStrafeWeight,
+            perfilObjetivo.strafeWeight,
+            Time.deltaTime * transitionSpeed
+        );
     }
 
     private void RotateTowardsCrosshair()
     {
-        if (cameraTransform == null) return;
+        if (cameraTransform == null)
+            return;
 
         Vector3 aimDirection = cameraTransform.forward;
         aimDirection.y = 0f;
 
-        if (aimDirection.sqrMagnitude < 0.01f) return;
+        if (aimDirection.sqrMagnitude < 0.01f)
+            return;
 
-        Quaternion targetRotation = Quaternion.LookRotation(aimDirection.normalized);
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        Quaternion targetRotation = Quaternion.LookRotation(
+            aimDirection.normalized
+        );
+
+        transform.rotation = Quaternion.Slerp(
+            transform.rotation,
+            targetRotation,
+            rotationSpeed * Time.deltaTime
+        );
     }
 
     private void MoveAndCorrect()
     {
         Vector2 moveInput = inputReader.MoveInput;
 
+        Vector3 finalMoveDirection = Vector3.zero;
+        float currentSpeed = 0f;
+
         if (moveInput.sqrMagnitude < 0.01f || !inputReader.GameplayEnabled)
         {
             IsMoving = false;
-            return;
+        }
+        else
+        {
+            IsMoving = true;
+
+            Vector3 camForward = cameraTransform.forward;
+            Vector3 camRight = cameraTransform.right;
+
+            camForward.y = 0f;
+            camRight.y = 0f;
+
+            camForward.Normalize();
+            camRight.Normalize();
+
+            Vector3 playerIntent =
+                (camForward * moveInput.y +
+                 camRight * (moveInput.x * currentStrafeWeight)).normalized;
+
+            // Lectura directa de la fuente de la verdad
+            float balanceOffset = balanceSystem != null
+                ? balanceSystem.CurrentBalance
+                : 0f;
+
+            // CorrecciÃ³n de reversa (S)
+            float reverseMultiplier = moveInput.y < 0f ? -1f : 1f;
+
+            float currentDriftAngle =
+                balanceOffset *
+                currentDriftAngleMax *
+                reverseMultiplier;
+
+            Quaternion driftRotation =
+                Quaternion.Euler(0f, currentDriftAngle, 0f);
+
+            finalMoveDirection =
+                driftRotation * playerIntent;
+
+            currentSpeed = inputReader.Sprint
+                ? currentSprintSpeed
+                : currentWalkSpeed;
         }
 
-        IsMoving = true;
+        ApplyGravity();
 
-        Vector3 camForward = cameraTransform.forward;
-        Vector3 camRight = cameraTransform.right;
-        camForward.y = 0f;
-        camRight.y = 0f;
-        camForward.Normalize();
-        camRight.Normalize();
+        finalMoveDirection.y = verticalVelocity;
 
-        Vector3 playerIntent = (camForward * moveInput.y + camRight * (moveInput.x * currentStrafeWeight)).normalized;
+        characterController.Move(
+            finalMoveDirection * Time.deltaTime * Mathf.Max(currentSpeed, 1f)
+        );
+    }
 
-        // LECTURA DIRECTA DE LA FUENTE DE LA VERDAD
-        float balanceOffset = balanceSystem != null ? balanceSystem.CurrentBalance : 0f;
-
-        // CORRECCIÓN DE REVERSA (S):
-        // Si el jugador se mueve hacia atrás (moveInput.y < 0), invertimos el ángulo
-        // para compensar la rotación del vector negativo en espacio de cámara.
-        float reverseMultiplier = moveInput.y < 0f ? -1f : 1f;
-        float currentDriftAngle = balanceOffset * currentDriftAngleMax * reverseMultiplier;
-
-        Quaternion driftRotation = Quaternion.Euler(0f, currentDriftAngle, 0f);
-        Vector3 finalMoveDirection = driftRotation * playerIntent;
-
-        float currentSpeed = inputReader.Sprint ? currentSprintSpeed : currentWalkSpeed;
-
-        characterController.Move(finalMoveDirection * currentSpeed * Time.deltaTime);
+    private void ApplyGravity()
+    {
+        if (characterController.isGrounded)
+        {
+            if (verticalVelocity < 0f)
+            {
+                verticalVelocity = -2f;
+            }
+        }
+        else
+        {
+            verticalVelocity += gravity * Time.deltaTime;
+        }
     }
 
     private void SetTargetProfile(NivelBorrachera newState)
@@ -181,6 +267,7 @@ public class PlayerMovementV3 : MonoBehaviour
 
     private void OnInputAvailabilityChanged()
     {
-        if (!inputReader.GameplayEnabled) IsMoving = false;
+        if (!inputReader.GameplayEnabled)
+            IsMoving = false;
     }
 }
