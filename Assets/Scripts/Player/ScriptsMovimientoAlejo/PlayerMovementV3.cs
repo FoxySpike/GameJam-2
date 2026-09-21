@@ -26,9 +26,9 @@ public class PlayerMovementV3 : MonoBehaviour
     private PerfilBorrachera[] perfilesEstado =
     {
         new PerfilBorrachera(NivelBorrachera.Sobrio, 3f, 6f, 0f, 0f, 1f),
-        new PerfilBorrachera(NivelBorrachera.Prendido, 2.8f, 5.5f, 15f, 0.5f, 0.8f),
-        new PerfilBorrachera(NivelBorrachera.Tomado, 2.2f, 4f, 45f, 0.8f, 0.5f),
-        new PerfilBorrachera(NivelBorrachera.VueltoMierda, 1.5f, 2f, 75f, 1.2f, 0.2f)
+        new PerfilBorrachera(NivelBorrachera.Prendido, 3f, 5.5f, 20f, 0.7f, 0.8f),
+        new PerfilBorrachera(NivelBorrachera.Tomado, 2.5f, 4f, 45f, 1.7f, 0.9f),
+        new PerfilBorrachera(NivelBorrachera.VueltoMierda, 2f, 2.5f, 73f, 3f, 1f)
     };
 
     [Header("Curva de Tambaleo")]
@@ -51,6 +51,9 @@ public class PlayerMovementV3 : MonoBehaviour
 
     private CharacterController characterController;
     private PerfilBorrachera perfilObjetivo;
+
+    // Semilla aleatoria para cortar una franja neutra en el mapa 2D de Ruido de Perlin
+    private float noiseOffsetY;
 
     private float currentWalkSpeed;
     private float currentSprintSpeed;
@@ -79,6 +82,9 @@ public class PlayerMovementV3 : MonoBehaviour
 
         if (cameraTransform == null && Camera.main != null)
             cameraTransform = Camera.main.transform;
+
+        // Generamos un offset en Y aleatorio y lejano para evitar muestrear sobre bordes enteros
+        noiseOffsetY = UnityEngine.Random.Range(100f, 10000f);
     }
 
     private void OnEnable()
@@ -103,6 +109,11 @@ public class PlayerMovementV3 : MonoBehaviour
     private void Update()
     {
         LerpTowardsTargetProfile();
+
+        // 1. Orientación constante hacia la dirección de la cámara/cruceta
+        RotateTowardsCrosshair();
+
+        // 2. Desplazamiento y corrección de la física/borrachera
         MoveAndCorrect();
     }
 
@@ -115,6 +126,25 @@ public class PlayerMovementV3 : MonoBehaviour
         currentStrafeWeight = Mathf.Lerp(currentStrafeWeight, perfilObjetivo.strafeWeight, Time.deltaTime * transitionSpeed);
     }
 
+    /// <summary>
+    /// Mantiene el cuerpo del personaje siempre orientado hacia la dirección de la cámara.
+    /// </summary>
+    private void RotateTowardsCrosshair()
+    {
+        if (cameraTransform == null) return;
+
+        Vector3 aimDirection = cameraTransform.forward;
+        aimDirection.y = 0f; // Ignoramos la inclinación vertical para no inclinar el cuerpo hacia el suelo/cielo
+
+        if (aimDirection.sqrMagnitude < 0.01f) return;
+
+        Quaternion targetRotation = Quaternion.LookRotation(aimDirection.normalized);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+    }
+
+    /// <summary>
+    /// Aplica la traslación del personaje basada en el input WASD y la desviación por borrachera.
+    /// </summary>
     private void MoveAndCorrect()
     {
         Vector2 moveInput = inputReader.MoveInput;
@@ -127,6 +157,7 @@ public class PlayerMovementV3 : MonoBehaviour
 
         IsMoving = true;
 
+        // Obtenemos los ejes plano-horizontales de la cámara
         Vector3 camForward = cameraTransform.forward;
         Vector3 camRight = cameraTransform.right;
         camForward.y = 0f;
@@ -134,11 +165,14 @@ public class PlayerMovementV3 : MonoBehaviour
         camForward.Normalize();
         camRight.Normalize();
 
+        // Intención de movimiento relativa a la cámara
         Vector3 playerIntent = (camForward * moveInput.y + camRight * (moveInput.x * currentStrafeWeight)).normalized;
 
-        float rawNoise = Mathf.PerlinNoise(Time.time * currentDriftSpeed, 0f);
-        float normalizedDrift = driftCurve.Evaluate(rawNoise);
+        // Desviación por estado de ebriedad (Ruido de Perlin con offset aleatorio)
+        float rawNoise = Mathf.PerlinNoise(Time.time * currentDriftSpeed, noiseOffsetY);
 
+        // Evaluamos en la curva (0.0 -> -1 | 0.5 -> 0 | 1.0 -> +1)
+        float normalizedDrift = driftCurve.Evaluate(rawNoise);
         float currentDriftAngle = normalizedDrift * currentDriftAngleMax;
 
         Quaternion driftRotation = Quaternion.Euler(0f, currentDriftAngle, 0f);
@@ -146,10 +180,8 @@ public class PlayerMovementV3 : MonoBehaviour
 
         float currentSpeed = inputReader.Sprint ? currentSprintSpeed : currentWalkSpeed;
 
+        // Traslación física mediante el CharacterController
         characterController.Move(finalMoveDirection * currentSpeed * Time.deltaTime);
-
-        Quaternion targetRotation = Quaternion.LookRotation(finalMoveDirection);
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
     }
 
     private void SetTargetProfile(NivelBorrachera newState)
