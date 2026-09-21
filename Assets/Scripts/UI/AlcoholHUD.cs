@@ -12,15 +12,18 @@ public sealed class AlcoholHUD : MonoBehaviour
     private void Awake()
     {
         if (alcoholSystem != null && alcoholBar != null && stateText != null) return;
-        Debug.LogError("AlcoholHUD requires AlcoholSystem, Slider and state text.", this);
+        Debug.LogError("AlcoholHUD requiere AlcoholSystem, Slider y texto de estado.", this);
         enabled = false;
     }
 
     private void OnEnable()
     {
         alcoholSystem.OnAlcoholChanged += ShowValue;
-        alcoholSystem.OnAlcoholStateChanged += ShowState;
-        if (adulteratedTracker != null) adulteratedTracker.OnSpecialIntoxicationTriggered += ShowSpecial;
+        alcoholSystem.OnAlcoholStateChanged += ShowState; // Firma corregida
+
+        if (adulteratedTracker != null)
+            adulteratedTracker.OnSpecialIntoxicationTriggered += ShowSpecial;
+
         ShowValue(alcoholSystem.CurrentAlcohol);
         ShowState(alcoholSystem.CurrentState);
     }
@@ -32,7 +35,9 @@ public sealed class AlcoholHUD : MonoBehaviour
             alcoholSystem.OnAlcoholChanged -= ShowValue;
             alcoholSystem.OnAlcoholStateChanged -= ShowState;
         }
-        if (adulteratedTracker != null) adulteratedTracker.OnSpecialIntoxicationTriggered -= ShowSpecial;
+
+        if (adulteratedTracker != null)
+            adulteratedTracker.OnSpecialIntoxicationTriggered -= ShowSpecial;
     }
 
     private void ShowValue(float value)
@@ -42,15 +47,29 @@ public sealed class AlcoholHUD : MonoBehaviour
         alcoholBar.SetValueWithoutNotify(value);
     }
 
-    private void ShowState(AlcoholState state)
+    // CORREGIDO: Ahora recibe NivelBorrachera
+    private void ShowState(NivelBorrachera state)
     {
-        if (adulteratedTracker != null && adulteratedTracker.IsTriggered) { ShowSpecial(); return; }
+        if (adulteratedTracker != null && adulteratedTracker.IsTriggered)
+        {
+            ShowSpecial();
+            return;
+        }
+
         switch (state)
         {
-            case AlcoholState.Sober: stateText.text = "SOBRIO"; break;
-            case AlcoholState.Tipsy: stateText.text = "PRENDIDO"; break;
-            case AlcoholState.Drunk: stateText.text = "BORRACHO"; break;
-            case AlcoholState.Wasted: stateText.text = "VUELTO MIERDA"; break;
+            case NivelBorrachera.Sobrio:
+                stateText.text = "SOBRIO";
+                break;
+            case NivelBorrachera.Prendido:
+                stateText.text = "PRENDIDO";
+                break;
+            case NivelBorrachera.Tomado:
+                stateText.text = "TOMADO";
+                break;
+            case NivelBorrachera.VueltoMierda:
+                stateText.text = "VUELTO MIERDA"; // Aquí podemos incluir el espacio cómodamente
+                break;
         }
     }
 

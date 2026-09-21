@@ -1,8 +1,10 @@
 using UnityEngine;
 
+[RequireComponent(typeof(PlayerInputReader))]
 public class PlayerLookV2 : MonoBehaviour
 {
-    [Header("Camera")]
+    [Header("References")]
+    [SerializeField] private PlayerInputReader inputReader;
     [SerializeField] private Transform cameraPivot;
 
     [Header("Look Settings")]
@@ -17,28 +19,22 @@ public class PlayerLookV2 : MonoBehaviour
     [SerializeField] private float swayAmount = 2f;
     [SerializeField] private float swaySpeed = 1f;
 
-    private NIS inputActions;
-    private Vector2 lookInput;
-    private Vector2 moveInput; // Necesario para saber si el personaje camina
-
     private float cameraRotationX;
     private float cameraRotationY;
 
     private void Awake()
     {
-        inputActions = new NIS();
+        if (inputReader == null)
+            inputReader = GetComponent<PlayerInputReader>();
 
-        inputActions.Player.Look.performed += ctx => lookInput = ctx.ReadValue<Vector2>();
-        inputActions.Player.Look.canceled += _ => lookInput = Vector2.zero;
+        if (cameraPivot == null)
+        {
+            Debug.LogError("PlayerLookV2 requiere una referencia a cameraPivot.", this);
+            enabled = false;
+        }
 
-        inputActions.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
-        inputActions.Player.Move.canceled += _ => moveInput = Vector2.zero;
+        Cursor.lockState = CursorLockMode.Locked;
     }
-
-    private void OnEnable() => inputActions.Enable();
-    private void OnDisable() => inputActions.Disable();
-
-    private void OnDestroy() => inputActions.Dispose();
 
     private void LateUpdate()
     {
@@ -47,6 +43,10 @@ public class PlayerLookV2 : MonoBehaviour
 
     private void Look()
     {
+        // Si el gameplay está bloqueado por el InputReader, consideramos lecturas en cero
+        Vector2 lookInput = inputReader.GameplayEnabled ? inputReader.LookInput : Vector2.zero;
+        Vector2 moveInput = inputReader.GameplayEnabled ? inputReader.MoveInput : Vector2.zero;
+
         // 1. Acumular la rotación del ratón
         float mouseX = lookInput.x * lookSensitivity * Time.deltaTime;
         float mouseY = lookInput.y * lookSensitivity * Time.deltaTime;

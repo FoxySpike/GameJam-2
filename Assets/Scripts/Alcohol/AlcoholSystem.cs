@@ -6,17 +6,19 @@ public sealed class AlcoholSystem : MonoBehaviour
 {
     [SerializeField, Min(1f)] private float maxAlcohol = 100f;
     [SerializeField, Min(0f)] private float startingAlcohol;
-    [Header("State thresholds (alcohol units)")]
-    [SerializeField, Min(0f)] private float tipsyThreshold = 20f;
-    [SerializeField, Min(0f)] private float drunkThreshold = 40f;
-    [SerializeField, Min(0f)] private float wastedThreshold = 70f;
+
+    [Header("Umbrales de estado (unidades de alcohol)")]
+    [SerializeField, Min(0f)] private float prendidoThreshold = 20f;
+    [SerializeField, Min(0f)] private float tomadoThreshold = 40f;
+    [SerializeField, Min(0f)] private float vueltoMierdaThreshold = 70f;
 
     public float CurrentAlcohol { get; private set; }
     public float MaxAlcohol => maxAlcohol;
-    public AlcoholState CurrentState { get; private set; }
+    public NivelBorrachera CurrentState { get; private set; }
     public bool IsAtMaximum => CurrentAlcohol >= maxAlcohol;
+
     public event Action<float> OnAlcoholChanged;
-    public event Action<AlcoholState> OnAlcoholStateChanged;
+    public event Action<NivelBorrachera> OnAlcoholStateChanged;
     public event Action OnMaxAlcoholReached;
 
     private void Awake()
@@ -26,41 +28,46 @@ public sealed class AlcoholSystem : MonoBehaviour
         CurrentState = CalculateState(CurrentAlcohol);
     }
 
-    /// <summary>Changes the clamped value, then notifies state and maximum-crossing listeners.</summary>
     public void AddAlcohol(float amount)
     {
         if (float.IsNaN(amount) || float.IsInfinity(amount))
         {
-            Debug.LogError("Alcohol amount must be finite.", this);
+            Debug.LogError("La cantidad de alcohol debe ser un número finito.", this);
             return;
         }
 
         float next = Mathf.Clamp(CurrentAlcohol + amount, 0f, maxAlcohol);
-        if (next == CurrentAlcohol) return;
+        if (Mathf.Approximately(next, CurrentAlcohol)) return;
 
         bool wasAtMaximum = IsAtMaximum;
-        AlcoholState previousState = CurrentState;
+        NivelBorrachera previousState = CurrentState;
+
         CurrentAlcohol = next;
         CurrentState = CalculateState(next);
+
         OnAlcoholChanged?.Invoke(CurrentAlcohol);
-        if (previousState != CurrentState) OnAlcoholStateChanged?.Invoke(CurrentState);
-        if (!wasAtMaximum && IsAtMaximum) OnMaxAlcoholReached?.Invoke();
+
+        if (previousState != CurrentState)
+            OnAlcoholStateChanged?.Invoke(CurrentState);
+
+        if (!wasAtMaximum && IsAtMaximum)
+            OnMaxAlcoholReached?.Invoke();
     }
 
-    private AlcoholState CalculateState(float value)
+    private NivelBorrachera CalculateState(float value)
     {
-        if (value >= wastedThreshold) return AlcoholState.Wasted;
-        if (value >= drunkThreshold) return AlcoholState.Drunk;
-        if (value >= tipsyThreshold) return AlcoholState.Tipsy;
-        return AlcoholState.Sober;
+        if (value >= vueltoMierdaThreshold) return NivelBorrachera.VueltoMierda;
+        if (value >= tomadoThreshold) return NivelBorrachera.Tomado;
+        if (value >= prendidoThreshold) return NivelBorrachera.Prendido;
+        return NivelBorrachera.Sobrio;
     }
 
     private void OnValidate()
     {
         maxAlcohol = Mathf.Max(1f, maxAlcohol);
         startingAlcohol = Mathf.Clamp(startingAlcohol, 0f, maxAlcohol);
-        tipsyThreshold = Mathf.Clamp(tipsyThreshold, 0.01f, maxAlcohol);
-        drunkThreshold = Mathf.Clamp(drunkThreshold, tipsyThreshold, maxAlcohol);
-        wastedThreshold = Mathf.Clamp(wastedThreshold, drunkThreshold, maxAlcohol);
+        prendidoThreshold = Mathf.Clamp(prendidoThreshold, 0.01f, maxAlcohol);
+        tomadoThreshold = Mathf.Clamp(tomadoThreshold, prendidoThreshold, maxAlcohol);
+        vueltoMierdaThreshold = Mathf.Clamp(vueltoMierdaThreshold, tomadoThreshold, maxAlcohol);
     }
 }
