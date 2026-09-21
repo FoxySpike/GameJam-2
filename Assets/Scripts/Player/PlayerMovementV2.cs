@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovementV2 : MonoBehaviour
 {
     [Header("Movement")]
     [SerializeField] private float walkSpeed = 3f;

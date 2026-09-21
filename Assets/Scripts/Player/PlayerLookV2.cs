@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerLook : MonoBehaviour
+public class PlayerLookV2 : MonoBehaviour
 {
     [Header("Camera")]
     [SerializeField] private Transform cameraPivot;
