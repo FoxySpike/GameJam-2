@@ -34,7 +34,7 @@ public class PlayerMovementV3 : MonoBehaviour
     [SerializeField] private Transform cameraTransform;
     [SerializeField] private PlayerInputReader inputReader;
     [SerializeField] private AlcoholSystem alcoholSystem;
-    [SerializeField] private PlayerBalanceSystem balanceSystem; // Nueva referencia obligatoria
+    [SerializeField] private PlayerBalanceSystem balanceSystem;
 
     [Header("Configuración Extra")]
     [SerializeField] private float rotationSpeed = 10f;
@@ -143,10 +143,13 @@ public class PlayerMovementV3 : MonoBehaviour
         Vector3 playerIntent = (camForward * moveInput.y + camRight * (moveInput.x * currentStrafeWeight)).normalized;
 
         // LECTURA DIRECTA DE LA FUENTE DE LA VERDAD
-        // Si CurrentBalance es -1.0, el desvío será -driftAngleMax (Izquierda)
-        // Si CurrentBalance es +1.0, el desvío será +driftAngleMax (Derecha)
         float balanceOffset = balanceSystem != null ? balanceSystem.CurrentBalance : 0f;
-        float currentDriftAngle = balanceOffset * currentDriftAngleMax;
+
+        // CORRECCIÓN DE REVERSA (S):
+        // Si el jugador se mueve hacia atrás (moveInput.y < 0), invertimos el ángulo
+        // para compensar la rotación del vector negativo en espacio de cámara.
+        float reverseMultiplier = moveInput.y < 0f ? -1f : 1f;
+        float currentDriftAngle = balanceOffset * currentDriftAngleMax * reverseMultiplier;
 
         Quaternion driftRotation = Quaternion.Euler(0f, currentDriftAngle, 0f);
         Vector3 finalMoveDirection = driftRotation * playerIntent;

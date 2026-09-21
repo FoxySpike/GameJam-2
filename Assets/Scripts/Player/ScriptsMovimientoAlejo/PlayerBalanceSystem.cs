@@ -11,16 +11,13 @@ public class PlayerBalanceSystem : MonoBehaviour
         public float swayForce;          // Fuerza del bamboleo aleatorio
         public float swaySpeed;          // Velocidad del bamboleo
         public float instabilityFactor;  // Aceleración de la gravedad en los bordes
-        [Range(0f, 0.6f)]
-        public float maxIdleSway;        // Límite máximo de balanceo seguro en reposo
 
-        public PerfilEquilibrio(NivelBorrachera e, float force, float speed, float instability, float idleSway)
+        public PerfilEquilibrio(NivelBorrachera e, float force, float speed, float instability)
         {
             estado = e;
             swayForce = force;
             swaySpeed = speed;
             instabilityFactor = instability;
-            maxIdleSway = idleSway;
         }
     }
 
@@ -28,10 +25,10 @@ public class PlayerBalanceSystem : MonoBehaviour
     [SerializeField]
     private PerfilEquilibrio[] perfilesEstado =
     {
-        new PerfilEquilibrio(NivelBorrachera.Sobrio, 0f, 0f, 0f, 0f),
-        new PerfilEquilibrio(NivelBorrachera.Prendido, 0.2f, 0.8f, 0.35f, 0.15f),
-        new PerfilEquilibrio(NivelBorrachera.Tomado, 0.4f, 1.0f, 0.65f, 0.30f),
-        new PerfilEquilibrio(NivelBorrachera.VueltoMierda, 0.55f, 1.2f, 0.95f, 0.45f)
+        new PerfilEquilibrio(NivelBorrachera.Sobrio, 0f, 0f, 0f),
+        new PerfilEquilibrio(NivelBorrachera.Prendido, 0.3f, 1.0f, 0.4f),
+        new PerfilEquilibrio(NivelBorrachera.Tomado, 0.6f, 1.5f, 0.8f),
+        new PerfilEquilibrio(NivelBorrachera.VueltoMierda, 0.9f, 2.0f, 1.3f)
     };
 
     [Header("Referencias")]
@@ -46,7 +43,7 @@ public class PlayerBalanceSystem : MonoBehaviour
     private float balanceSensitivity = 1.0f;
 
     [SerializeField, Tooltip("Fuerza con la que el cuerpo intenta regresar al centro de forma natural")]
-    private float naturalCenterTendency = 0.25f;
+    private float naturalCenterTendency = 0.15f;
 
     [Header("Mecánica de Tiempo de Gracia / Salvada")]
     [SerializeField, Range(0.5f, 0.9f), Tooltip("A partir de qué punto del slider se activa la ayuda de emergencia")]
@@ -70,7 +67,6 @@ public class PlayerBalanceSystem : MonoBehaviour
     private float currentSwayForce;
     private float currentSwaySpeed;
     private float currentInstability;
-    private float currentMaxIdleSway;
 
     private float smoothedSwayForce;
 
@@ -107,60 +103,45 @@ public class PlayerBalanceSystem : MonoBehaviour
     {
         Vector2 moveInput = inputReader.GameplayEnabled ? inputReader.MoveInput : Vector2.zero;
         float rawInputX = moveInput.x;
-        bool isPlayerMoving = moveInput.sqrMagnitude > 0.01f;
 
-        // 1. Ruido aleatorio del alcohol (Bamboleo)
+        // 1. Ruido de Borrachera (Bamboleo Reactivo)
         float rawNoise = Mathf.PerlinNoise(Time.time * currentSwaySpeed, noiseOffsetY);
-        float normalizedNoise = (rawNoise - 0.5f) * 2f;
-        float targetBorracheraForce = normalizedNoise * currentSwayForce;
+        float normalizedNoise = (rawNoise - 0.5f) * 2f; // Convertir rango de [0,1] a [-1,1]
 
-        smoothedSwayForce = Mathf.Lerp(smoothedSwayForce, targetBorracheraForce, Time.deltaTime * 4.0f);
+        // Transición más rápida del ruido para mantener al jugador en alerta constante
+        smoothedSwayForce = Mathf.Lerp(smoothedSwayForce, normalizedNoise * currentSwayForce, Time.deltaTime * 8.0f);
 
-        // 2. Transición IDLE Seguro vs Inercia Inestable
+        // 2. Detección de Estado y Ayuda en Zona de Peligro
         float absoluteBalance = Mathf.Abs(currentBalance);
-        bool isWithinIdleLimits = absoluteBalance <= currentMaxIdleSway;
-
-        // Solo entra a Idle Seguro si el jugador NO presiona nada Y está dentro de los límites de seguridad
-        if (!isPlayerMoving && isWithinIdleLimits)
-        {
-            currentBalance = Mathf.MoveTowards(currentBalance, smoothedSwayForce * currentMaxIdleSway, Time.deltaTime * balanceSensitivity);
-            currentBalance = Mathf.Clamp(currentBalance, -currentMaxIdleSway, currentMaxIdleSway);
-
-            OnBalanceChanged?.Invoke(currentBalance);
-            return;
-        }
-
-        // 3. Cálculo de Gravedad y Detección de Salvada en Zona de Peligro
-        // (Aplica si se mueve O si se quedó quieto fuera del límite seguro)
         float balanceSign = Mathf.Sign(currentBalance);
 
-        // ¿El jugador está presionando la tecla opuesta a la inclinación actual?
         bool isCorrectingOpposite = (currentBalance > 0f && rawInputX < 0f) || (currentBalance < 0f && rawInputX > 0f);
         bool isInDangerZone = absoluteBalance >= dangerZoneThreshold;
 
         float effectiveGravityFactor = currentInstability;
         float effectivePlayerPower = playerControlPower;
 
-        // APLICACIÓN DEL TIEMPO DE GRACIA / RECOVERY BOOST
         if (isInDangerZone && isCorrectingOpposite)
         {
             effectiveGravityFactor *= gravityDampeningOnCorrecting;
             effectivePlayerPower *= emergencyRecoveryBoost;
         }
 
-        // 4. Gravedad Exponencial
-        float gravityForce = (currentBalance * currentBalance) * balanceSign * effectiveGravityFactor;
+        // 3. Gravedad Híbrida (Combinación Lineal + Cuadrática para romper la inercia del centro)
+        // (0.3 * x) asegura desequilibrio inmediato; (0.7 * x^2) aporta la aceleración peligrosa en bordes.
+        float gravityCurve = (0.3f * absoluteBalance) + (0.7f * absoluteBalance * absoluteBalance);
+        float gravityForce = gravityCurve * balanceSign * effectiveGravityFactor;
 
-        // 5. Tendencia Natural al Centro
-        float centerPull = -currentBalance * naturalCenterTendency;
+        // 4. Tendencia Natural al Centro (Se reduce a medida que aumenta la inclinación)
+        float centerPullDampening = 1f - absoluteBalance;
+        float centerPull = -currentBalance * centerPullDampening * naturalCenterTendency;
 
-        // 6. Fuerza del Jugador (Si está quieto sin tocar teclas, rawInputX será 0)
+        // 5. Fuerza del Jugador
         float playerForce = rawInputX * effectivePlayerPower;
 
-        // 7. Torque Neto Total
+        // 6. Integración del Torque Neto
         float netTorque = smoothedSwayForce + centerPull + gravityForce + playerForce;
 
-        // 8. Integración del estado final
         currentBalance += netTorque * balanceSensitivity * Time.deltaTime;
         currentBalance = Mathf.Clamp(currentBalance, -1f, 1f);
 
@@ -177,7 +158,6 @@ public class PlayerBalanceSystem : MonoBehaviour
         currentSwayForce = Mathf.Lerp(currentSwayForce, perfilObjetivo.swayForce, Time.deltaTime * 2f);
         currentSwaySpeed = Mathf.Lerp(currentSwaySpeed, perfilObjetivo.swaySpeed, Time.deltaTime * 2f);
         currentInstability = Mathf.Lerp(currentInstability, perfilObjetivo.instabilityFactor, Time.deltaTime * 2f);
-        currentMaxIdleSway = Mathf.Lerp(currentMaxIdleSway, perfilObjetivo.maxIdleSway, Time.deltaTime * 2f);
     }
 
     private void SetTargetProfile(NivelBorrachera newState)
@@ -197,6 +177,5 @@ public class PlayerBalanceSystem : MonoBehaviour
         currentSwayForce = perfilObjetivo.swayForce;
         currentSwaySpeed = perfilObjetivo.swaySpeed;
         currentInstability = perfilObjetivo.instabilityFactor;
-        currentMaxIdleSway = perfilObjetivo.maxIdleSway;
     }
 }
