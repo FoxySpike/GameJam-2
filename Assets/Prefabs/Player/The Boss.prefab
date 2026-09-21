@@ -60,7 +60,7 @@ Transform:
   m_GameObject: {fileID: 1193524401667632368}
   serializedVersion: 2
   m_LocalRotation: {x: 0.17364816, y: -0, z: -0, w: 0.9848078}
-  m_LocalPosition: {x: 0.002, y: 0.83500004, z: -2.479}
+  m_LocalPosition: {x: 0.621, y: 0.83500004, z: -2.479}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -179,15 +179,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -1.07
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.00000032703315
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -2.38
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
       propertyPath: m_LocalRotation.w
@@ -241,12 +241,6 @@ PrefabInstance:
       addedObject: {fileID: 4292906758101219564}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6400959714932991549}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2287116372719559678}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 6279258555779143351}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
       insertIndex: -1
@@ -259,10 +253,16 @@ PrefabInstance:
       addedObject: {fileID: 4897165221593040674}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7651058800010810997}
+      addedObject: {fileID: 8687380214428255266}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 8687380214428255266}
+      addedObject: {fileID: 3646091401982358240}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5741212283567899367}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7833742974093616922}
   m_SourcePrefab: {fileID: 100100000, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
 --- !u!95 &652678721022783696 stripped
 Animator:
@@ -299,57 +299,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &6400959714932991549
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6099346891685326864}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 791620fdc3bd0e048904df5a4bf04d19, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
-  walkSpeed: 3
-  sprintSpeed: 6
-  inputReader: {fileID: 6279258555779143351}
-  alcoholSystem: {fileID: 6816280125691406241}
-  stateProfiles:
-  - state: 0
-    speedMultiplier: 1
-    lateralAmplitude: 0
-    lateralFrequency: 0
-  - state: 1
-    speedMultiplier: 1
-    lateralAmplitude: 0.04
-    lateralFrequency: 1.4
-  - state: 2
-    speedMultiplier: 0.9
-    lateralAmplitude: 0.12
-    lateralFrequency: 1.8
-  - state: 3
-    speedMultiplier: 0.75
-    lateralAmplitude: 0.22
-    lateralFrequency: 2.2
---- !u!114 &2287116372719559678
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6099346891685326864}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07c5ad8bf94d71d448b2f1145bca2423, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerLook
-  cameraPivot: {fileID: 2741261536094228852}
-  lookSensitivity: 25
-  maxCameraAngle: 60
-  minLookAngle: -3
-  maxLookAngle: 30
-  inputReader: {fileID: 6279258555779143351}
 --- !u!114 &6279258555779143351
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -376,9 +325,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AlcoholSystem
   maxAlcohol: 100
   startingAlcohol: 0
-  tipsyThreshold: 20
-  drunkThreshold: 40
-  wastedThreshold: 70
+  prendidoThreshold: 20
+  tomadoThreshold: 40
+  vueltoMierdaThreshold: 70
 --- !u!114 &5180927123437118852
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -406,21 +355,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AdulteratedDrinkTracker
   drinkingSystem: {fileID: 5180927123437118852}
   requiredAdulteratedDrinks: 2
---- !u!114 &7651058800010810997
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6099346891685326864}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8dc1843a5ede7e74abaf82aaaf378bf2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimationController
-  movement: {fileID: 6400959714932991549}
-  alcoholSystem: {fileID: 6816280125691406241}
-  animator: {fileID: 652678721022783696}
 --- !u!114 &8687380214428255266
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -439,6 +373,128 @@ MonoBehaviour:
   raycastMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &3646091401982358240
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6099346891685326864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b339ebecbfcb89458a1c13de41ba76e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMovementV3
+  perfilesEstado:
+  - estado: 0
+    walkSpeed: 3
+    sprintSpeed: 6
+    driftAngleMax: 0
+    driftSpeed: 0
+    strafeWeight: 1
+  - estado: 1
+    walkSpeed: 3
+    sprintSpeed: 5.5
+    driftAngleMax: 20
+    driftSpeed: 0.7
+    strafeWeight: 0.8
+  - estado: 2
+    walkSpeed: 2.5
+    sprintSpeed: 4
+    driftAngleMax: 45
+    driftSpeed: 1.7
+    strafeWeight: 0.9
+  - estado: 3
+    walkSpeed: 2
+    sprintSpeed: 2.5
+    driftAngleMax: 78
+    driftSpeed: 3.2
+    strafeWeight: 1
+  driftCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: -0.98083496
+      inSlope: -0.036991928
+      outSlope: -0.036991928
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.74993783
+    - serializedVersion: 3
+      time: 0.5
+      value: 0
+      inSlope: 1.9616699
+      outSlope: 1.9594581
+      tangentMode: 69
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.9966596
+      value: 0.97318363
+      inSlope: 0.15248314
+      outSlope: 0.15248314
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.65117425
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  cameraTransform: {fileID: 2741261536094228852}
+  inputReader: {fileID: 6279258555779143351}
+  alcoholSystem: {fileID: 6816280125691406241}
+  rotationSpeed: 10
+  transitionSpeed: 2
+--- !u!114 &5741212283567899367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6099346891685326864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07c5ad8bf94d71d448b2f1145bca2423, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerLookV2
+  perfilesCamara:
+  - estado: 0
+    swayAmount: 0
+    swaySpeed: 0
+  - estado: 1
+    swayAmount: 0.5
+    swaySpeed: 1
+  - estado: 2
+    swayAmount: 2
+    swaySpeed: 1.8
+  - estado: 3
+    swayAmount: 4
+    swaySpeed: 2.5
+  inputReader: {fileID: 6279258555779143351}
+  cameraPivot: {fileID: 2741261536094228852}
+  alcoholSystem: {fileID: 0}
+  lookSensitivity: 10
+  transitionSpeed: 2
+  minLookAngle: -25
+  maxLookAngle: 25
+--- !u!114 &7833742974093616922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6099346891685326864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8dc1843a5ede7e74abaf82aaaf378bf2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimationController
+  movement: {fileID: 3646091401982358240}
+  alcoholSystem: {fileID: 6816280125691406241}
+  animator: {fileID: 652678721022783696}
 --- !u!4 &6912720872729553578 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
