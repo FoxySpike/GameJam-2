@@ -8,7 +8,9 @@ public sealed class PlayerHitReaction : MonoBehaviour
 {
     [SerializeField] private PlayerInputReader inputReader;
     [SerializeField] private CharacterController characterController;
+    [SerializeField] private PlayerRagdollController ragdollController;
     [SerializeField, Min(0.05f)] private float reactionDuration = 0.55f;
+    [SerializeField, Min(0.1f)] private float ragdollDuration = 2f;
     [SerializeField, Min(0f)] private float hitCooldown = 1.25f;
 
     private Coroutine reaction;
@@ -21,6 +23,7 @@ public sealed class PlayerHitReaction : MonoBehaviour
     {
         if (inputReader == null) inputReader = GetComponent<PlayerInputReader>();
         if (characterController == null) characterController = GetComponent<CharacterController>();
+        if (ragdollController == null) ragdollController = GetComponent<PlayerRagdollController>();
     }
 
     public bool ReceiveHit(Vector3 direction, float force)
@@ -41,6 +44,16 @@ public sealed class PlayerHitReaction : MonoBehaviour
     private IEnumerator React(Vector3 direction, float force)
     {
         inputReader.SetGameplayBlocked(this, true);
+
+        if (ragdollController != null && ragdollController.BeginRagdoll(direction, force))
+        {
+            yield return new WaitForSeconds(ragdollDuration);
+            ragdollController.EndRagdoll();
+            inputReader.SetGameplayBlocked(this, false);
+            reaction = null;
+            yield break;
+        }
+
         float elapsed = 0f;
 
         while (elapsed < reactionDuration)
@@ -59,6 +72,7 @@ public sealed class PlayerHitReaction : MonoBehaviour
     {
         if (reaction != null) StopCoroutine(reaction);
         reaction = null;
+        if (ragdollController != null) ragdollController.EndRagdoll();
         if (inputReader != null) inputReader.SetGameplayBlocked(this, false);
     }
 }
