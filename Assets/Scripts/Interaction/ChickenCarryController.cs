@@ -6,7 +6,7 @@ using UnityEngine;
 public sealed class ChickenCarryController : MonoBehaviour, IInteractable
 {
     [SerializeField] private Transform holdPoint;
-    [SerializeField] private PlayerHitReaction playerHitReaction;
+    [SerializeField] private Transform carrierRoot;
     [SerializeField] private Rigidbody chickenBody;
     [SerializeField] private Collider chickenCollider;
     [SerializeField] private bool startHeld = true;
@@ -24,62 +24,50 @@ public sealed class ChickenCarryController : MonoBehaviour, IInteractable
     {
         if (chickenBody == null) chickenBody = GetComponent<Rigidbody>();
         if (chickenCollider == null) chickenCollider = GetComponent<Collider>();
+        if (carrierRoot == null && holdPoint != null) carrierRoot = holdPoint.parent;
     }
 
-    public void Configure(Transform targetHoldPoint, PlayerHitReaction hitReaction)
+    public void Configure(Transform targetHoldPoint, Transform targetCarrier)
     {
         holdPoint = targetHoldPoint;
-        playerHitReaction = hitReaction;
-    }
-
-    private void OnEnable()
-    {
-        if (playerHitReaction != null)
-            playerHitReaction.OnHit += OnPlayerHit;
+        carrierRoot = targetCarrier;
     }
 
     private void Start()
     {
-        if (startHeld) AttachToPlayer(false);
-        else Drop(Vector3.zero, 0f);
-    }
-
-    private void OnDisable()
-    {
-        if (playerHitReaction != null)
-            playerHitReaction.OnHit -= OnPlayerHit;
+        if (startHeld) AttachToCarrier(false);
     }
 
     private void Update()
     {
-        if (!IsHeld && transform.position.y < recoveryHeight && playerHitReaction != null)
+        if (!IsHeld && transform.position.y < recoveryHeight && carrierRoot != null)
         {
             chickenBody.linearVelocity = Vector3.zero;
             chickenBody.angularVelocity = Vector3.zero;
-            transform.position = playerHitReaction.transform.position + playerHitReaction.transform.forward * 1.5f + Vector3.up;
+            transform.position = carrierRoot.position + carrierRoot.forward * 1.5f + Vector3.up;
         }
     }
 
     public bool CanInteract(GameObject interactor)
     {
-        return isActiveAndEnabled && !IsHeld &&
-               (playerHitReaction == null ||
-                interactor.GetComponentInParent<PlayerHitReaction>() == playerHitReaction);
+        if (!isActiveAndEnabled || IsHeld || interactor == null)
+            return false;
+
+        if (carrierRoot == null)
+            return interactor.CompareTag("Player");
+
+        Transform interactorTransform = interactor.transform;
+        return interactorTransform == carrierRoot || interactorTransform.IsChildOf(carrierRoot);
     }
 
     public void Interact(GameObject interactor)
     {
-        if (CanInteract(interactor)) AttachToPlayer(true, interactor);
+        if (CanInteract(interactor)) AttachToCarrier(true, interactor);
     }
 
-    private void OnPlayerHit(Vector3 direction, float force)
+    public bool Drop(Vector3 direction, float force)
     {
-        Drop(direction, force);
-    }
-
-    public void Drop(Vector3 direction, float force)
-    {
-        if (!IsHeld) return;
+        if (!IsHeld) return false;
 
         IsHeld = false;
         transform.SetParent(null, true);
@@ -98,12 +86,16 @@ public sealed class ChickenCarryController : MonoBehaviour, IInteractable
         }
 
         OnChickenDropped?.Invoke();
+        return true;
     }
 
-    private void AttachToPlayer(bool notify, GameObject interactor = null)
+    private void AttachToCarrier(bool notify, GameObject interactor = null)
     {
         if (holdPoint == null && interactor != null)
+        {
             holdPoint = CreateRuntimeHoldPoint(interactor.transform);
+            carrierRoot = interactor.transform;
+        }
 
         if (holdPoint == null)
         {

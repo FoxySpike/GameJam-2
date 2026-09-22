@@ -1788,6 +1788,7 @@ GameObject:
   - component: {fileID: 1731550358}
   - component: {fileID: 1731550357}
   - component: {fileID: 1731550356}
+  - component: {fileID: 1731550361}
   m_Layer: 0
   m_Name: Chicken -placeholder
   m_TagString: Untagged
@@ -1823,13 +1824,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ChickenCarryController
   holdPoint: {fileID: 1888984668}
-  playerHitReaction: {fileID: 541991295}
+  carrierRoot: {fileID: 541991293}
   chickenBody: {fileID: 0}
   chickenCollider: {fileID: 0}
   dropForce: 5
   upwardForce: 2.5
   recoveryHeight: -8
   pickupPrompt: '[E] RECOGER POLLO'
+--- !u!114 &1731550361
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1731550354}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b63c018be4d448be91d78ee6d66f5e32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DropChickenOnPlayerHit
+  hitReaction: {fileID: 541991295}
+  chicken: {fileID: 1731550356}
 --- !u!54 &1731550357
 Rigidbody:
   m_ObjectHideFlags: 0
