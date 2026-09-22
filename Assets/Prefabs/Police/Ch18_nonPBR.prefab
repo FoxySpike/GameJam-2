@@ -309,6 +309,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6d87cf327e56a8448ddd00dae76a7ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PoliceDetection
+  chicken: {fileID: 0}
 --- !u!1 &8025280796603484264
 GameObject:
   m_ObjectHideFlags: 0
@@ -353,7 +354,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 0f7505abdaf80184697785f960c12413, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -48.856167
+      value: 50.7
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0f7505abdaf80184697785f960c12413, type: 3}
       propertyPath: m_LocalPosition.y
@@ -361,7 +362,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0f7505abdaf80184697785f960c12413, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 6.301337
+      value: 40.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0f7505abdaf80184697785f960c12413, type: 3}
       propertyPath: m_LocalRotation.w
