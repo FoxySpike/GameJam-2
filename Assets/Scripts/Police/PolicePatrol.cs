@@ -19,6 +19,8 @@ public class PolicePatrol : MonoBehaviour
     private bool isWaiting;
     private float waitTimer;
 
+    private bool isInvestigatingNoise;
+
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -41,6 +43,12 @@ public class PolicePatrol : MonoBehaviour
         if (patrolPoints == null || patrolPoints.Length == 0)
             return;
 
+        if (isInvestigatingNoise)
+        {
+            HandleNoiseInvestigation();
+            return;
+        }
+
         if (isWaiting)
         {
             animator.SetBool("IsWalking", false);
@@ -51,7 +59,10 @@ public class PolicePatrol : MonoBehaviour
         if (agent.pathPending)
             return;
 
-        animator.SetBool("IsWalking", agent.velocity.sqrMagnitude > 0.01f);
+        animator.SetBool(
+            "IsWalking",
+            agent.velocity.sqrMagnitude > 0.01f
+        );
 
         if (agent.remainingDistance <= agent.stoppingDistance)
         {
@@ -59,10 +70,40 @@ public class PolicePatrol : MonoBehaviour
         }
     }
 
+    public void HearNoise(Vector3 noisePosition)
+    {
+        isInvestigatingNoise = true;
+        isWaiting = false;
+
+        agent.isStopped = false;
+        agent.SetDestination(noisePosition);
+    }
+
+    private void HandleNoiseInvestigation()
+    {
+        if (agent.pathPending)
+            return;
+
+        animator.SetBool(
+            "IsWalking",
+            agent.velocity.sqrMagnitude > 0.01f
+        );
+
+        if (agent.remainingDistance <= agent.stoppingDistance)
+        {
+            isInvestigatingNoise = false;
+
+            GoToRandomPoint();
+        }
+    }
+
     private void StartWaiting()
     {
         isWaiting = true;
-        waitTimer = Random.Range(minimumWaitTime, maximumWaitTime);
+        waitTimer = Random.Range(
+            minimumWaitTime,
+            maximumWaitTime
+        );
 
         agent.isStopped = true;
 
@@ -88,7 +129,9 @@ public class PolicePatrol : MonoBehaviour
         if (patrolPoints.Length == 1)
         {
             currentPointIndex = 0;
-            agent.SetDestination(patrolPoints[0].position);
+            agent.SetDestination(
+                patrolPoints[0].position
+            );
             return;
         }
 
@@ -96,11 +139,16 @@ public class PolicePatrol : MonoBehaviour
 
         while (newPointIndex == currentPointIndex)
         {
-            newPointIndex = Random.Range(0, patrolPoints.Length);
+            newPointIndex = Random.Range(
+                0,
+                patrolPoints.Length
+            );
         }
 
         currentPointIndex = newPointIndex;
 
-        agent.SetDestination(patrolPoints[currentPointIndex].position);
+        agent.SetDestination(
+            patrolPoints[currentPointIndex].position
+        );
     }
 }
