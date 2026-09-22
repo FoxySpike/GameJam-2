@@ -20,6 +20,9 @@ public sealed class Level3FinishTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        // Bone colliders are enabled while the Player is in ragdoll. Only the
+        // root CharacterController is allowed to complete the level.
+        if (other.GetComponent<CharacterController>() == null) return;
         if (other.GetComponentInParent<PlayerHitReaction>() == null) return;
         if (playerColliders.Add(other) && playerColliders.Count == 1)
             OnPlayerEntered?.Invoke();
