@@ -6,20 +6,45 @@ using UnityEngine.InputSystem;
 [DefaultExecutionOrder(-200), DisallowMultipleComponent]
 public sealed class PlayerInputReader : MonoBehaviour
 {
+    public enum InputContext
+    {
+        Player,
+        Fridge
+    }
+
     private readonly HashSet<object> blockers = new HashSet<object>();
     private NIS actions;
 
+    // Estado de contexto activo (Por defecto inicia en movimiento 3P)
+    public InputContext CurrentContext { get; private set; } = InputContext.Player;
+
     public bool GameplayEnabled => isActiveAndEnabled && blockers.Count == 0;
-    public Vector2 MoveInput => GameplayEnabled ? actions.Player.Move.ReadValue<Vector2>() : Vector2.zero;
-    public Vector2 LookInput => GameplayEnabled ? actions.Player.Look.ReadValue<Vector2>() : Vector2.zero;
-    public bool Sprint => GameplayEnabled && actions.Player.Sprint.IsPressed();
+
+    // --- ENTRADAS DEL MODO JUGADOR (3P) ---
+    public Vector2 MoveInput => (GameplayEnabled && CurrentContext == InputContext.Player) ? actions.Player.Move.ReadValue<Vector2>() : Vector2.zero;
+    public Vector2 LookInput => (GameplayEnabled && CurrentContext == InputContext.Player) ? actions.Player.Look.ReadValue<Vector2>() : Vector2.zero;
+    public bool Sprint => GameplayEnabled && CurrentContext == InputContext.Player && actions.Player.Sprint.IsPressed();
+
+    // --- ENTRADAS DEL MODO NEVERA (1P) ---
+    public Vector2 HandMoveInput => (GameplayEnabled && CurrentContext == InputContext.Fridge) ? actions.Fridge.HandMove.ReadValue<Vector2>() : Vector2.zero;
+    public bool HoldBreath => GameplayEnabled && CurrentContext == InputContext.Fridge && actions.Fridge.HoldBreath.IsPressed();
+
+    // --- EVENTOS ---
     public event Action Interact;
+    public event Action Grab;
+    public event Action ExitFridge;
     public event Action InputAvailabilityChanged;
 
     private void Awake()
     {
         actions = new NIS();
-        actions.Player.Interact.performed += OnInteract;
+
+        // Suscripción a eventos del Player Map
+        actions.Player.Interact.performed += OnInteractPerformed;
+
+        // Suscripción a eventos del Fridge Map
+        actions.Fridge.Grab.performed += OnGrabPerformed;
+        actions.Fridge.Exit.performed += OnExitPerformed;
     }
 
     private void OnEnable() => RefreshInput();
@@ -32,11 +57,15 @@ public sealed class PlayerInputReader : MonoBehaviour
 
     private void OnDestroy()
     {
-        actions.Player.Interact.performed -= OnInteract;
+        actions.Player.Interact.performed -= OnInteractPerformed;
+        actions.Fridge.Grab.performed -= OnGrabPerformed;
+        actions.Fridge.Exit.performed -= OnExitPerformed;
         actions.Dispose();
     }
 
-    /// <summary>Owners release only their own lock, so closing a dialogue cannot unlock a blackout.</summary>
+    /// <summary>
+    /// Bloquea temporalmente las entradas (útil para menús, diálogos, o cinematográficas).
+    /// </summary>
     public void SetGameplayBlocked(object owner, bool blocked)
     {
         if (owner == null) throw new ArgumentNullException(nameof(owner));
@@ -46,16 +75,51 @@ public sealed class PlayerInputReader : MonoBehaviour
 
     public bool IsBlockedByOther(object owner) => blockers.Count > (blockers.Contains(owner) ? 1 : 0);
 
+    /// <summary>
+    /// Cambia el contexto de entrada activo entre Player (Caminata 3P) y Fridge (Nevera 1P).
+    /// </summary>
+    public void SetContext(InputContext newContext)
+    {
+        if (CurrentContext == newContext) return;
+
+        CurrentContext = newContext;
+        RefreshInput();
+    }
+
     private void RefreshInput()
     {
-        if (GameplayEnabled) actions.Player.Enable();
-        else actions.Player.Disable();
-        // Notify even if another owner already blocked input: modal UI must yield to the ending.
+        // Desactivamos ambos mapas para asegurar un punto de partida limpio
+        actions.Player.Disable();
+        actions.Fridge.Disable();
+
+        if (GameplayEnabled)
+        {
+            switch (CurrentContext)
+            {
+                case InputContext.Player:
+                    actions.Player.Enable();
+                    break;
+                case InputContext.Fridge:
+                    actions.Fridge.Enable();
+                    break;
+            }
+        }
+
         InputAvailabilityChanged?.Invoke();
     }
 
-    private void OnInteract(InputAction.CallbackContext context)
+    private void OnInteractPerformed(InputAction.CallbackContext context)
     {
-        if (GameplayEnabled) Interact?.Invoke();
+        if (GameplayEnabled && CurrentContext == InputContext.Player) Interact?.Invoke();
+    }
+
+    private void OnGrabPerformed(InputAction.CallbackContext context)
+    {
+        if (GameplayEnabled && CurrentContext == InputContext.Fridge) Grab?.Invoke();
+    }
+
+    private void OnExitPerformed(InputAction.CallbackContext context)
+    {
+        if (GameplayEnabled && CurrentContext == InputContext.Fridge) ExitFridge?.Invoke();
     }
 }

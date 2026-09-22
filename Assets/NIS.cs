@@ -219,6 +219,94 @@ public partial class @NIS: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Fridge"",
+            ""id"": ""97799335-914b-47df-843c-5cde97b45dba"",
+            ""actions"": [
+                {
+                    ""name"": ""HandMove"",
+                    ""type"": ""Value"",
+                    ""id"": ""ceaa5517-8c90-430d-84d5-e7d3cf674f46"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""HoldBreath"",
+                    ""type"": ""Button"",
+                    ""id"": ""abbf8d8e-ce5a-495f-8147-f59f6a514dd2"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Grab"",
+                    ""type"": ""Button"",
+                    ""id"": ""03bd0ac1-f0fe-4d58-84d6-41053542a4c2"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Exit"",
+                    ""type"": ""Button"",
+                    ""id"": ""372d24bd-b292-40fd-8cf9-f7e97fafd140"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""e66b7e1d-d2ed-4877-9f4e-8cdb1b22b6ef"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""HandMove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""13560c8c-3a0a-4a49-a54a-fc8033ba07bd"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""HoldBreath"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6592f784-b6b9-4af1-adbf-5281cab95b51"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Grab"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""51987275-d483-471e-b92f-b9aa7cc67b18"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Exit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -229,11 +317,18 @@ public partial class @NIS: IInputActionCollection2, IDisposable
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
         m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
+        // Fridge
+        m_Fridge = asset.FindActionMap("Fridge", throwIfNotFound: true);
+        m_Fridge_HandMove = m_Fridge.FindAction("HandMove", throwIfNotFound: true);
+        m_Fridge_HoldBreath = m_Fridge.FindAction("HoldBreath", throwIfNotFound: true);
+        m_Fridge_Grab = m_Fridge.FindAction("Grab", throwIfNotFound: true);
+        m_Fridge_Exit = m_Fridge.FindAction("Exit", throwIfNotFound: true);
     }
 
     ~@NIS()
     {
         UnityEngine.Debug.Assert(!m_Player.enabled, "This will cause a leak and performance issues, NIS.Player.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Fridge.enabled, "This will cause a leak and performance issues, NIS.Fridge.Disable() has not been called.");
     }
 
     /// <summary>
@@ -434,6 +529,135 @@ public partial class @NIS: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="PlayerActions" /> instance referencing this action map.
     /// </summary>
     public PlayerActions @Player => new PlayerActions(this);
+
+    // Fridge
+    private readonly InputActionMap m_Fridge;
+    private List<IFridgeActions> m_FridgeActionsCallbackInterfaces = new List<IFridgeActions>();
+    private readonly InputAction m_Fridge_HandMove;
+    private readonly InputAction m_Fridge_HoldBreath;
+    private readonly InputAction m_Fridge_Grab;
+    private readonly InputAction m_Fridge_Exit;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "Fridge".
+    /// </summary>
+    public struct FridgeActions
+    {
+        private @NIS m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public FridgeActions(@NIS wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "Fridge/HandMove".
+        /// </summary>
+        public InputAction @HandMove => m_Wrapper.m_Fridge_HandMove;
+        /// <summary>
+        /// Provides access to the underlying input action "Fridge/HoldBreath".
+        /// </summary>
+        public InputAction @HoldBreath => m_Wrapper.m_Fridge_HoldBreath;
+        /// <summary>
+        /// Provides access to the underlying input action "Fridge/Grab".
+        /// </summary>
+        public InputAction @Grab => m_Wrapper.m_Fridge_Grab;
+        /// <summary>
+        /// Provides access to the underlying input action "Fridge/Exit".
+        /// </summary>
+        public InputAction @Exit => m_Wrapper.m_Fridge_Exit;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_Fridge; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="FridgeActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(FridgeActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="FridgeActions" />
+        public void AddCallbacks(IFridgeActions instance)
+        {
+            if (instance == null || m_Wrapper.m_FridgeActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_FridgeActionsCallbackInterfaces.Add(instance);
+            @HandMove.started += instance.OnHandMove;
+            @HandMove.performed += instance.OnHandMove;
+            @HandMove.canceled += instance.OnHandMove;
+            @HoldBreath.started += instance.OnHoldBreath;
+            @HoldBreath.performed += instance.OnHoldBreath;
+            @HoldBreath.canceled += instance.OnHoldBreath;
+            @Grab.started += instance.OnGrab;
+            @Grab.performed += instance.OnGrab;
+            @Grab.canceled += instance.OnGrab;
+            @Exit.started += instance.OnExit;
+            @Exit.performed += instance.OnExit;
+            @Exit.canceled += instance.OnExit;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="FridgeActions" />
+        private void UnregisterCallbacks(IFridgeActions instance)
+        {
+            @HandMove.started -= instance.OnHandMove;
+            @HandMove.performed -= instance.OnHandMove;
+            @HandMove.canceled -= instance.OnHandMove;
+            @HoldBreath.started -= instance.OnHoldBreath;
+            @HoldBreath.performed -= instance.OnHoldBreath;
+            @HoldBreath.canceled -= instance.OnHoldBreath;
+            @Grab.started -= instance.OnGrab;
+            @Grab.performed -= instance.OnGrab;
+            @Grab.canceled -= instance.OnGrab;
+            @Exit.started -= instance.OnExit;
+            @Exit.performed -= instance.OnExit;
+            @Exit.canceled -= instance.OnExit;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="FridgeActions.UnregisterCallbacks(IFridgeActions)" />.
+        /// </summary>
+        /// <seealso cref="FridgeActions.UnregisterCallbacks(IFridgeActions)" />
+        public void RemoveCallbacks(IFridgeActions instance)
+        {
+            if (m_Wrapper.m_FridgeActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="FridgeActions.AddCallbacks(IFridgeActions)" />
+        /// <seealso cref="FridgeActions.RemoveCallbacks(IFridgeActions)" />
+        /// <seealso cref="FridgeActions.UnregisterCallbacks(IFridgeActions)" />
+        public void SetCallbacks(IFridgeActions instance)
+        {
+            foreach (var item in m_Wrapper.m_FridgeActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_FridgeActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="FridgeActions" /> instance referencing this action map.
+    /// </summary>
+    public FridgeActions @Fridge => new FridgeActions(this);
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Player" which allows adding and removing callbacks.
     /// </summary>
@@ -469,5 +693,41 @@ public partial class @NIS: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnSprint(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Fridge" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="FridgeActions.AddCallbacks(IFridgeActions)" />
+    /// <seealso cref="FridgeActions.RemoveCallbacks(IFridgeActions)" />
+    public interface IFridgeActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "HandMove" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnHandMove(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "HoldBreath" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnHoldBreath(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Grab" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnGrab(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Exit" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnExit(InputAction.CallbackContext context);
     }
 }
