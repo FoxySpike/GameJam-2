@@ -173,6 +173,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "DepthMove",
+                    "type": "Value",
+                    "id": "1e0cd630-5c8d-4bf2-820a-580c4622439d",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -219,6 +228,39 @@
                     "action": "Exit",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "1D Axis",
+                    "id": "68b4f3e2-f552-4abb-8acd-e088e12e6a94",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DepthMove",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "be766cff-1d6f-4ff6-a1a2-a5a2c4de47eb",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DepthMove",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "19581db8-44e2-4852-b87c-2e812afcfe00",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DepthMove",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         }

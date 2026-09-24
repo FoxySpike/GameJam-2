@@ -27,6 +27,7 @@ public sealed class PlayerInputReader : MonoBehaviour
 
     // --- ENTRADAS DEL MODO NEVERA (1P) ---
     public Vector2 HandMoveInput => (GameplayEnabled && CurrentContext == InputContext.Fridge) ? actions.Fridge.HandMove.ReadValue<Vector2>() : Vector2.zero;
+    public float DepthInput => (GameplayEnabled && CurrentContext == InputContext.Fridge) ? actions.Fridge.DepthMove.ReadValue<float>() : 0f;
     public bool HoldBreath => GameplayEnabled && CurrentContext == InputContext.Fridge && actions.Fridge.HoldBreath.IsPressed();
 
     // --- EVENTOS ---

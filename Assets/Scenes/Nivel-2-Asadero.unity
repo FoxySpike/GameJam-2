@@ -147,11 +147,11 @@ Transform:
   m_GameObject: {fileID: 129586527}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.85262114, z: -0, w: 0.52252966}
-  m_LocalPosition: {x: 1.248, y: 0.57285, z: -0.925}
-  m_LocalScale: {x: 0.052073468, y: 1.0998678, z: 1.3024417}
+  m_LocalPosition: {x: 1.248, y: 0.57285, z: -0.92499995}
+  m_LocalScale: {x: 0.05207347, y: 1.0998678, z: 1.3024418}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1155825780}
+  m_Father: {fileID: 1673991483}
   m_LocalEulerAnglesHint: {x: 0, y: 116.996, z: 0}
 --- !u!65 &129586529
 BoxCollider:
@@ -386,11 +386,11 @@ Transform:
   m_GameObject: {fileID: 244970968}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.68665004, y: 0.57385, z: 0}
+  m_LocalPosition: {x: -0.6866499, y: 0.5738499, z: 0}
   m_LocalScale: {x: 0.051796556, y: 1.0978231, z: 1.1580478}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1155825780}
+  m_Father: {fileID: 1673991483}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &244970970
 BoxCollider:
@@ -545,7 +545,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!81 &300891209
 AudioListener:
   m_ObjectHideFlags: 0
@@ -658,11 +658,12 @@ Transform:
   m_GameObject: {fileID: 300891208}
   serializedVersion: 2
   m_LocalRotation: {x: 0.11160371, y: -0, z: -0, w: 0.9937528}
-  m_LocalPosition: {x: -1.342, y: 1.792, z: -4.359}
+  m_LocalPosition: {x: 0.06499994, y: 0.9200001, z: -1.5930002}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
+  m_Children:
+  - {fileID: 890882243}
+  m_Father: {fileID: 1155825780}
   m_LocalEulerAnglesHint: {x: 12.816, y: 0, z: 0}
 --- !u!1 &484769576
 GameObject:
@@ -894,7 +895,7 @@ Transform:
   m_LocalScale: {x: 1.4252267, y: 0.04058344, z: 1.1580478}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1155825780}
+  m_Father: {fileID: 1673991483}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &600668804
 BoxCollider:
@@ -1002,11 +1003,11 @@ Transform:
   m_GameObject: {fileID: 776759875}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.70710665, z: -0, w: 0.70710695}
-  m_LocalPosition: {x: -0.0005199909, y: 0.5728499, z: 0.5483}
+  m_LocalPosition: {x: -0.0005199909, y: 0.57285, z: 0.5483}
   m_LocalScale: {x: 0.052073468, y: 1.0998678, z: 1.3024417}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1155825780}
+  m_Father: {fileID: 1673991483}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!65 &776759877
 BoxCollider:
@@ -1111,13 +1112,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 890882242}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.0514, y: 1.656, z: -4.165}
+  m_LocalRotation: {x: -0.11160371, y: 0, z: -0, w: 0.9937528}
+  m_LocalPosition: {x: 0.29060006, y: -0.0895804, z: 0.21933413}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1715231686}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 300891212}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &890882244
 MonoBehaviour:
@@ -1170,7 +1171,7 @@ Transform:
   m_LocalScale: {x: 1.4252267, y: 0.04058344, z: 1.1580478}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1155825780}
+  m_Father: {fileID: 1673991483}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &948639529
 BoxCollider:
@@ -1431,7 +1432,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1155825780}
   m_Layer: 0
-  m_Name: FridgeInside
+  m_Name: FridgePrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1450,13 +1451,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 948639528}
-  - {fileID: 600668803}
-  - {fileID: 1855851361}
-  - {fileID: 244970969}
-  - {fileID: 1761502329}
-  - {fileID: 776759876}
-  - {fileID: 129586528}
+  - {fileID: 1673991483}
+  - {fileID: 300891212}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1565890617
@@ -1628,6 +1624,44 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1648501627}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1673991482
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1673991483}
+  m_Layer: 0
+  m_Name: FridgeModel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1673991483
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1673991482}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 948639528}
+  - {fileID: 600668803}
+  - {fileID: 1855851361}
+  - {fileID: 244970969}
+  - {fileID: 1761502329}
+  - {fileID: 776759876}
+  - {fileID: 129586528}
+  m_Father: {fileID: 1155825780}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1715231685
 GameObject:
   m_ObjectHideFlags: 0
@@ -1690,11 +1724,11 @@ Transform:
   m_GameObject: {fileID: 1761502328}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.68086, y: 0.56874996, z: 0}
+  m_LocalPosition: {x: 0.68086, y: 0.5687499, z: 0}
   m_LocalScale: {x: 0.051796556, y: 1.1081547, z: 1.1580478}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1155825780}
+  m_Father: {fileID: 1673991483}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &1761502330
 BoxCollider:
@@ -1813,11 +1847,11 @@ Transform:
   m_GameObject: {fileID: 1855851360}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.57035, z: 0.10739994}
+  m_LocalPosition: {x: 0, y: 0.57034993, z: 0.10739994}
   m_LocalScale: {x: 1.4252267, y: 0.019799035, z: 0.9431009}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1155825780}
+  m_Father: {fileID: 1673991483}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &1855851362
 BoxCollider:
@@ -2341,5 +2375,3 @@ SceneRoots:
   - {fileID: 1085039556}
   - {fileID: 2038239967}
   - {fileID: 1155825780}
-  - {fileID: 890882243}
-  - {fileID: 300891212}

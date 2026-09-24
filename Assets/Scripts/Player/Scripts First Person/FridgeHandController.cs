@@ -6,12 +6,14 @@ public class FridgeHandController : MonoBehaviour
     [SerializeField] private PlayerInputReader inputReader;
 
     [Header("Movement Settings")]
-    [SerializeField] private float sensitivity = 0.005f;
+    [SerializeField] private float xySensitivity = 0.005f; // NUEVO: Renombrado para claridad
+    [SerializeField] private float zSensitivity = 0.01f;   // NUEVO: Sensibilidad independiente para la profundidad
     [SerializeField] private float smoothTime = 0.05f;
 
     [Header("Local Boundaries (Límites en espacio local)")]
-    [SerializeField] private Vector2 minLocalBounds = new Vector2(-0.5f, -0.4f);
-    [SerializeField] private Vector2 maxLocalBounds = new Vector2(0.5f, 0.4f);
+    // NUEVO: Ahora son Vector3 para incluir el límite de qué tan al fondo (Z max) o qué tan atrás (Z min) puede ir.
+    [SerializeField] private Vector3 minLocalBounds = new Vector3(-0.5f, -0.4f, 0f);
+    [SerializeField] private Vector3 maxLocalBounds = new Vector3(0.5f, 0.4f, 1.0f);
 
     [Header("Breath & Shake Mechanics")]
     [SerializeField] private float defaultShakeAmount = 0.02f;
@@ -23,14 +25,12 @@ public class FridgeHandController : MonoBehaviour
 
     private void Awake()
     {
-        // Guardamos la posición inicial de la mano en el espacio local de la nevera
         initialLocalPosition = transform.localPosition;
         targetLocalPosition = initialLocalPosition;
     }
 
     private void OnEnable()
     {
-        // Reiniciamos la posición objetivo al activar el objeto
         targetLocalPosition = transform.localPosition;
     }
 
@@ -44,24 +44,27 @@ public class FridgeHandController : MonoBehaviour
 
     private void HandleHandMovement()
     {
-        // 1. Obtener la entrada del mouse en el contexto de la nevera
-        Vector2 deltaInput = inputReader.HandMoveInput;
+        // 1. Obtener la entrada del mouse (X,Y) y la de profundidad (Z)
+        Vector2 xyInput = inputReader.HandMoveInput;
+        float depthInput = inputReader.DepthInput; // NUEVO: Leemos tu nueva variable
 
-        // 2. Acumular el desplazamiento en la posición local objetivo
-        targetLocalPosition.x += deltaInput.x * sensitivity;
-        targetLocalPosition.y += deltaInput.y * sensitivity;
+        // 2. Acumular el desplazamiento en los 3 ejes
+        targetLocalPosition.x += xyInput.x * xySensitivity;
+        targetLocalPosition.y += xyInput.y * xySensitivity;
+        targetLocalPosition.z += depthInput * zSensitivity; // NUEVO: Mueve en Z
 
-        // 3. Restringir la posición dentro de los límites locales (Clamping)
+        // 3. Restringir la posición dentro de los límites locales en los 3 ejes (Clamping 3D)
         targetLocalPosition.x = Mathf.Clamp(targetLocalPosition.x, minLocalBounds.x, maxLocalBounds.x);
         targetLocalPosition.y = Mathf.Clamp(targetLocalPosition.y, minLocalBounds.y, maxLocalBounds.y);
+        targetLocalPosition.z = Mathf.Clamp(targetLocalPosition.z, minLocalBounds.z, maxLocalBounds.z); // NUEVO
 
-        // 4. Calcular el temblor natural del brazo (Si aguanta la respiración, el temblor se reduce)
+        // 4. Calcular el temblor natural del brazo
         bool isHoldingBreath = inputReader.HoldBreath;
         float currentShakeFactor = isHoldingBreath ? 0.15f : 1.0f;
 
         Vector3 shakeOffset = CalculateHandShake(currentShakeFactor);
 
-        // 5. Aplicar movimiento suavizado (SmoothDamp evita tirones bruscos)
+        // 5. Aplicar movimiento suavizado
         Vector3 finalTarget = targetLocalPosition + shakeOffset;
         transform.localPosition = Vector3.SmoothDamp(transform.localPosition, finalTarget, ref currentVelocity, smoothTime);
     }
@@ -70,27 +73,30 @@ public class FridgeHandController : MonoBehaviour
     {
         float time = Time.time * defaultShakeSpeed;
 
-        // Uso de PerlinNoise para generar un temblor orgánico e impredecible
         float noiseX = (Mathf.PerlinNoise(time, 0f) - 0.5f) * defaultShakeAmount * shakeFactor;
         float noiseY = (Mathf.PerlinNoise(0f, time) - 0.5f) * defaultShakeAmount * shakeFactor;
 
-        return new Vector3(noiseX, noiseY, 0f);
+        // Bonus opcional: Un ligero temblor en Z lo hace sentir más torpe/borracho
+        float noiseZ = (Mathf.PerlinNoise(time, time) - 0.5f) * (defaultShakeAmount * 0.5f) * shakeFactor;
+
+        return new Vector3(noiseX, noiseY, noiseZ);
     }
 
     private void OnDrawGizmosSelected()
     {
-        // Dibujamos los límites en la vista de escena para calibrar visualmente
+        // NUEVO: El Gizmo ahora dibuja un cubo en 3D real para que calibres tu caja de movimiento
         Transform parentTransform = transform.parent != null ? transform.parent : transform;
+
         Vector3 center = parentTransform.TransformPoint(new Vector3(
             (minLocalBounds.x + maxLocalBounds.x) * 0.5f,
             (minLocalBounds.y + maxLocalBounds.y) * 0.5f,
-            transform.localPosition.z
+            (minLocalBounds.z + maxLocalBounds.z) * 0.5f // Centro en Z
         ));
 
         Vector3 size = new Vector3(
             maxLocalBounds.x - minLocalBounds.x,
             maxLocalBounds.y - minLocalBounds.y,
-            0.1f
+            maxLocalBounds.z - minLocalBounds.z // Profundidad en Z
         );
 
         Gizmos.color = Color.cyan;

@@ -259,6 +259,15 @@ public partial class @NIS: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""DepthMove"",
+                    ""type"": ""Value"",
+                    ""id"": ""1e0cd630-5c8d-4bf2-820a-580c4622439d"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -305,6 +314,39 @@ public partial class @NIS: IInputActionCollection2, IDisposable
                     ""action"": ""Exit"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""68b4f3e2-f552-4abb-8acd-e088e12e6a94"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DepthMove"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""be766cff-1d6f-4ff6-a1a2-a5a2c4de47eb"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DepthMove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""19581db8-44e2-4852-b87c-2e812afcfe00"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DepthMove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -323,6 +365,7 @@ public partial class @NIS: IInputActionCollection2, IDisposable
         m_Fridge_HoldBreath = m_Fridge.FindAction("HoldBreath", throwIfNotFound: true);
         m_Fridge_Grab = m_Fridge.FindAction("Grab", throwIfNotFound: true);
         m_Fridge_Exit = m_Fridge.FindAction("Exit", throwIfNotFound: true);
+        m_Fridge_DepthMove = m_Fridge.FindAction("DepthMove", throwIfNotFound: true);
     }
 
     ~@NIS()
@@ -537,6 +580,7 @@ public partial class @NIS: IInputActionCollection2, IDisposable
     private readonly InputAction m_Fridge_HoldBreath;
     private readonly InputAction m_Fridge_Grab;
     private readonly InputAction m_Fridge_Exit;
+    private readonly InputAction m_Fridge_DepthMove;
     /// <summary>
     /// Provides access to input actions defined in input action map "Fridge".
     /// </summary>
@@ -564,6 +608,10 @@ public partial class @NIS: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Fridge/Exit".
         /// </summary>
         public InputAction @Exit => m_Wrapper.m_Fridge_Exit;
+        /// <summary>
+        /// Provides access to the underlying input action "Fridge/DepthMove".
+        /// </summary>
+        public InputAction @DepthMove => m_Wrapper.m_Fridge_DepthMove;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -602,6 +650,9 @@ public partial class @NIS: IInputActionCollection2, IDisposable
             @Exit.started += instance.OnExit;
             @Exit.performed += instance.OnExit;
             @Exit.canceled += instance.OnExit;
+            @DepthMove.started += instance.OnDepthMove;
+            @DepthMove.performed += instance.OnDepthMove;
+            @DepthMove.canceled += instance.OnDepthMove;
         }
 
         /// <summary>
@@ -625,6 +676,9 @@ public partial class @NIS: IInputActionCollection2, IDisposable
             @Exit.started -= instance.OnExit;
             @Exit.performed -= instance.OnExit;
             @Exit.canceled -= instance.OnExit;
+            @DepthMove.started -= instance.OnDepthMove;
+            @DepthMove.performed -= instance.OnDepthMove;
+            @DepthMove.canceled -= instance.OnDepthMove;
         }
 
         /// <summary>
@@ -729,5 +783,12 @@ public partial class @NIS: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnExit(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "DepthMove" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnDepthMove(InputAction.CallbackContext context);
     }
 }
