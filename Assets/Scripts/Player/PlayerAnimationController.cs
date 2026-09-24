@@ -9,6 +9,7 @@ public sealed class PlayerAnimationController : MonoBehaviour
 
     private static readonly int IsWalking = Animator.StringToHash("IsWalking");
     private static readonly int IsDrunk = Animator.StringToHash("IsDrunk");
+    private static readonly int IsSprinting = Animator.StringToHash("IsSprinting");
 
     private void Awake()
     {
@@ -25,7 +26,12 @@ public sealed class PlayerAnimationController : MonoBehaviour
 
     private void OnEnable()
     {
-        if (movement != null) movement.OnMovingChanged += SetMoving;
+        if (movement != null)
+        {
+            movement.OnMovingChanged += SetMoving;
+            movement.OnSprintingChanged += SetSprinting;
+        }
+
         if (alcoholSystem != null) alcoholSystem.OnAlcoholStateChanged += SetAlcoholState;
 
         Refresh();
@@ -35,20 +41,42 @@ public sealed class PlayerAnimationController : MonoBehaviour
 
     private void OnDisable()
     {
-        if (movement != null) movement.OnMovingChanged -= SetMoving;
+        if (movement != null)
+        {
+            movement.OnMovingChanged -= SetMoving;
+            movement.OnSprintingChanged -= SetSprinting;
+        }
+
         if (alcoholSystem != null) alcoholSystem.OnAlcoholStateChanged -= SetAlcoholState;
     }
 
     private void Refresh()
     {
-        if (movement != null) SetMoving(movement.IsMoving);
         SetAlcoholState(alcoholSystem != null ? alcoholSystem.CurrentState : NivelBorrachera.Sobrio);
+        SetMoving(movement != null && movement.IsMoving);
+        SetSprinting(movement != null && movement.IsSprinting);
     }
 
-    private void SetMoving(bool moving) => animator.SetBool(IsWalking, moving);
+    private void SetMoving(bool moving)
+    {
+        animator.SetBool(IsWalking, moving);
+
+        if (!moving)
+            animator.SetBool(IsSprinting, false);
+    }
+
+    private void SetSprinting(bool sprinting)
+    {
+        bool isSober = !animator.GetBool(IsDrunk);
+        animator.SetBool(IsSprinting, sprinting && isSober);
+    }
 
     private void SetAlcoholState(NivelBorrachera state)
     {
-        animator.SetBool(IsDrunk, state != NivelBorrachera.Sobrio);
+        bool isDrunk = state != NivelBorrachera.Sobrio;
+        animator.SetBool(IsDrunk, isDrunk);
+
+        if (isDrunk)
+            animator.SetBool(IsSprinting, false);
     }
 }
