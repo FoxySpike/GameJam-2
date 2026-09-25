@@ -2274,7 +2274,7 @@ MonoBehaviour:
   handController: {fileID: 890882244}
   grabPoint: {fileID: 161882274}
   armPivotRigidbody: {fileID: 890882247}
-  grabRadius: 0.08
+  grabRadius: 0.1
   grabbableLayer:
     serializedVersion: 2
     m_Bits: 64
