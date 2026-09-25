@@ -5,68 +5,87 @@ using UnityEngine;
 public class BottleProp : MonoBehaviour
 {
     [Header("Dependencies")]
-    // Referencia al manager. En un prototipo pequeño FindAnyObjectByType está bien.
-    // Si el proyecto crece, consideraríamos inyectarlo para mejorar el rendimiento.
-    private NoiseManager noiseManager;
+    // Eliminamos la variable noiseManager. Ya no la necesitamos.
     private AudioSource audioSource;
 
-    [Header("Bump Settings")]
-    [Tooltip("Fuerza mínima del choque para que cuente como un golpecito")]
-    [SerializeField] private float minBumpVelocity = 0.5f;
-    [SerializeField] private float bumpNoiseAmount = 10f;
-    [SerializeField] private AudioClip bumpClip;
-
-    [Header("Fall Settings")]
+    [Header("Tilt / Fall Settings")]
     [Tooltip("Ángulo a partir del cual consideramos que la botella se acostó")]
     [SerializeField] private float fallAngleThreshold = 60f;
-    [SerializeField] private float fallNoiseAmount = 25f;
-    [SerializeField] private AudioClip fallClip;
+    [SerializeField] private float tiltNoiseAmount = 15f;
+    [SerializeField] private AudioClip tiltClip;
 
-    private bool hasFallen = false;
+    [Header("Impact Settings")]
+    [Tooltip("Velocidad mínima para considerar un golpecito suave (ignora la fricción al rodar)")]
+    [SerializeField] private float minImpactVelocity = 1.5f;
+    [Tooltip("Velocidad a partir de la cual se considera un impacto fuerte (caída desde alto)")]
+    [SerializeField] private float hardImpactVelocity = 5.0f;
+
+    [SerializeField] private float lightImpactNoise = 8f;
+    [SerializeField] private float hardImpactNoise = 30f;
+
+    [SerializeField] private AudioClip lightImpactClip;
+    [SerializeField] private AudioClip hardImpactClip;
+
+    [Header("Anti-Spam Settings")]
+    [Tooltip("Tiempo mínimo en segundos entre ruidos de impacto consecutivas")]
+    [SerializeField] private float impactCooldown = 0.25f;
+
+    private bool isTilted = false;
+    private float lastImpactTime = -999f;
 
     private void Awake()
     {
         audioSource = GetComponent<AudioSource>();
-        // Buscamos el manager en la escena al iniciar
-        noiseManager = FindAnyObjectByType<NoiseManager>();
+        // Eliminamos el costoso FindAnyObjectByType. La botella ya no busca activamente.
     }
 
     private void Update()
     {
-        if (hasFallen) return; // Si ya se cayó, dejamos de revisar
-
-        // Calculamos el ángulo entre la punta de la botella y el cielo del mundo
-        float currentAngle = Vector3.Angle(transform.up, Vector3.up);
-
-        if (currentAngle > fallAngleThreshold)
+        if (!isTilted)
         {
-            hasFallen = true;
-            PlaySound(fallClip, 1f);
+            float currentAngle = Vector3.Angle(transform.up, Vector3.up);
+            if (currentAngle > fallAngleThreshold)
+            {
+                isTilted = true;
+                PlaySound(tiltClip, 0.8f);
 
-            if (noiseManager != null)
-                noiseManager.AddNoise(fallNoiseAmount);
+                // Llamamos directamente al Singleton, pero verificamos que exista primero
+                if (NoiseManager.Instance != null)
+                    NoiseManager.Instance.AddNoise(tiltNoiseAmount);
+            }
         }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (hasFallen) return; // Si ya está en el suelo, ignoramos golpecitos
+        if (Time.time - lastImpactTime < impactCooldown) return;
 
-        // Medimos qué tan fuerte fue el impacto
         float impactForce = collision.relativeVelocity.magnitude;
 
-        if (impactForce > minBumpVelocity)
-        {
-            PlaySound(bumpClip, 0.5f);
+        // IMPRIMIMOS LA FUERZA REAL EN CONSOLA PARA DEPURAR
+        Debug.Log($"[BottleProp] Fuerza de impacto detectada: {impactForce}");
 
-            if (noiseManager != null)
-                noiseManager.AddNoise(bumpNoiseAmount);
+        if (impactForce < minImpactVelocity) return;
+
+        lastImpactTime = Time.time;
+
+        if (impactForce >= hardImpactVelocity)
+        {
+            Debug.Log("-> Clasificado como: IMPACTO FUERTE");
+            PlaySound(hardImpactClip, 1.0f);
+            if (NoiseManager.Instance != null) NoiseManager.Instance.AddNoise(hardImpactNoise);
+        }
+        else
+        {
+            Debug.Log("-> Clasificado como: IMPACTO SUAVE");
+            PlaySound(lightImpactClip, 0.5f);
+            if (NoiseManager.Instance != null) NoiseManager.Instance.AddNoise(lightImpactNoise);
         }
     }
 
     private void PlaySound(AudioClip clip, float volume)
     {
-        if (clip != null)
+        if (clip != null && audioSource != null)
         {
             audioSource.PlayOneShot(clip, volume);
         }

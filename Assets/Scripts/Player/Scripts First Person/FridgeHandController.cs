@@ -29,12 +29,12 @@ public class FridgeHandController : MonoBehaviour
     private Vector3 virtualLocalPosition;
     private Vector3 targetLocalWithSway;
     private Vector3 currentShakeOffset;
-    private float fixedZPosition; // Guarda la profundidad inicial
+    private float fixedZPosition;
 
     private void Awake()
     {
         virtualLocalPosition = transform.localPosition;
-        fixedZPosition = transform.localPosition.z; // Mantenemos la Z original del inspector
+        fixedZPosition = transform.localPosition.z;
 
         breathSystem = GetComponent<BreathStaminaSystem>();
         rb = GetComponent<Rigidbody>();
@@ -78,7 +78,7 @@ public class FridgeHandController : MonoBehaviour
 
         virtualLocalPosition.x += xyInput.x * xySensitivity;
         virtualLocalPosition.y += xyInput.y * xySensitivity;
-        virtualLocalPosition.z = fixedZPosition; // Nunca cambia por input
+        virtualLocalPosition.z = fixedZPosition;
 
         virtualLocalPosition.x = Mathf.Clamp(virtualLocalPosition.x, minLocalBounds.x, maxLocalBounds.x);
         virtualLocalPosition.y = Mathf.Clamp(virtualLocalPosition.y, minLocalBounds.y, maxLocalBounds.y);
@@ -101,7 +101,7 @@ public class FridgeHandController : MonoBehaviour
         if (desyncVector.magnitude > maxDesyncDistance)
         {
             virtualLocalPosition = actualVirtualCenter + desyncVector.normalized * maxDesyncDistance;
-            virtualLocalPosition.z = fixedZPosition; // Aseguramos que la sincronización no altere la profundidad
+            virtualLocalPosition.z = fixedZPosition;
         }
     }
 
@@ -112,6 +112,27 @@ public class FridgeHandController : MonoBehaviour
         float swayY = Mathf.Sin(time * 2f) * swayVerticalAmount * shakeFactor;
         return new Vector3(swayX, swayY, 0f);
     }
+
+    // --- NUEVO MÉTODO PARA LA OPCIÓN B ---
+    public void DisplaceHandForGrab(Vector3 pushVectorWorld)
+    {
+        // 1. Traducimos el vector 3D global al espacio 2D local de tu brazo
+        Vector3 localPush = transform.parent != null
+            ? transform.parent.InverseTransformVector(pushVectorWorld)
+            : pushVectorWorld;
+
+        // 2. Movemos el control virtual para que no pelee intentando regresar abajo
+        virtualLocalPosition += localPush;
+
+        // 3. Respetamos tu regla estricta de la Z fija y los límites de la pantalla
+        virtualLocalPosition.z = fixedZPosition;
+        virtualLocalPosition.x = Mathf.Clamp(virtualLocalPosition.x, minLocalBounds.x, maxLocalBounds.x);
+        virtualLocalPosition.y = Mathf.Clamp(virtualLocalPosition.y, minLocalBounds.y, maxLocalBounds.y);
+
+        // 4. Movemos FÍSICAMENTE el brazo en este mismo frame.
+        rb.position += pushVectorWorld;
+    }
+    // -------------------------------------
 
     private void OnDrawGizmosSelected()
     {
@@ -124,7 +145,7 @@ public class FridgeHandController : MonoBehaviour
         Vector3 size = new Vector3(
             maxLocalBounds.x - minLocalBounds.x,
             maxLocalBounds.y - minLocalBounds.y,
-            0.01f // Plano 2D para visualización
+            0.01f
         );
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireCube(center, size);

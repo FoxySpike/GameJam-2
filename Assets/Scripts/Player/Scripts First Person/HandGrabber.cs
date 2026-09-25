@@ -6,11 +6,14 @@ public class HandGrabber : MonoBehaviour
     [Header("Dependencies")]
     [SerializeField] private PlayerInputReader inputReader;
 
+    [Tooltip("Referencia al controlador del brazo para sincronizar el empuje al agarrar.")]
+    [SerializeField] private FridgeHandController handController; // <-- NUEVA DEPENDENCIA
+
     [Tooltip("El GameObject vacío que actúa como la palma de la mano. Usado solo para posición.")]
     [SerializeField] private Transform grabPoint;
 
     [Tooltip("El Rigidbody del brazo principal (BrazoPivote). NO poner en la mano.")]
-    [SerializeField] private Rigidbody armPivotRigidbody; // CORREGIDO: Nombre que refleja la arquitectura real
+    [SerializeField] private Rigidbody armPivotRigidbody;
 
     [Header("Grab Settings")]
     [SerializeField] private float grabRadius = 0.2f;
@@ -26,6 +29,9 @@ public class HandGrabber : MonoBehaviour
 
         if (armPivotRigidbody == null)
             Debug.LogError("[HandGrabber] Falta asignar el Rigidbody del pivote del brazo.");
+
+        if (handController == null)
+            Debug.LogWarning("[HandGrabber] No se asignó FridgeHandController. La mano no hará espacio para los objetos.");
     }
 
     private void Update()
@@ -73,11 +79,20 @@ public class HandGrabber : MonoBehaviour
         currentlyHeldObject.linearVelocity = Vector3.zero;
         currentlyHeldObject.angularVelocity = Vector3.zero;
 
-        // 2. Teleportación INSTANTÁNEA en el fotograma actual (NO usar MovePosition aquí)
+        // 2. EL TRUCO FÍSICO: Calculamos el vector exacto desde la mano hacia el objeto.
+        // Y empujamos el brazo hacia allá ANTES de mover el objeto.
+        if (handController != null)
+        {
+            Vector3 offsetToTarget = currentlyHeldObject.transform.position - grabPoint.position;
+            handController.DisplaceHandForGrab(offsetToTarget);
+        }
+
+        // 3. Teleportación. Como acabamos de mover la mano al centro del objeto, 
+        // este movimiento es ahora de distancia casi cero. No atravesará el cristal.
         currentlyHeldObject.transform.position = grabPoint.position;
         currentlyHeldObject.transform.rotation = grabPoint.rotation;
 
-        // 3. Al crear el Joint AHORA, detecta ambos objetos en la misma posición y los centra
+        // 4. Creamos el Joint
         currentJoint = armPivotRigidbody.gameObject.AddComponent<FixedJoint>();
         currentJoint.connectedBody = currentlyHeldObject;
 
@@ -91,6 +106,16 @@ public class HandGrabber : MonoBehaviour
             Destroy(currentJoint);
             currentJoint = null;
         }
+
+        // --- LA SOLUCIÓN ---
+        // Le quitamos toda la inercia y temblor heredados del brazo
+        // en el instante exacto en que la soltamos.
+        if (currentlyHeldObject != null)
+        {
+            currentlyHeldObject.linearVelocity = Vector3.zero;
+            currentlyHeldObject.angularVelocity = Vector3.zero;
+        }
+        // -------------------
 
         Debug.Log($"[HandGrabber] Solté: {currentlyHeldObject.name}");
         currentlyHeldObject = null;

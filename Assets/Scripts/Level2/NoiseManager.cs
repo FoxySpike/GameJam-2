@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class NoiseManager : MonoBehaviour
 {
+    public static NoiseManager Instance { get; private set; }
+
     [Header("Noise Settings")]
     [SerializeField] private float maxNoise = 100f;
     [SerializeField] private float currentNoise = 0f;
@@ -17,6 +19,21 @@ public class NoiseManager : MonoBehaviour
     public event Action OnMaxNoiseReached;
 
     private bool isMaxNoiseReached = false;
+
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this; // Si soy el primero, me asigno como LA instancia
+        }
+        else
+        {
+            // Si ya existe otro NoiseManager, me destruyo para evitar duplicados
+            Debug.LogWarning("Se intentó crear más de un NoiseManager. Destruyendo duplicado.");
+            Destroy(gameObject);
+        }
+    }
 
     private void Update()
     {

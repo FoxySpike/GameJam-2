@@ -6,7 +6,7 @@ public sealed class DrinkInteractable : MonoBehaviour, IInteractable
     [SerializeField] private DrinkData drinkData;
     [SerializeField] private bool singleUse = true;
     private bool consumed;
-    public string Prompt => "[E] Beber";
+    public string Prompt => "[F] Beber";
 
     private void Awake()
     {
