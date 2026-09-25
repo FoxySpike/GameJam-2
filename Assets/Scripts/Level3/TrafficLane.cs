@@ -66,7 +66,6 @@ public sealed class TrafficLane : MonoBehaviour
 
         GameObject instance = Instantiate(vehicleTemplate, spawnPoint.position, Quaternion.identity, transform);
         instance.name = "Vehicle";
-        instance.SetActive(true);
 
         TrafficVehicle vehicle = instance.GetComponent<TrafficVehicle>();
         if (vehicle == null)
@@ -81,6 +80,7 @@ public sealed class TrafficLane : MonoBehaviour
         float maximum = Mathf.Max(minimum, Mathf.Max(speedRange.x, speedRange.y));
         activeVehicles++;
         vehicle.Initialize(this, exitPoint.position, Random.Range(minimum, maximum));
+        instance.SetActive(true);
     }
 
     public void NotifyVehicleReleased()
