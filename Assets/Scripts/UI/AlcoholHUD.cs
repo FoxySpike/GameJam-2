@@ -58,17 +58,17 @@ public sealed class AlcoholHUD : MonoBehaviour
 
         switch (state)
         {
-            case NivelBorrachera.Sobrio:
-                stateText.text = "SOBRIO";
+            case NivelBorrachera.Sober:
+                stateText.text = "Sober";
                 break;
-            case NivelBorrachera.Prendido:
-                stateText.text = "PRENDIDO";
+            case NivelBorrachera.Tipsy:
+                stateText.text = "Tipsy";
                 break;
-            case NivelBorrachera.Tomado:
-                stateText.text = "TOMADO";
+            case NivelBorrachera.Drunk:
+                stateText.text = "Drunk";
                 break;
-            case NivelBorrachera.VueltoMierda:
-                stateText.text = "VUELTO MIERDA"; // Aquí podemos incluir el espacio cómodamente
+            case NivelBorrachera.Wasted:
+                stateText.text = "VUELTO MIERDA"; // Aquï¿½ podemos incluir el espacio cï¿½modamente
                 break;
         }
     }

@@ -27,10 +27,10 @@ public class PlayerMovementV3 : MonoBehaviour
     [SerializeField]
     private PerfilBorrachera[] perfilesEstado =
     {
-        new PerfilBorrachera(NivelBorrachera.Sobrio, 3f, 6f, 0f, 1f),
-        new PerfilBorrachera(NivelBorrachera.Prendido, 3f, 5.5f, 20f, 0.8f),
-        new PerfilBorrachera(NivelBorrachera.Tomado, 2.5f, 4f, 45f, 0.9f),
-        new PerfilBorrachera(NivelBorrachera.VueltoMierda, 2f, 2.5f, 73f, 1f)
+        new PerfilBorrachera(NivelBorrachera.Sober, 3f, 6f, 0f, 1f),
+        new PerfilBorrachera(NivelBorrachera.Tipsy, 3f, 5.5f, 20f, 0.8f),
+        new PerfilBorrachera(NivelBorrachera.Drunk, 2.5f, 4f, 45f, 0.9f),
+        new PerfilBorrachera(NivelBorrachera.Wasted, 2f, 2.5f, 73f, 1f)
     };
 
     [Header("Referencias")]
@@ -61,7 +61,7 @@ public class PlayerMovementV3 : MonoBehaviour
 
     private bool isMoving;
     private bool isSprinting;
-    private NivelBorrachera currentAlcoholState = NivelBorrachera.Sobrio;
+    private NivelBorrachera currentAlcoholState = NivelBorrachera.Sober;
 
     public bool IsMoving
     {
@@ -114,7 +114,7 @@ public class PlayerMovementV3 : MonoBehaviour
         SetTargetProfile(
             alcoholSystem != null
                 ? alcoholSystem.CurrentState
-                : NivelBorrachera.Sobrio
+                : NivelBorrachera.Sober
         );
 
         SnapToTargetProfile();
@@ -201,7 +201,7 @@ public class PlayerMovementV3 : MonoBehaviour
         else
         {
             IsMoving = true;
-            IsSprinting = inputReader.Sprint && currentAlcoholState == NivelBorrachera.Sobrio;
+            IsSprinting = inputReader.Sprint && currentAlcoholState == NivelBorrachera.Sober;
 
             Vector3 camForward = cameraTransform.forward;
             Vector3 camRight = cameraTransform.right;
@@ -268,7 +268,7 @@ public class PlayerMovementV3 : MonoBehaviour
     {
         currentAlcoholState = newState;
 
-        if (newState != NivelBorrachera.Sobrio)
+        if (newState != NivelBorrachera.Sober)
             IsSprinting = false;
 
         foreach (PerfilBorrachera perfil in perfilesEstado)
