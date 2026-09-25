@@ -10,7 +10,7 @@ public class PlayerBalanceSystem : MonoBehaviour
         public NivelBorrachera estado;
         public float swayForce;          // Fuerza del bamboleo aleatorio
         public float swaySpeed;          // Velocidad del bamboleo
-        public float instabilityFactor;  // Aceleración de la gravedad en los bordes
+        public float instabilityFactor;  // Aceleraciï¿½n de la gravedad en los bordes
 
         public PerfilEquilibrio(NivelBorrachera e, float force, float speed, float instability)
         {
@@ -21,7 +21,7 @@ public class PlayerBalanceSystem : MonoBehaviour
         }
     }
 
-    [Header("Perfiles de Pérdida de Equilibrio")]
+    [Header("Perfiles de Pï¿½rdida de Equilibrio")]
     [SerializeField]
     private PerfilEquilibrio[] perfilesEstado =
     {
@@ -35,8 +35,8 @@ public class PlayerBalanceSystem : MonoBehaviour
     [SerializeField] private PlayerInputReader inputReader;
     [SerializeField] private AlcoholSystem alcoholSystem;
 
-    [Header("Configuración del Control y Sensibilidad")]
-    [SerializeField, Tooltip("Poder de corrección base del jugador")]
+    [Header("Configuraciï¿½n del Control y Sensibilidad")]
+    [SerializeField, Tooltip("Poder de correcciï¿½n base del jugador")]
     private float playerControlPower = 1.8f;
 
     [SerializeField, Tooltip("Sensibilidad general de la barra")]
@@ -45,8 +45,8 @@ public class PlayerBalanceSystem : MonoBehaviour
     [SerializeField, Tooltip("Fuerza con la que el cuerpo intenta regresar al centro de forma natural")]
     private float naturalCenterTendency = 0.15f;
 
-    [Header("Mecánica de Tiempo de Gracia / Salvada")]
-    [SerializeField, Range(0.5f, 0.9f), Tooltip("A partir de qué punto del slider se activa la ayuda de emergencia")]
+    [Header("Mecï¿½nica de Tiempo de Gracia / Salvada")]
+    [SerializeField, Range(0.5f, 0.9f), Tooltip("A partir de quï¿½ punto del slider se activa la ayuda de emergencia")]
     private float dangerZoneThreshold = 0.65f;
 
     [SerializeField, Tooltip("Multiplicador de fuerza cuando el jugador intenta salvarse en el borde")]
@@ -108,10 +108,10 @@ public class PlayerBalanceSystem : MonoBehaviour
         float rawNoise = Mathf.PerlinNoise(Time.time * currentSwaySpeed, noiseOffsetY);
         float normalizedNoise = (rawNoise - 0.5f) * 2f; // Convertir rango de [0,1] a [-1,1]
 
-        // Transición más rápida del ruido para mantener al jugador en alerta constante
+        // Transiciï¿½n mï¿½s rï¿½pida del ruido para mantener al jugador en alerta constante
         smoothedSwayForce = Mathf.Lerp(smoothedSwayForce, normalizedNoise * currentSwayForce, Time.deltaTime * 8.0f);
 
-        // 2. Detección de Estado y Ayuda en Zona de Peligro
+        // 2. Detecciï¿½n de Estado y Ayuda en Zona de Peligro
         float absoluteBalance = Mathf.Abs(currentBalance);
         float balanceSign = Mathf.Sign(currentBalance);
 
@@ -127,19 +127,19 @@ public class PlayerBalanceSystem : MonoBehaviour
             effectivePlayerPower *= emergencyRecoveryBoost;
         }
 
-        // 3. Gravedad Híbrida (Combinación Lineal + Cuadrática para romper la inercia del centro)
-        // (0.3 * x) asegura desequilibrio inmediato; (0.7 * x^2) aporta la aceleración peligrosa en bordes.
+        // 3. Gravedad Hï¿½brida (Combinaciï¿½n Lineal + Cuadrï¿½tica para romper la inercia del centro)
+        // (0.3 * x) asegura desequilibrio inmediato; (0.7 * x^2) aporta la aceleraciï¿½n peligrosa en bordes.
         float gravityCurve = (0.3f * absoluteBalance) + (0.7f * absoluteBalance * absoluteBalance);
         float gravityForce = gravityCurve * balanceSign * effectiveGravityFactor;
 
-        // 4. Tendencia Natural al Centro (Se reduce a medida que aumenta la inclinación)
+        // 4. Tendencia Natural al Centro (Se reduce a medida que aumenta la inclinaciï¿½n)
         float centerPullDampening = 1f - absoluteBalance;
         float centerPull = -currentBalance * centerPullDampening * naturalCenterTendency;
 
         // 5. Fuerza del Jugador
         float playerForce = rawInputX * effectivePlayerPower;
 
-        // 6. Integración del Torque Neto
+        // 6. Integraciï¿½n del Torque Neto
         float netTorque = smoothedSwayForce + centerPull + gravityForce + playerForce;
 
         currentBalance += netTorque * balanceSensitivity * Time.deltaTime;

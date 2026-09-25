@@ -5562,7 +5562,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1089435286
 Transform:
   m_ObjectHideFlags: 0
@@ -9791,6 +9791,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Level 3 UI
       objectReference: {fileID: 0}
+    - target: {fileID: 3715697677588562035, guid: d0bdbaf22204c044ca036072945965d6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3949939777601271960, guid: d0bdbaf22204c044ca036072945965d6, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -9805,15 +9809,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4471170480005399683, guid: d0bdbaf22204c044ca036072945965d6, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4617656707361148484, guid: d0bdbaf22204c044ca036072945965d6, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 4617656707361148484, guid: d0bdbaf22204c044ca036072945965d6, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6244717420950270498, guid: d0bdbaf22204c044ca036072945965d6, type: 3}
       propertyPath: interaction
@@ -9821,15 +9825,15 @@ PrefabInstance:
       objectReference: {fileID: 1328623942}
     - target: {fileID: 7052999066316619066, guid: d0bdbaf22204c044ca036072945965d6, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7052999066316619066, guid: d0bdbaf22204c044ca036072945965d6, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7052999066316619066, guid: d0bdbaf22204c044ca036072945965d6, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

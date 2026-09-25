@@ -9,17 +9,11 @@ public class PoliceDetection : MonoBehaviour
         if (!other.CompareTag("Player"))
             return;
 
-        DropCarriedChicken();
-
         PlayerRespawn playerRespawn = other.GetComponent<PlayerRespawn>();
-
-        if (playerRespawn != null)
-        {
-            playerRespawn.Respawn();
-        }
+        OnPlayerCaught(playerRespawn);
     }
 
-    private void DropCarriedChicken()
+    private void OnPlayerCaught(PlayerRespawn playerRespawn)
     {
         ChickenCarryController targetChicken = chicken;
         if (targetChicken == null)
@@ -27,5 +21,8 @@ public class PoliceDetection : MonoBehaviour
 
         if (targetChicken != null)
             targetChicken.Drop(Vector3.zero, 0f);
+
+        if (playerRespawn != null)
+            playerRespawn.Respawn();
     }
 }
