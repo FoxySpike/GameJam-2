@@ -6,11 +6,20 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
+    path: Assets/Scenes/Nivel 1 - La parranda MVP.unity
+    guid: 432616d3b4b24344bbcb851ec47d959c
+  - enabled: 1
+    path: Assets/Scenes/Nivel-2-Asadero.unity
+    guid: 4c9109c911c74f149b4358675c72d6b4
   - enabled: 1
     path: Assets/Scenes/Nivel 3 - Cruzar la calle.unity
     guid: 2813b61aeb5e8e646973f14246220732
+  - enabled: 1
+    path: Assets/Scenes/Nivel 4 - El parque.unity
+    guid: 97ca29fc20b5f184f82605d52a8c6edc
+  - enabled: 1
+    path: Assets/Scenes/Construccion.unity
+    guid: c21c0477fbe5f29459e86a857ad8e372
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 8510ae61a5245e34fa1434c097fbc5a4, type: 3}

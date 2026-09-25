@@ -2,15 +2,24 @@ using UnityEngine;
 
 public class PlayerRespawn : MonoBehaviour
 {
-    [SerializeField] private Transform spawnPoint;
+    [Header("Configuración")]
+    [SerializeField] private string spawnPointTag = "SpawnPoint";
+
 
     public void Respawn()
     {
-        if (spawnPoint == null)
+        GameObject spawnObject = GameObject.FindGameObjectWithTag(spawnPointTag);
+
+
+        if (spawnObject == null)
         {
-            Debug.LogWarning("PlayerRespawn: No hay Spawn Point asignado.");
+            Debug.LogWarning("PlayerRespawn: No existe un SpawnPoint en la escena actual.");
             return;
         }
+
+
+        Transform spawnPoint = spawnObject.transform;
+
 
         CharacterController characterController = GetComponent<CharacterController>();
 
@@ -19,12 +28,17 @@ public class PlayerRespawn : MonoBehaviour
             characterController.enabled = false;
         }
 
+
         transform.position = spawnPoint.position;
         transform.rotation = spawnPoint.rotation;
+
 
         if (characterController != null)
         {
             characterController.enabled = true;
         }
+
+
+        Debug.Log("Jugador enviado al SpawnPoint actual.");
     }
 }

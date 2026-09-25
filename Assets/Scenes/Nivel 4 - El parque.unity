@@ -661,8 +661,8 @@ GameObject:
   m_Component:
   - component: {fileID: 83025408}
   m_Layer: 0
-  m_Name: ParkSpawnPoint
-  m_TagString: Untagged
+  m_Name: SpawnPoint
+  m_TagString: SpawnPoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6822,9 +6822,21 @@ PrefabInstance:
       propertyPath: m_Radius
       value: 0.25
       objectReference: {fileID: 0}
+    - target: {fileID: 5741212283567899367, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6099346891685326864, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
       propertyPath: m_Name
       value: The Boss
+      objectReference: {fileID: 0}
+    - target: {fileID: 6099346891685326864, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6279258555779143351, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6912720872729553578, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
       propertyPath: m_LocalPosition.x
@@ -6866,10 +6878,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7049680606650961848, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7325358613168604923, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7325358613168604923, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
       propertyPath: spawnPoint
       value: 
       objectReference: {fileID: 83025408}
+    - target: {fileID: 7833742974093616922, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
