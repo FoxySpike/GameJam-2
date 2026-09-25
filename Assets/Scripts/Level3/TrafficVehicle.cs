@@ -4,6 +4,13 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody), typeof(Collider))]
 public sealed class TrafficVehicle : MonoBehaviour
 {
+    [Header("Visual")]
+    [SerializeField] private GameObject vehicleModel;
+    [SerializeField] private Vector3 modelOffset;
+    [SerializeField] private Vector3 modelRotation;
+    [SerializeField] private Vector3 modelScale = Vector3.one;
+
+    [Header("Impact")]
     [SerializeField, Min(0.1f)] private float impactForce = 8f;
     [SerializeField, Min(0.01f)] private float arrivalDistance = 0.25f;
 
@@ -15,9 +22,26 @@ public sealed class TrafficVehicle : MonoBehaviour
 
     private void Awake()
     {
+        CreateModel();
+
         body = GetComponent<Rigidbody>();
         body.isKinematic = true;
         body.useGravity = false;
+    }
+
+    private void CreateModel()
+    {
+        if (vehicleModel == null) return;
+
+        GameObject visual = new GameObject("Visual");
+        visual.transform.SetParent(transform, false);
+        visual.transform.SetLocalPositionAndRotation(
+            modelOffset,
+            Quaternion.Euler(modelRotation));
+        visual.transform.localScale = modelScale;
+
+        GameObject model = Instantiate(vehicleModel, visual.transform, false);
+        model.name = vehicleModel.name;
     }
 
     public void Initialize(TrafficLane lane, Vector3 target, float movementSpeed)
