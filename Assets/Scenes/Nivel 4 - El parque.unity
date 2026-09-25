@@ -11917,7 +11917,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b8d96363b4e44b4980f4f2b7dd7d6b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Level4FinalTrigger
-  chicken: {fileID: 1901408442}
+  chicken: {fileID: 854167808}
   messagePanel: {fileID: 489876664}
   messageText: {fileID: 1985577655}
   messageDuration: 2.5
