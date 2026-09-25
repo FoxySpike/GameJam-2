@@ -11934,7 +11934,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86b1c30e953ff76458465f067f0e1e9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SceneTrigger
-  sceneToLoad: 
+  sceneToLoad: Final
 --- !u!1 &2087917751
 GameObject:
   m_ObjectHideFlags: 0
