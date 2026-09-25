@@ -10,15 +10,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 257e505a49c3d004e816c4d056d5950f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.65267444
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 257e505a49c3d004e816c4d056d5950f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.803
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 257e505a49c3d004e816c4d056d5950f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -9.304827
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 257e505a49c3d004e816c4d056d5950f, type: 3}
       propertyPath: m_LocalRotation.w
@@ -56,6 +56,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pollo
       objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 257e505a49c3d004e816c4d056d5950f, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: f3d79d42865f07344a403e4de942c657, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
