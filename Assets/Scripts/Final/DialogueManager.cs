@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using TMPro;
 using UnityEngine.SceneManagement;
 
@@ -7,21 +8,21 @@ public class DialogueManager : MonoBehaviour
     public TextMeshProUGUI dialogueText;
 
     [TextArea(2, 4)]
-    public string[] lines; // Aquí escribes los cuadros de texto en el Inspector
+    public string[] lines;
 
-    public string menuSceneName = "Menu"; // nombre exacto de tu escena de menú
+    public string menuSceneName = "Menu";
 
     private int currentLine = 0;
 
-    void Start()
+    void OnEnable()
     {
+        currentLine = 0;
         ShowLine();
     }
 
     void Update()
     {
-        // Cambia esto por el input que prefieras (click, tecla, etc.)
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
+        if (Keyboard.current != null && Keyboard.current.fKey.wasPressedThisFrame)
         {
             NextLine();
         }
@@ -29,6 +30,7 @@ public class DialogueManager : MonoBehaviour
 
     void ShowLine()
     {
+        if (lines == null || lines.Length == 0) return;
         dialogueText.text = lines[currentLine];
     }
 
