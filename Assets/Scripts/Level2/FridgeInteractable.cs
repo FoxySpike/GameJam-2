@@ -18,6 +18,11 @@ public class FridgeInteractable : MonoBehaviour, IInteractable
 
     public string Prompt => promptMessage;
 
+    private void Awake()
+    {
+        fridgeCamera.gameObject.SetActive(false);
+    }
+
     public bool CanInteract(GameObject interactor)
     {
         // No se puede interactuar si ya estamos dentro del minijuego

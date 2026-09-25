@@ -11,18 +11,15 @@ public class FridgeHandController : MonoBehaviour
 
     [Header("Movement Settings")]
     [SerializeField] private float xySensitivity = 0.005f;
-    [SerializeField] private float zSensitivity = 0.01f;
     [SerializeField] private float followSpeed = 25f;
 
     [Tooltip("Velocidad máxima absoluta (m/s) a la que se puede mover el brazo.")]
     [SerializeField] private float maxVelocity = 8f;
+    [SerializeField] private float maxDesyncDistance = 0.01f;
 
-    [Tooltip("Tolerancia de penetración. Valores pequeños (ej. 0.01 = 1cm) evitan que el brazo aplaste objetos contra repisas.")]
-    [SerializeField] private float maxDesyncDistance = 0.01f; // CORREGIDO: Reducido de 0.05f a 0.01f
-
-    [Header("Local Boundaries")]
-    [SerializeField] private Vector3 minLocalBounds = new Vector3(-0.5f, -0.4f, 0f);
-    [SerializeField] private Vector3 maxLocalBounds = new Vector3(0.5f, 0.4f, 1.0f);
+    [Header("Local Boundaries (X and Y only)")]
+    [SerializeField] private Vector2 minLocalBounds = new Vector2(-0.5f, -0.4f);
+    [SerializeField] private Vector2 maxLocalBounds = new Vector2(0.5f, 0.4f);
 
     [Header("Drunk Sway Mechanics")]
     [SerializeField] private float swayHorizontalAmount = 0.08f;
@@ -32,22 +29,26 @@ public class FridgeHandController : MonoBehaviour
     private Vector3 virtualLocalPosition;
     private Vector3 targetLocalWithSway;
     private Vector3 currentShakeOffset;
+    private float fixedZPosition; // Guarda la profundidad inicial
 
     private void Awake()
     {
         virtualLocalPosition = transform.localPosition;
+        fixedZPosition = transform.localPosition.z; // Mantenemos la Z original del inspector
+
         breathSystem = GetComponent<BreathStaminaSystem>();
         rb = GetComponent<Rigidbody>();
 
         rb.isKinematic = false;
         rb.useGravity = false;
-        rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
+        rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
         rb.interpolation = RigidbodyInterpolation.Interpolate;
     }
 
     private void OnEnable()
     {
         virtualLocalPosition = transform.localPosition;
+        fixedZPosition = transform.localPosition.z;
     }
 
     private void Update()
@@ -74,15 +75,13 @@ public class FridgeHandController : MonoBehaviour
     private void HandleInputAndSway()
     {
         Vector2 xyInput = inputReader.HandMoveInput;
-        float depthInput = inputReader.DepthInput;
 
         virtualLocalPosition.x += xyInput.x * xySensitivity;
         virtualLocalPosition.y += xyInput.y * xySensitivity;
-        virtualLocalPosition.z += depthInput * zSensitivity;
+        virtualLocalPosition.z = fixedZPosition; // Nunca cambia por input
 
         virtualLocalPosition.x = Mathf.Clamp(virtualLocalPosition.x, minLocalBounds.x, maxLocalBounds.x);
         virtualLocalPosition.y = Mathf.Clamp(virtualLocalPosition.y, minLocalBounds.y, maxLocalBounds.y);
-        virtualLocalPosition.z = Mathf.Clamp(virtualLocalPosition.z, minLocalBounds.z, maxLocalBounds.z);
 
         float currentShakeFactor = breathSystem.ProcessBreathAndGetShakeFactor(inputReader.HoldBreath);
 
@@ -99,11 +98,10 @@ public class FridgeHandController : MonoBehaviour
         Vector3 actualVirtualCenter = actualLocalPos - currentShakeOffset;
         Vector3 desyncVector = virtualLocalPosition - actualVirtualCenter;
 
-        // Si la mano física choca con una repisa, obligamos a la posición virtual a pegarse
-        // inmediatamente a la posición física real. Así no se acumula fuerza vertical contra la repisa.
         if (desyncVector.magnitude > maxDesyncDistance)
         {
             virtualLocalPosition = actualVirtualCenter + desyncVector.normalized * maxDesyncDistance;
+            virtualLocalPosition.z = fixedZPosition; // Aseguramos que la sincronización no altere la profundidad
         }
     }
 
@@ -121,12 +119,12 @@ public class FridgeHandController : MonoBehaviour
         Vector3 center = parentTransform.TransformPoint(new Vector3(
             (minLocalBounds.x + maxLocalBounds.x) * 0.5f,
             (minLocalBounds.y + maxLocalBounds.y) * 0.5f,
-            (minLocalBounds.z + maxLocalBounds.z) * 0.5f
+            Application.isPlaying ? fixedZPosition : transform.localPosition.z
         ));
         Vector3 size = new Vector3(
             maxLocalBounds.x - minLocalBounds.x,
             maxLocalBounds.y - minLocalBounds.y,
-            maxLocalBounds.z - minLocalBounds.z
+            0.01f // Plano 2D para visualización
         );
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireCube(center, size);

@@ -6,9 +6,24 @@ public class FridgeRigController : MonoBehaviour
     [SerializeField] private PlayerInputReader inputReader;
 
     [Header("Rig Movement Settings")]
-    [SerializeField] private float moveSpeed = 2f;
-    [SerializeField] private Vector3 minRigBounds = new Vector3(-1f, -1f, -2f);
-    [SerializeField] private Vector3 maxRigBounds = new Vector3(1f, 1f, 0f);
+    [SerializeField] private float moveSpeed = 1.5f;
+
+    [Tooltip("Límites de movimiento del cuerpo frente a la nevera.")]
+    // NOTA MENTAL: Abrí los límites de Y para que pueda subir hasta 0.5 y bajar hasta -0.5
+    [SerializeField] private Vector3 minRigBounds = new Vector3(-0.6f, -0.5f, -0.5f);
+    [SerializeField] private Vector3 maxRigBounds = new Vector3(0.6f, 0.5f, 0.3f);
+
+    private Vector3 virtualRigPosition;
+
+    private void Awake()
+    {
+        virtualRigPosition = transform.localPosition;
+    }
+
+    private void OnEnable()
+    {
+        virtualRigPosition = transform.localPosition;
+    }
 
     private void Update()
     {
@@ -20,22 +35,41 @@ public class FridgeRigController : MonoBehaviour
 
     private void HandleRigMovement()
     {
-        // AQUÍ ES DONDE NECESITAMOS TU DECISIÓN DE DISEÑO
-        // Supongamos que agregaste un 'RigMoveInput' a tu InputReader (que podría ser el ratón)
-        // Vector2 rigInput = inputReader.RigMoveInput; 
+        Vector2 xyInput = inputReader.RigMoveInput;        // X = A/D, Y = W/S (En nuestro script, el Y de este input afecta el eje Z)
+        float verticalInput = inputReader.RigVerticalMoveInput; // Valor de Q y E
 
-        // Lógica súper básica de traslación del Rig (Cuerpo)
-        /*
-        Vector3 newPosition = transform.localPosition;
-        newPosition.x += rigInput.x * moveSpeed * Time.deltaTime;
-        newPosition.z += rigInput.y * moveSpeed * Time.deltaTime; // Asumiendo que Y del input es acercarse (Z)
+        // EJE X (Izquierda/Derecha)
+        virtualRigPosition.x += xyInput.x * moveSpeed * Time.deltaTime;
 
-        // Limitar para que el jugador no atraviese la nevera ni se vaya muy lejos
-        newPosition.x = Mathf.Clamp(newPosition.x, minRigBounds.x, maxRigBounds.x);
-        newPosition.y = Mathf.Clamp(newPosition.y, minRigBounds.y, maxRigBounds.y);
-        newPosition.z = Mathf.Clamp(newPosition.z, minRigBounds.z, maxRigBounds.z);
+        // EJE Y (Arriba/Abajo) -> Nuevo input
+        virtualRigPosition.y += verticalInput * moveSpeed * Time.deltaTime;
 
-        transform.localPosition = newPosition;
-        */
+        // EJE Z (Profundidad) -> Recordamos que W/S (el input.y del Vector2) nos mueve en profundidad
+        virtualRigPosition.z += xyInput.y * moveSpeed * Time.deltaTime;
+
+        // Aplicamos límites para que no atraviese la nevera ni el suelo
+        virtualRigPosition.x = Mathf.Clamp(virtualRigPosition.x, minRigBounds.x, maxRigBounds.x);
+        virtualRigPosition.y = Mathf.Clamp(virtualRigPosition.y, minRigBounds.y, maxRigBounds.y);
+        virtualRigPosition.z = Mathf.Clamp(virtualRigPosition.z, minRigBounds.z, maxRigBounds.z);
+
+        transform.localPosition = virtualRigPosition;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Transform parentTransform = transform.parent != null ? transform.parent : transform;
+        Vector3 center = parentTransform.TransformPoint(new Vector3(
+            (minRigBounds.x + maxRigBounds.x) * 0.5f,
+            (minRigBounds.y + maxRigBounds.y) * 0.5f,
+            (minRigBounds.z + maxRigBounds.z) * 0.5f
+        ));
+        Vector3 size = new Vector3(
+            maxRigBounds.x - minRigBounds.x,
+            maxRigBounds.y - minRigBounds.y,
+            maxRigBounds.z - minRigBounds.z
+        );
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireCube(center, size);
     }
 }
