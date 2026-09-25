@@ -47,6 +47,7 @@ public class PlayerMovementV3 : MonoBehaviour
     [SerializeField] private float gravity = -20f;
 
     public event Action<bool> OnMovingChanged;
+    public event Action<bool> OnSprintingChanged;
 
     private CharacterController characterController;
     private PerfilBorrachera perfilObjetivo;
@@ -59,6 +60,8 @@ public class PlayerMovementV3 : MonoBehaviour
     private float verticalVelocity;
 
     private bool isMoving;
+    private bool isSprinting;
+    private NivelBorrachera currentAlcoholState = NivelBorrachera.Sobrio;
 
     public bool IsMoving
     {
@@ -69,6 +72,18 @@ public class PlayerMovementV3 : MonoBehaviour
 
             isMoving = value;
             OnMovingChanged?.Invoke(isMoving);
+        }
+    }
+
+    public bool IsSprinting
+    {
+        get => isSprinting;
+        private set
+        {
+            if (isSprinting == value) return;
+
+            isSprinting = value;
+            OnSprintingChanged?.Invoke(isSprinting);
         }
     }
 
@@ -111,6 +126,8 @@ public class PlayerMovementV3 : MonoBehaviour
             alcoholSystem.OnAlcoholStateChanged -= SetTargetProfile;
 
         inputReader.InputAvailabilityChanged -= OnInputAvailabilityChanged;
+        IsSprinting = false;
+        IsMoving = false;
     }
 
     private void Update()
@@ -179,10 +196,12 @@ public class PlayerMovementV3 : MonoBehaviour
         if (moveInput.sqrMagnitude < 0.01f || !inputReader.GameplayEnabled)
         {
             IsMoving = false;
+            IsSprinting = false;
         }
         else
         {
             IsMoving = true;
+            IsSprinting = inputReader.Sprint && currentAlcoholState == NivelBorrachera.Sobrio;
 
             Vector3 camForward = cameraTransform.forward;
             Vector3 camRight = cameraTransform.right;
@@ -216,7 +235,7 @@ public class PlayerMovementV3 : MonoBehaviour
             finalMoveDirection =
                 driftRotation * playerIntent;
 
-            currentSpeed = inputReader.Sprint
+            currentSpeed = IsSprinting
                 ? currentSprintSpeed
                 : currentWalkSpeed;
         }
@@ -247,6 +266,11 @@ public class PlayerMovementV3 : MonoBehaviour
 
     private void SetTargetProfile(NivelBorrachera newState)
     {
+        currentAlcoholState = newState;
+
+        if (newState != NivelBorrachera.Sobrio)
+            IsSprinting = false;
+
         foreach (PerfilBorrachera perfil in perfilesEstado)
         {
             if (perfil.estado == newState)
@@ -267,7 +291,10 @@ public class PlayerMovementV3 : MonoBehaviour
 
     private void OnInputAvailabilityChanged()
     {
-        if (!inputReader.GameplayEnabled)
+        if (!inputReader.GameplayEnabled || inputReader.CurrentContext != PlayerInputReader.InputContext.Player)
+        {
             IsMoving = false;
+            IsSprinting = false;
+        }
     }
 }
