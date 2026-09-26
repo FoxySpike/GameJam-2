@@ -13,10 +13,10 @@ public class GrillMinigameController : MonoBehaviour
     [SerializeField] private GameObject uiCanvas3D;
 
     [Header("Mecánicas del Asador")]
-    [SerializeField] private float maxCookingTime = 10f;
     [SerializeField] private float passiveCoolingRate = 15f;
     [SerializeField] private float heatUpAmount = 5f;
     [SerializeField] private float cooldownRate = 30f;
+    [SerializeField] private float maxCookingTime = 10f;
 
     private PlayerInputReader inputReader;
     private bool isPlaying = false;
