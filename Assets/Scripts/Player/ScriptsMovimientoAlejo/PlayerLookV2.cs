@@ -23,10 +23,10 @@ public class PlayerLookV2 : MonoBehaviour
     [SerializeField]
     private PerfilSwayCamara[] perfilesCamara =
     {
-        new PerfilSwayCamara(NivelBorrachera.Sobrio, 0f, 0f),
-        new PerfilSwayCamara(NivelBorrachera.Prendido, 0.5f, 1f),
-        new PerfilSwayCamara(NivelBorrachera.Tomado, 2f, 1.8f),
-        new PerfilSwayCamara(NivelBorrachera.VueltoMierda, 4f, 2.5f)
+        new PerfilSwayCamara(NivelBorrachera.Sober, 0f, 0f),
+        new PerfilSwayCamara(NivelBorrachera.Tipsy, 0.5f, 1f),
+        new PerfilSwayCamara(NivelBorrachera.Drunk, 2f, 1.8f),
+        new PerfilSwayCamara(NivelBorrachera.Wasted, 4f, 2.5f)
     };
 
     [Header("Referencias")]
@@ -77,7 +77,7 @@ public class PlayerLookV2 : MonoBehaviour
         if (alcoholSystem != null)
             alcoholSystem.OnAlcoholStateChanged += SetTargetProfile;
 
-        SetTargetProfile(alcoholSystem != null ? alcoholSystem.CurrentState : NivelBorrachera.Sobrio);
+        SetTargetProfile(alcoholSystem != null ? alcoholSystem.CurrentState : NivelBorrachera.Sober);
         SnapToTargetProfile();
     }
 
@@ -104,7 +104,7 @@ public class PlayerLookV2 : MonoBehaviour
         Vector2 lookInput = inputReader.GameplayEnabled ? inputReader.LookInput : Vector2.zero;
         Vector2 moveInput = inputReader.GameplayEnabled ? inputReader.MoveInput : Vector2.zero;
 
-        // 1. Acumular la rotación del ratón
+        // 1. Acumular la rotaciï¿½n del ratï¿½n
         float mouseX = lookInput.x * lookSensitivity * Time.deltaTime;
         float mouseY = lookInput.y * lookSensitivity * Time.deltaTime;
 
@@ -112,7 +112,7 @@ public class PlayerLookV2 : MonoBehaviour
         cameraRotationX -= mouseY;
         cameraRotationX = Mathf.Clamp(cameraRotationX, minLookAngle, maxLookAngle);
 
-        // 2. Comprobar si el jugador está en reposo
+        // 2. Comprobar si el jugador estï¿½ en reposo
         bool isFullyIdle = (lookInput.sqrMagnitude < 0.01f) && (moveInput.sqrMagnitude < 0.01f);
 
         // 3. Transicionar peso del mareo
@@ -123,15 +123,15 @@ public class PlayerLookV2 : MonoBehaviour
         swayTimerX += Time.deltaTime * currentSwaySpeed;
         swayTimerY += Time.deltaTime * currentSwaySpeed * 0.8f;
 
-        // Reset individual cuando cada ángulo completa su propio ciclo de 2*PI
+        // Reset individual cuando cada ï¿½ngulo completa su propio ciclo de 2*PI
         if (swayTimerX > Mathf.PI * 2f) swayTimerX -= Mathf.PI * 2f;
         if (swayTimerY > Mathf.PI * 2f) swayTimerY -= Mathf.PI * 2f;
 
-        // 5. Calcular oscilación suave sin brincos
+        // 5. Calcular oscilaciï¿½n suave sin brincos
         float finalSwayX = Mathf.Sin(swayTimerX) * currentSwayAmount * currentSwayWeight;
         float finalSwayY = Mathf.Cos(swayTimerY) * currentSwayAmount * currentSwayWeight;
 
-        // 6. Aplicar rotación global
+        // 6. Aplicar rotaciï¿½n global
         cameraPivot.rotation = Quaternion.Euler(cameraRotationX + finalSwayX, cameraRotationY + finalSwayY, 0f);
     }
 

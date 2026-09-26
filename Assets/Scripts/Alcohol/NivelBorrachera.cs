@@ -1,7 +1,7 @@
 public enum NivelBorrachera
 {
-    Sobrio,
-    Prendido,
-    Tomado,
-    VueltoMierda
+    Sober,
+    Tipsy,
+    Drunk,
+    Wasted
 }

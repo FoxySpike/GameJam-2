@@ -25,10 +25,10 @@ public class PlayerBalanceSystem : MonoBehaviour
     [SerializeField]
     private PerfilEquilibrio[] perfilesEstado =
     {
-        new PerfilEquilibrio(NivelBorrachera.Sobrio, 0f, 0f, 0f),
-        new PerfilEquilibrio(NivelBorrachera.Prendido, 0.3f, 1.0f, 0.4f),
-        new PerfilEquilibrio(NivelBorrachera.Tomado, 0.6f, 1.5f, 0.8f),
-        new PerfilEquilibrio(NivelBorrachera.VueltoMierda, 0.9f, 2.0f, 1.3f)
+        new PerfilEquilibrio(NivelBorrachera.Sober, 0f, 0f, 0f),
+        new PerfilEquilibrio(NivelBorrachera.Tipsy, 0.3f, 1.0f, 0.4f),
+        new PerfilEquilibrio(NivelBorrachera.Drunk, 0.6f, 1.5f, 0.8f),
+        new PerfilEquilibrio(NivelBorrachera.Wasted, 0.9f, 2.0f, 1.3f)
     };
 
     [Header("Referencias")]
@@ -83,7 +83,7 @@ public class PlayerBalanceSystem : MonoBehaviour
         if (alcoholSystem != null)
             alcoholSystem.OnAlcoholStateChanged += SetTargetProfile;
 
-        SetTargetProfile(alcoholSystem != null ? alcoholSystem.CurrentState : NivelBorrachera.Sobrio);
+        SetTargetProfile(alcoholSystem != null ? alcoholSystem.CurrentState : NivelBorrachera.Sober);
         SnapToTargetProfile();
     }
 

@@ -3,6 +3,7 @@ using UnityEngine;
 public class PoliceDetection : MonoBehaviour
 {
     [SerializeField] private ChickenCarryController chicken;
+    [SerializeField] private AudioSource heySound;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -24,5 +25,8 @@ public class PoliceDetection : MonoBehaviour
 
         if (playerRespawn != null)
             playerRespawn.Respawn();
+
+        if (heySound != null)
+            heySound.Play();
     }
 }
