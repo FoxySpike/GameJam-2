@@ -6,15 +6,13 @@ public class GrillInteractable : MonoBehaviour, IInteractable
     {
         Empty,
         Cooking,
-        Finished_Perfect,
-        Finished_Ruined
+        Finished_Perfect
     }
 
     [Header("Visuals")]
     [SerializeField] private GameObject chickenOnGrillVisual;
 
     [Header("Referencias")]
-    [Tooltip("El controlador del minijuego en este mismo objeto")]
     [SerializeField] private GrillMinigameController grillMinigame;
 
     private GrillState currentState = GrillState.Empty;
@@ -28,8 +26,7 @@ public class GrillInteractable : MonoBehaviour, IInteractable
             {
                 GrillState.Empty => "Presiona E para colocar el pollo",
                 GrillState.Cooking => "Cocinando... ¡Concéntrate!",
-                GrillState.Finished_Perfect => "Presiona E para recoger tu obra maestra",
-                GrillState.Finished_Ruined => "Lo arruinaste. Presiona E para limpiar",
+                GrillState.Finished_Perfect => "Presiona E para recoger tu pollo cocinado",
                 _ => ""
             };
         }
@@ -43,7 +40,6 @@ public class GrillInteractable : MonoBehaviour, IInteractable
 
     public bool CanInteract(GameObject interactor)
     {
-        // No se puede interactuar (con la E) mientras se está jugando el minijuego
         return currentState != GrillState.Cooking;
     }
 
@@ -57,15 +53,11 @@ public class GrillInteractable : MonoBehaviour, IInteractable
             case GrillState.Finished_Perfect:
                 CollectPerfectChicken(interactor);
                 break;
-            case GrillState.Finished_Ruined:
-                CleanRuinedChicken();
-                break;
         }
     }
 
     private void TryPlaceChicken(GameObject interactor)
     {
-        // Verificamos si el jugador tiene el componente de manos y tiene el pollo
         if (interactor.TryGetComponent(out PlayerHand hand) && hand.HasChicken)
         {
             if (interactor.TryGetComponent(out currentPlayerInput))
@@ -75,14 +67,12 @@ public class GrillInteractable : MonoBehaviour, IInteractable
 
                 currentState = GrillState.Cooking;
 
-                // 1. Cambiamos el input del jugador al modo Grill
                 currentPlayerInput.SetContext(PlayerInputReader.InputContext.Grill);
 
-                // 2. Nos suscribimos a los eventos del minijuego
+                // Suscripción a eventos del minijuego
                 grillMinigame.OnMinigameWon += HandleVictory;
                 grillMinigame.OnMinigameLost += HandleDefeat;
 
-                // 3. Iniciamos pasándole el Input al minijuego
                 grillMinigame.StartMinigame(currentPlayerInput);
             }
         }
@@ -102,21 +92,33 @@ public class GrillInteractable : MonoBehaviour, IInteractable
     private void HandleDefeat()
     {
         EndCookingPhase();
-        currentState = GrillState.Finished_Ruined;
-        Debug.Log("El pollo se arruinó.");
+
+        // Ocultamos el pollo de la parrilla y la dejamos lista de nuevo
+        if (chickenOnGrillVisual != null) chickenOnGrillVisual.SetActive(false);
+        currentState = GrillState.Empty;
+
+        // Ejecutamos la lógica/evento de derrota
+        OnChickenRuined();
+    }
+
+    /// <summary>
+    /// Método / Función vacía para implementar más adelante cuando el pollo se arruine.
+    /// </summary>
+    private void OnChickenRuined()
+    {
+        // TODO: Agregar partículas de humo negro, sonido de quemado o restar puntuación.
+        Debug.Log("[EVENTO DERROTA]: El pollo se arruinó.");
     }
 
     private void EndCookingPhase()
     {
-        // SIEMPRE que te suscribas a un evento (+=), debes desuscribirte (-=) cuando terminas.
         grillMinigame.OnMinigameWon -= HandleVictory;
         grillMinigame.OnMinigameLost -= HandleDefeat;
 
-        // Devolvemos el control normal al jugador
         if (currentPlayerInput != null)
         {
             currentPlayerInput.SetContext(PlayerInputReader.InputContext.Player);
-            currentPlayerInput = null; // Limpiamos la referencia
+            currentPlayerInput = null;
         }
     }
 
@@ -124,14 +126,6 @@ public class GrillInteractable : MonoBehaviour, IInteractable
     {
         if (chickenOnGrillVisual != null) chickenOnGrillVisual.SetActive(false);
         currentState = GrillState.Empty;
-        Debug.Log("Le hemos dado el pollo cocinado al jugador.");
-        // Aquí llamarías a hand.GiveItem(polloCocinado) o similar
-    }
-
-    private void CleanRuinedChicken()
-    {
-        if (chickenOnGrillVisual != null) chickenOnGrillVisual.SetActive(false);
-        currentState = GrillState.Empty;
-        Debug.Log("Limpiaste la parrilla.");
+        Debug.Log("Pollo cocinado recogido.");
     }
 }

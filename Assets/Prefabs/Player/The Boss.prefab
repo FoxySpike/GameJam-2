@@ -78,7 +78,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 577cfb5494755de409fbf61c03bc475e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StaminaBarUI
-  staminaSystem: {fileID: 0}
   fillImage: {fileID: 2660879231993751756}
   lerpSpeed: 10
   normalColor: {r: 0.2, g: 0.7, b: 1, a: 1}
@@ -643,7 +642,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b104a3a7d61b2643ab4aaf866e50ea8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NoiseUI
-  noiseManager: {fileID: 0}
   noiseBarFill: {fileID: 9219817061095960336}
 --- !u!1001 &2620576733035265057
 PrefabInstance:
@@ -732,6 +730,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 568777672834941446, guid: c3379f907250cf24ca4301b6fac0138b, type: 3}
   m_PrefabInstance: {fileID: 2620576733035265057}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &5147275902079461143 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7147463907834567478, guid: c3379f907250cf24ca4301b6fac0138b, type: 3}
+  m_PrefabInstance: {fileID: 2620576733035265057}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2886166000549437936
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -740,6 +743,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6912720872729553578}
     m_Modifications:
+    - target: {fileID: 540818010758674937, guid: d0bdbaf22204c044ca036072945965d6, type: 3}
+      propertyPath: m_text
+      value: NAH
+      objectReference: {fileID: 0}
     - target: {fileID: 893573133581560653, guid: d0bdbaf22204c044ca036072945965d6, type: 3}
       propertyPath: alcoholSystem
       value: 
@@ -847,6 +854,10 @@ PrefabInstance:
     - target: {fileID: 2606351754007614412, guid: d0bdbaf22204c044ca036072945965d6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3464929326266908673, guid: d0bdbaf22204c044ca036072945965d6, type: 3}
+      propertyPath: m_text
+      value: DRINK
       objectReference: {fileID: 0}
     - target: {fileID: 3715697677588562035, guid: d0bdbaf22204c044ca036072945965d6, type: 3}
       propertyPath: m_Name
@@ -1006,6 +1017,11 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2606351754007614412, guid: d0bdbaf22204c044ca036072945965d6, type: 3}
   m_PrefabInstance: {fileID: 2886166000549437936}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &6915045238363300315 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8645387009917550635, guid: d0bdbaf22204c044ca036072945965d6, type: 3}
+  m_PrefabInstance: {fileID: 2886166000549437936}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6369306479710981441
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1016,31 +1032,31 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 24.86509
+      value: -8.1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0
+      value: -0.00000032703315
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -5.09731
+      value: -2.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: -0.8017165
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0.59770447
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1048,7 +1064,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -286.589
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -1122,6 +1138,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7049680606650961848}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2123246484092450492}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6692086834577462409}
@@ -1426,6 +1445,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerNoise
   sprintNoiseRadius: 12
   noiseCooldown: 1
+--- !u!114 &2123246484092450492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6099346891685326864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ef875dbe09588b4cac9c1ba585653a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHand
+  chickenInHand: {fileID: 5147275902079461143}
 --- !u!114 &6692086834577462409
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1438,6 +1470,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cbc99ad3ca282642847e03631f1f66d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PersistentPlayer
+  PlayerHandComponent: {fileID: 2123246484092450492}
+  Player3rdPersonHUD: {fileID: 6915045238363300315}
+  Player1stPersonHUD: {fileID: 6831294671601254324}
 --- !u!114 &5816418084815305725
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -3277,21 +3277,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 652678721022783696, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 9100000, guid: ccf4dba40d6576b4b821f72a550ad9b2, type: 2}
     - target: {fileID: 1585673283206931827, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1736241502863368689, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
-      propertyPath: m_text
-      value: DRINK
-      objectReference: {fileID: 0}
-    - target: {fileID: 3426368168529516553, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
-      propertyPath: m_text
-      value: NAH
       objectReference: {fileID: 0}
     - target: {fileID: 5326898437293710538, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
       propertyPath: m_AnchorMax.x
@@ -3305,26 +3293,10 @@ PrefabInstance:
       propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5525426245832108551, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6099346891685326864, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
       propertyPath: m_Name
       value: The Boss
       objectReference: {fileID: 0}
-    - target: {fileID: 6692086834577462409, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
-      propertyPath: Player1stPersonHUD
-      value: 
-      objectReference: {fileID: 542460066}
-    - target: {fileID: 6692086834577462409, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
-      propertyPath: Player3rdPersonHUD
-      value: 
-      objectReference: {fileID: 542460065}
-    - target: {fileID: 6692086834577462409, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
-      propertyPath: PlayerHandComponent
-      value: 
-      objectReference: {fileID: 542460068}
     - target: {fileID: 6912720872729553578, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
       propertyPath: m_LocalPosition.x
       value: -8.1
@@ -3376,17 +3348,14 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6099346891685326864, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
-      insertIndex: 15
-      addedObject: {fileID: 542460068}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
 --- !u!114 &542460061 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6279258555779143351, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
   m_PrefabInstance: {fileID: 542460060}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 542460067}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bf3adee24166d2f4d865f00b8f2fcf0a, type: 3}
@@ -3397,7 +3366,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4897165221593040674, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
   m_PrefabInstance: {fileID: 542460060}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 542460067}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0fcc8315c1a7da9448192e70d530d9de, type: 3}
@@ -3408,45 +3377,12 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6816280125691406241, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
   m_PrefabInstance: {fileID: 542460060}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 542460067}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c2c93d441e2c1af479cce88a7627572e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AlcoholSystem
---- !u!1 &542460064 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5147275902079461143, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
-  m_PrefabInstance: {fileID: 542460060}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &542460065 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6915045238363300315, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
-  m_PrefabInstance: {fileID: 542460060}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &542460066 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6831294671601254324, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
-  m_PrefabInstance: {fileID: 542460060}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &542460067 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6099346891685326864, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
-  m_PrefabInstance: {fileID: 542460060}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &542460068
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 542460067}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ef875dbe09588b4cac9c1ba585653a0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerHand
-  chickenInHand: {fileID: 542460064}
 --- !u!1001 &547877575
 PrefabInstance:
   m_ObjectHideFlags: 0

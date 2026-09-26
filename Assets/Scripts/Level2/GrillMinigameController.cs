@@ -4,33 +4,29 @@ using UnityEngine;
 [RequireComponent(typeof(GrillCameraController))]
 public class GrillMinigameController : MonoBehaviour
 {
-    // Eventos para avisar al GrillInteractable
+    // Eventos para notificar el resultado (Decoupled architecture)
     public event Action OnMinigameWon;
     public event Action OnMinigameLost;
 
     [Header("Referencias")]
     [SerializeField] private GrillCameraController cameraController;
-    [Tooltip("El Canvas 3D que contiene las barras")]
     [SerializeField] private GameObject uiCanvas3D;
 
     [Header("Mecánicas del Asador")]
-    [SerializeField] private float maxCookingTime = 10f; // Segundos para cocinar
-    [SerializeField] private float passiveCoolingRate = 15f; // Cuánto baja la aguja sola por segundo
-    [SerializeField] private float heatUpAmount = 5f; // Cuánto sube al presionar D
-    [SerializeField] private float cooldownRate = 30f; // Cuánto baja al mantener A
+    [SerializeField] private float maxCookingTime = 10f;
+    [SerializeField] private float passiveCoolingRate = 15f;
+    [SerializeField] private float heatUpAmount = 5f;
+    [SerializeField] private float cooldownRate = 30f;
 
     private PlayerInputReader inputReader;
     private bool isPlaying = false;
 
-    // Estado del minijuego
-    private float currentHeat = 0f; // Va de 0 a 100
-    private float currentProgress = 0f; // Va de 0 a maxCookingTime
+    private float currentHeat = 0f;
+    private float currentProgress = 0f;
 
-    // Zonas de temperatura
     private const float SWEET_SPOT_MIN = 40f;
     private const float SWEET_SPOT_MAX = 60f;
 
-    // Llamaradas
     private float nextFlareUpTime = 0f;
 
     private void Awake()
@@ -43,15 +39,12 @@ public class GrillMinigameController : MonoBehaviour
     {
         inputReader = playerInput;
         isPlaying = true;
-        currentHeat = 50f; // Empezamos en el centro
+        currentHeat = 50f;
         currentProgress = 0f;
 
         if (uiCanvas3D != null) uiCanvas3D.SetActive(true);
 
-        // Idealmente, obtendrías estos valores de tu AlcoholSystem
         cameraController.ActivateCamera(inputReader, 3f, 1.5f);
-
-        inputReader.ExitGrill += SurrenderMinigame;
 
         ScheduleNextFlareUp();
     }
@@ -63,50 +56,42 @@ public class GrillMinigameController : MonoBehaviour
         HandleTemperature();
         HandleCookingProgress();
         HandleFlareUps();
-
-        // AQUÍ DEBES ACTUALIZAR TUS BARRAS 3D VISUALES
-        // progressBarUI.fillAmount = currentProgress / maxCookingTime;
-        // sweetSpotUI_Aguja.rotation = ... (basado en currentHeat)
     }
 
     private void HandleTemperature()
     {
         float heatInput = inputReader.GrillHeatControl;
 
-        // La temperatura siempre cae pasivamente (el asador está dañado)
+        // La temperatura cae constantemente
         currentHeat -= passiveCoolingRate * Time.deltaTime;
 
         if (heatInput > 0)
         {
-            // Presionó D: Subimos temperatura a golpes (requiere Spamear si usaste un "Tap" en el Input)
-            // Si el input es continuo (mantiene presionado D), sumamos con deltaTime
             currentHeat += heatUpAmount * Time.deltaTime * 10f;
         }
         else if (heatInput < 0)
         {
-            // Presionó A: Enfriamos drásticamente
             currentHeat -= cooldownRate * Time.deltaTime;
         }
 
         currentHeat = Mathf.Clamp(currentHeat, 0f, 100f);
 
-        // Perder por dejar que se apague o se queme al máximo
+        // Si la temperatura llega a los extremos (0 o 100), se arruina el pollo
         if (currentHeat <= 0f || currentHeat >= 100f)
         {
-            EndMinigame(false);
+            EndMinigame(isVictory: false);
         }
     }
 
     private void HandleCookingProgress()
     {
-        // Solo avanza el tiempo si la aguja está en la zona verde
         if (currentHeat >= SWEET_SPOT_MIN && currentHeat <= SWEET_SPOT_MAX)
         {
             currentProgress += Time.deltaTime;
 
             if (currentProgress >= maxCookingTime)
             {
-                EndMinigame(true); // ¡El pollo está listo!
+                EndMinigame(isVictory: true);
             }
         }
     }
@@ -115,7 +100,6 @@ public class GrillMinigameController : MonoBehaviour
     {
         if (Time.time >= nextFlareUpTime)
         {
-            // ¡Llamarada! Sube la temperatura de golpe
             currentHeat += 25f;
             Debug.Log("¡LLAMARADA!");
             ScheduleNextFlareUp();
@@ -134,18 +118,16 @@ public class GrillMinigameController : MonoBehaviour
         if (uiCanvas3D != null) uiCanvas3D.SetActive(false);
         cameraController.DeactivateCamera();
 
-        if (inputReader != null)
+        inputReader = null;
+
+        // Disparamos los eventos correspondientes
+        if (isVictory)
         {
-            inputReader.ExitGrill -= SurrenderMinigame;
-            inputReader = null;
+            OnMinigameWon?.Invoke();
         }
-
-        if (isVictory) OnMinigameWon?.Invoke();
-        else OnMinigameLost?.Invoke();
-    }
-
-    private void SurrenderMinigame()
-    {
-        EndMinigame(false);
+        else
+        {
+            OnMinigameLost?.Invoke(); // Dispara el evento de fallo
+        }
     }
 }
