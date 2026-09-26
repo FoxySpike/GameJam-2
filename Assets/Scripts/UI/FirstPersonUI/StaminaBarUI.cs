@@ -3,25 +3,38 @@ using UnityEngine.UI;
 
 public class StaminaBarUI : MonoBehaviour
 {
-    [Header("Dependencies")]
-    [SerializeField] private BreathStaminaSystem staminaSystem;
+    // 1. Quitamos el [SerializeField]. La UI lo buscará sola.
+    private BreathStaminaSystem staminaSystem;
 
     [Header("UI References")]
     [SerializeField] private Image fillImage;
 
     [Header("Visual Settings")]
     [SerializeField] private float lerpSpeed = 10f;
-    [SerializeField] private Color normalColor = new Color(0.2f, 0.7f, 1f); // Azul oxígeno
-    [SerializeField] private Color exhaustedColor = new Color(1f, 0.2f, 0.2f); // Rojo agotado
+    [SerializeField] private Color normalColor = new Color(0.2f, 0.7f, 1f);
+    [SerializeField] private Color exhaustedColor = new Color(1f, 0.2f, 0.2f);
 
     private float targetFillAmount = 1f;
 
     private void OnEnable()
     {
+        // 2. BUSCAMOS dinámicamente el brazo en la Escena 2 al encender la UI
+        if (staminaSystem == null)
+        {
+            // FindFirstObjectByType busca en la escena activa el primer objeto con este script
+            staminaSystem = Object.FindFirstObjectByType<BreathStaminaSystem>();
+        }
+
         if (staminaSystem != null)
         {
-            // Nos suscribimos al evento
             staminaSystem.OnStaminaChanged += HandleStaminaChanged;
+
+            // Inicializamos la barra
+            UpdateUIImmediate(staminaSystem.CurrentStamina / 100f);
+        }
+        else
+        {
+            Debug.LogWarning("[StaminaBarUI] No se encontró ningún BreathStaminaSystem en la escena.");
         }
     }
 
@@ -29,27 +42,16 @@ public class StaminaBarUI : MonoBehaviour
     {
         if (staminaSystem != null)
         {
-            // Siempre nos desuscribimos para evitar fugas de memoria
             staminaSystem.OnStaminaChanged -= HandleStaminaChanged;
-        }
-    }
-
-    private void Start()
-    {
-        if (staminaSystem != null)
-        {
-            // Inicializamos la barra al valor actual
-            float initialRatio = staminaSystem.CurrentStamina / 100f; // o tu maxStamina
-            UpdateUIImmediate(initialRatio);
         }
     }
 
     private void Update()
     {
-        // Interpola suavemente el fillAmount para que el cambio no sea brusco
+        if (fillImage == null) return;
+
         fillImage.fillAmount = Mathf.Lerp(fillImage.fillAmount, targetFillAmount, Time.deltaTime * lerpSpeed);
 
-        // Cambia el color si el jugador está exhausto
         if (staminaSystem != null)
         {
             fillImage.color = Color.Lerp(
@@ -68,6 +70,6 @@ public class StaminaBarUI : MonoBehaviour
     private void UpdateUIImmediate(float normalizedStamina)
     {
         targetFillAmount = normalizedStamina;
-        fillImage.fillAmount = normalizedStamina;
+        if (fillImage != null) fillImage.fillAmount = normalizedStamina;
     }
 }

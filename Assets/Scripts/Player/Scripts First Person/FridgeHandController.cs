@@ -5,7 +5,7 @@ using UnityEngine;
 public class FridgeHandController : MonoBehaviour
 {
     [Header("Dependencies")]
-    [SerializeField] private PlayerInputReader inputReader;
+    private PlayerInputReader inputReader;
     private BreathStaminaSystem breathSystem;
     private Rigidbody rb;
 
@@ -43,6 +43,18 @@ public class FridgeHandController : MonoBehaviour
         rb.useGravity = false;
         rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
         rb.interpolation = RigidbodyInterpolation.Interpolate;
+    }
+
+    private void Start()
+    {
+        if (PersistentPlayer.Instance != null)
+        {
+            inputReader = PersistentPlayer.Instance.InputReader;
+        }
+        else
+        {
+            Debug.LogError($"[{gameObject.name}] No se encontró el PersistentPlayer. ¿Iniciaste desde la Escena 1?");
+        }
     }
 
     private void OnEnable()

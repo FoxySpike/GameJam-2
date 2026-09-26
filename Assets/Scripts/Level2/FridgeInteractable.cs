@@ -8,14 +8,8 @@ public class FridgeInteractable : MonoBehaviour, IInteractable
     [Header("Camera Setup")]
     [SerializeField] private Camera fridgeCamera;
 
-    [Header("UI Panels Optional (Opcional)")]
-    [SerializeField] private GameObject playerHUD;
-    [SerializeField] private GameObject fridgeHUD;
-
-    // --- NUEVO: Referencia temporal para simular que el jugador tiene el pollo ---
-    [Header("Player Inventory Placeholder")]
-    [SerializeField] private GameObject fakePlayerHandItem;
-    // -----------------------------------------------------------------------------
+    // ELIMINAMOS los [SerializeField] de la UI. La nevera no sabe dónde están, 
+    // se lo preguntará al PersistentPlayer.
 
     private PlayerInputReader activeInputReader;
     private Camera mainCamera;
@@ -26,7 +20,6 @@ public class FridgeInteractable : MonoBehaviour, IInteractable
     private void Awake()
     {
         fridgeCamera.gameObject.SetActive(false);
-        if (fakePlayerHandItem != null) fakePlayerHandItem.SetActive(false);
     }
 
     public bool CanInteract(GameObject interactor)
@@ -40,7 +33,7 @@ public class FridgeInteractable : MonoBehaviour, IInteractable
 
         if (!interactor.TryGetComponent(out activeInputReader))
         {
-            Debug.LogWarning($"[FridgeInteractable] El objeto '{interactor.name}' no tiene un componente PlayerInputReader.", this);
+            Debug.LogWarning($"[FridgeInteractable] El objeto '{interactor.name}' no tiene PlayerInputReader.", this);
             return;
         }
 
@@ -55,42 +48,36 @@ public class FridgeInteractable : MonoBehaviour, IInteractable
         if (mainCamera != null) mainCamera.gameObject.SetActive(false);
         if (fridgeCamera != null) fridgeCamera.gameObject.SetActive(true);
 
-        if (playerHUD != null) playerHUD.SetActive(false);
-        if (fridgeHUD != null) fridgeHUD.SetActive(true);
+        // Consultamos al Singleton para apagar el HUD normal y encender el de la nevera
+        if (PersistentPlayer.Instance != null)
+        {
+            if (PersistentPlayer.Instance.Player3rdPersonHUD != null)
+                PersistentPlayer.Instance.Player3rdPersonHUD.SetActive(false); // Apagamos 3ra persona
+
+            if (PersistentPlayer.Instance.Player1stPersonHUD != null)
+                PersistentPlayer.Instance.Player1stPersonHUD.SetActive(true); // Encendemos 1ra persona (Minijuego)
+        }
 
         activeInputReader.SetContext(PlayerInputReader.InputContext.Fridge);
-
-        // OJO: Cambié ExitMinigame a HandleManualExit para diferenciar entre
-        // "salir abortando" y "salir ganando".
         activeInputReader.ExitFridge += HandleManualExit;
     }
 
-    // Método intermediario para el input del jugador
     private void HandleManualExit()
     {
         ExitMinigame();
     }
 
-    // --- NUEVO MÉTODO PARA EL TRIGGER ---
     public void OnItemExtracted(GameObject extractedItem)
     {
-        // 1. Destruimos el pollo físico que sacaste de la nevera
         Destroy(extractedItem);
 
-        // 2. Buscamos la mano del jugador y le avisamos que active SU pollo visual
-        if (activeInputReader != null && activeInputReader.TryGetComponent(out PlayerHand playerHand))
+        if (PersistentPlayer.Instance != null && PersistentPlayer.Instance.PlayerHandComponent != null)
         {
-            playerHand.GiveChicken(); // Esto encenderá el modelo que acomodaste en el Paso 1
-        }
-        else
-        {
-            Debug.LogWarning("[FridgeInteractable] El jugador no tiene el script PlayerHand.");
+            PersistentPlayer.Instance.PlayerHandComponent.GiveChicken();
         }
 
-        // 3. Salimos de la nevera
         ExitMinigame();
     }
-    // ------------------------------------
 
     private void ExitMinigame()
     {
@@ -100,14 +87,21 @@ public class FridgeInteractable : MonoBehaviour, IInteractable
         {
             activeInputReader.ExitFridge -= HandleManualExit;
             activeInputReader.SetContext(PlayerInputReader.InputContext.Player);
-            activeInputReader = null; // Liberar referencia
+            activeInputReader = null;
         }
 
         if (fridgeCamera != null) fridgeCamera.gameObject.SetActive(false);
         if (mainCamera != null) mainCamera.gameObject.SetActive(true);
 
-        if (fridgeHUD != null) fridgeHUD.SetActive(false);
-        if (playerHUD != null) playerHUD.SetActive(true);
+        // Consultamos al Singleton para apagar el HUD de la nevera y encender el normal
+        if (PersistentPlayer.Instance != null)
+        {
+            if (PersistentPlayer.Instance.Player1stPersonHUD != null)
+                PersistentPlayer.Instance.Player1stPersonHUD.SetActive(false); // Apagamos 1ra persona (Minijuego)
+
+            if (PersistentPlayer.Instance.Player3rdPersonHUD != null)
+                PersistentPlayer.Instance.Player3rdPersonHUD.SetActive(true); // Encendemos 3ra persona (Exploración)
+        }
 
         isInMinigame = false;
     }

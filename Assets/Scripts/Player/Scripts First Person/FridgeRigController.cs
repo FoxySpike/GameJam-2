@@ -3,7 +3,7 @@ using UnityEngine;
 public class FridgeRigController : MonoBehaviour
 {
     [Header("Dependencies")]
-    [SerializeField] private PlayerInputReader inputReader;
+    private PlayerInputReader inputReader;
 
     [Header("Rig Movement Settings")]
     [SerializeField] private float moveSpeed = 1.5f;
@@ -14,6 +14,18 @@ public class FridgeRigController : MonoBehaviour
     [SerializeField] private Vector3 maxRigBounds = new Vector3(0.6f, 0.5f, 0.3f);
 
     private Vector3 virtualRigPosition;
+
+    private void Start()
+    {
+        if (PersistentPlayer.Instance != null)
+        {
+            inputReader = PersistentPlayer.Instance.InputReader;
+        }
+        else
+        {
+            Debug.LogWarning("[FridgeRigController] No se encontró el PersistentPlayer en la escena.");
+        }
+    }
 
     private void Awake()
     {

@@ -4,7 +4,7 @@ using UnityEngine;
 public class SimpleHandGrabber : MonoBehaviour
 {
     [Header("Dependencies")]
-    [SerializeField] private PlayerInputReader inputReader;
+    private PlayerInputReader inputReader;
     [SerializeField] private Transform grabPoint;
     [Tooltip("Asigna aquí el BrazoPivote. El script buscará automáticamente todos los colliders hijos (Cilindros, Mano, etc.).")]
     [SerializeField] private Transform playerRoot;
@@ -32,6 +32,13 @@ public class SimpleHandGrabber : MonoBehaviour
 
         // Recopilamos TODOS los colliders que estén dentro de la jerarquía del playerRoot
         playerColliders = playerRoot.GetComponentsInChildren<Collider>();
+    }
+    private void Start()
+    {
+        if (PersistentPlayer.Instance != null)
+        {
+            inputReader = PersistentPlayer.Instance.InputReader;
+        }
     }
 
     private void Update()
