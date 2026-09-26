@@ -8,10 +8,11 @@ public sealed class NPCDrinkOffer : MonoBehaviour, IInteractable
     [SerializeField] private NPCDialogueController dialogue;
     [SerializeField] private DialogueUI dialogueUI;
     [SerializeField] private bool singleOffer = true;
+    [SerializeField] private string interactionPrompt = "[F] Talk";
     private readonly HashSet<Collider> playerColliders = new HashSet<Collider>();
     private DrinkingSystem nearbyPlayer;
     private bool offerUsed;
-    public string Prompt => "[E] Hablar";
+    public string Prompt => interactionPrompt;
 
     private void Awake()
     {

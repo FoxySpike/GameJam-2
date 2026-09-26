@@ -8,6 +8,7 @@ public sealed class AlcoholHUD : MonoBehaviour
     [SerializeField] private AdulteratedDrinkTracker adulteratedTracker;
     [SerializeField] private Slider alcoholBar;
     [SerializeField] private TMP_Text stateText;
+    [SerializeField] private string wastedLabel = "Wasted";
 
     private void Awake()
     {
@@ -68,7 +69,7 @@ public sealed class AlcoholHUD : MonoBehaviour
                 stateText.text = "Drunk";
                 break;
             case NivelBorrachera.Wasted:
-                stateText.text = "VUELTO MIERDA"; // Aqu� podemos incluir el espacio c�modamente
+                stateText.text = wastedLabel;
                 break;
         }
     }

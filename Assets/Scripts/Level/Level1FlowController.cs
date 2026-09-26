@@ -8,7 +8,8 @@ public sealed class Level1FlowController : MonoBehaviour
     [SerializeField] private PlayerInputReader inputReader;
     [SerializeField] private WifeCallSequenceController wifeCallSequence;
     [SerializeField] private ObjectiveUI objectiveUI;
-    [SerializeField] private string initialObjective = "EMBORRÁCHATE";
+    [SerializeField] private string initialObjective = "GET DRUNK";
+    [SerializeField, HideInInspector] private int presentationVersion;
     private bool initialized;
 
     public bool HasFinishedParty { get; private set; }
@@ -42,7 +43,7 @@ public sealed class Level1FlowController : MonoBehaviour
     {
         if (HasFinishedParty)
         {
-            inputReader.SetGameplayBlocked(this, true);
+            inputReader.SetGameplayBlocked(this, false);
             if (wifeCallSequence.IsComplete) CompleteLevel();
             else if (!wifeCallSequence.IsPlaying) wifeCallSequence.PlaySequence();
             return;
@@ -69,7 +70,9 @@ public sealed class Level1FlowController : MonoBehaviour
         }
         // Set the guard before either route can dispatch another ending event.
         HasFinishedParty = true;
+        // Dismiss any drink-choice dialogue, then let the player move during the call.
         inputReader.SetGameplayBlocked(this, true);
+        inputReader.SetGameplayBlocked(this, false);
         wifeCallSequence.PlaySequence();
     }
 
@@ -77,6 +80,7 @@ public sealed class Level1FlowController : MonoBehaviour
     {
         if (IsReadyForNextLevel) return;
         IsReadyForNextLevel = true;
+        inputReader.SetGameplayBlocked(this, false);
         OnReadyForNextLevel?.Invoke();
     }
 }
