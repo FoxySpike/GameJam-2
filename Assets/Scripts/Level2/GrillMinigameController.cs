@@ -18,6 +18,11 @@ public class GrillMinigameController : MonoBehaviour
     [SerializeField] private float cooldownRate = 30f;
     [SerializeField] private float maxCookingTime = 10f;
 
+    // Propiedades públicas de solo lectura para la UI
+    public float CurrentHeat => currentHeat;
+    public float CurrentProgress => currentProgress;
+    public float MaxCookingTime => maxCookingTime;
+
     private PlayerInputReader inputReader;
     private bool isPlaying = false;
 
