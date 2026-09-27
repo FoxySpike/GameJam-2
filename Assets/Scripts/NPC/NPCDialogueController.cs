@@ -2,11 +2,11 @@ using UnityEngine;
 
 public sealed class NPCDialogueController : MonoBehaviour
 {
-    [SerializeField] private string characterName = "Parcero";
-    [SerializeField, TextArea] private string attention = "¡Venga, tómese uno!";
-    [SerializeField, TextArea] private string offer = "¿Se anima a un trago?";
-    [SerializeField, TextArea] private string accepted = "¡Salud!";
-    [SerializeField, TextArea] private string rejected = "Bueno, será después.";
+    [SerializeField] private string characterName = "Buddy";
+    [SerializeField, TextArea] private string attention = "Come on, have a drink!";
+    [SerializeField, TextArea] private string offer = "How about a drink?";
+    [SerializeField, TextArea] private string accepted = "Cheers!";
+    [SerializeField, TextArea] private string rejected = "All right, maybe later.";
 
     public string CharacterName => characterName;
     public string Attention => attention;

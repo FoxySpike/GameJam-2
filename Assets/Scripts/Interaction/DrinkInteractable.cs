@@ -5,8 +5,9 @@ public sealed class DrinkInteractable : MonoBehaviour, IInteractable
 {
     [SerializeField] private DrinkData drinkData;
     [SerializeField] private bool singleUse = true;
+    [SerializeField] private string interactionPrompt = "[F] Drink";
     private bool consumed;
-    public string Prompt => "[E] Beber";
+    public string Prompt => interactionPrompt;
 
     private void Awake()
     {

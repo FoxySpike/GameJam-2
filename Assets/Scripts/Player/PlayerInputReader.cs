@@ -15,7 +15,6 @@ public sealed class PlayerInputReader : MonoBehaviour
     private readonly HashSet<object> blockers = new HashSet<object>();
     private NIS actions;
 
-    // Estado de contexto activo (Por defecto inicia en movimiento 3P)
     public InputContext CurrentContext { get; private set; } = InputContext.Player;
 
     public bool GameplayEnabled => isActiveAndEnabled && blockers.Count == 0;
@@ -27,7 +26,11 @@ public sealed class PlayerInputReader : MonoBehaviour
 
     // --- ENTRADAS DEL MODO NEVERA (1P) ---
     public Vector2 HandMoveInput => (GameplayEnabled && CurrentContext == InputContext.Fridge) ? actions.Fridge.HandMove.ReadValue<Vector2>() : Vector2.zero;
-    public float DepthInput => (GameplayEnabled && CurrentContext == InputContext.Fridge) ? actions.Fridge.DepthMove.ReadValue<float>() : 0f;
+    public Vector2 RigMoveInput => (GameplayEnabled && CurrentContext == InputContext.Fridge) ? actions.Fridge.RigMove.ReadValue<Vector2>() : Vector2.zero;
+
+    // NUEVA LÍNEA: Leemos el 1D Axis que acabas de crear
+    public float RigVerticalMoveInput => (GameplayEnabled && CurrentContext == InputContext.Fridge) ? actions.Fridge.RigVerticalMove.ReadValue<float>() : 0f;
+
     public bool HoldBreath => GameplayEnabled && CurrentContext == InputContext.Fridge && actions.Fridge.HoldBreath.IsPressed();
     public bool IsGrabbing => GameplayEnabled && CurrentContext == InputContext.Fridge && actions.Fridge.Grab.IsPressed();
 
@@ -41,10 +44,7 @@ public sealed class PlayerInputReader : MonoBehaviour
     {
         actions = new NIS();
 
-        // Suscripción a eventos del Player Map
         actions.Player.Interact.performed += OnInteractPerformed;
-
-        // Suscripción a eventos del Fridge Map
         actions.Fridge.Grab.performed += OnGrabPerformed;
         actions.Fridge.Exit.performed += OnExitPerformed;
     }
@@ -65,9 +65,6 @@ public sealed class PlayerInputReader : MonoBehaviour
         actions.Dispose();
     }
 
-    /// <summary>
-    /// Bloquea temporalmente las entradas (útil para menús, diálogos, o cinematográficas).
-    /// </summary>
     public void SetGameplayBlocked(object owner, bool blocked)
     {
         if (owner == null) throw new ArgumentNullException(nameof(owner));
@@ -77,20 +74,15 @@ public sealed class PlayerInputReader : MonoBehaviour
 
     public bool IsBlockedByOther(object owner) => blockers.Count > (blockers.Contains(owner) ? 1 : 0);
 
-    /// <summary>
-    /// Cambia el contexto de entrada activo entre Player (Caminata 3P) y Fridge (Nevera 1P).
-    /// </summary>
     public void SetContext(InputContext newContext)
     {
         if (CurrentContext == newContext) return;
-
         CurrentContext = newContext;
         RefreshInput();
     }
 
     private void RefreshInput()
     {
-        // Desactivamos ambos mapas para asegurar un punto de partida limpio
         actions.Player.Disable();
         actions.Fridge.Disable();
 

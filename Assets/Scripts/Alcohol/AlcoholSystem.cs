@@ -8,9 +8,9 @@ public sealed class AlcoholSystem : MonoBehaviour
     [SerializeField, Min(0f)] private float startingAlcohol;
 
     [Header("Umbrales de estado (unidades de alcohol)")]
-    [SerializeField, Min(0f)] private float prendidoThreshold = 20f;
-    [SerializeField, Min(0f)] private float tomadoThreshold = 40f;
-    [SerializeField, Min(0f)] private float vueltoMierdaThreshold = 70f;
+    [SerializeField, Min(0f)] private float TipsyThreshold = 20f;
+    [SerializeField, Min(0f)] private float DrunkThreshold = 40f;
+    [SerializeField, Min(0f)] private float WastedThreshold = 70f;
 
     public float CurrentAlcohol { get; private set; }
     public float MaxAlcohol => maxAlcohol;
@@ -32,7 +32,7 @@ public sealed class AlcoholSystem : MonoBehaviour
     {
         if (float.IsNaN(amount) || float.IsInfinity(amount))
         {
-            Debug.LogError("La cantidad de alcohol debe ser un número finito.", this);
+            Debug.LogError("La cantidad de alcohol debe ser un nï¿½mero finito.", this);
             return;
         }
 
@@ -56,18 +56,18 @@ public sealed class AlcoholSystem : MonoBehaviour
 
     private NivelBorrachera CalculateState(float value)
     {
-        if (value >= vueltoMierdaThreshold) return NivelBorrachera.VueltoMierda;
-        if (value >= tomadoThreshold) return NivelBorrachera.Tomado;
-        if (value >= prendidoThreshold) return NivelBorrachera.Prendido;
-        return NivelBorrachera.Sobrio;
+        if (value >= WastedThreshold) return NivelBorrachera.Wasted;
+        if (value >= DrunkThreshold) return NivelBorrachera.Drunk;
+        if (value >= TipsyThreshold) return NivelBorrachera.Tipsy;
+        return NivelBorrachera.Sober;
     }
 
     private void OnValidate()
     {
         maxAlcohol = Mathf.Max(1f, maxAlcohol);
         startingAlcohol = Mathf.Clamp(startingAlcohol, 0f, maxAlcohol);
-        prendidoThreshold = Mathf.Clamp(prendidoThreshold, 0.01f, maxAlcohol);
-        tomadoThreshold = Mathf.Clamp(tomadoThreshold, prendidoThreshold, maxAlcohol);
-        vueltoMierdaThreshold = Mathf.Clamp(vueltoMierdaThreshold, tomadoThreshold, maxAlcohol);
+        TipsyThreshold = Mathf.Clamp(TipsyThreshold, 0.01f, maxAlcohol);
+        DrunkThreshold = Mathf.Clamp(DrunkThreshold, TipsyThreshold, maxAlcohol);
+        WastedThreshold = Mathf.Clamp(WastedThreshold, DrunkThreshold, maxAlcohol);
     }
 }

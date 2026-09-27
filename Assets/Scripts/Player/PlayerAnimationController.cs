@@ -52,7 +52,7 @@ public sealed class PlayerAnimationController : MonoBehaviour
 
     private void Refresh()
     {
-        SetAlcoholState(alcoholSystem != null ? alcoholSystem.CurrentState : NivelBorrachera.Sobrio);
+        SetAlcoholState(alcoholSystem != null ? alcoholSystem.CurrentState : NivelBorrachera.Sober);
         SetMoving(movement != null && movement.IsMoving);
         SetSprinting(movement != null && movement.IsSprinting);
     }
@@ -73,7 +73,7 @@ public sealed class PlayerAnimationController : MonoBehaviour
 
     private void SetAlcoholState(NivelBorrachera state)
     {
-        bool isDrunk = state != NivelBorrachera.Sobrio;
+        bool isDrunk = state != NivelBorrachera.Sober;
         animator.SetBool(IsDrunk, isDrunk);
 
         if (isDrunk)

@@ -9,11 +9,11 @@ public sealed class ChickenCarryController : MonoBehaviour, IInteractable
     [SerializeField] private Transform carrierRoot;
     [SerializeField] private Rigidbody chickenBody;
     [SerializeField] private Collider chickenCollider;
-    [SerializeField] private bool startHeld = true;
+    [SerializeField] private bool startHeld = false;
     [SerializeField, Min(0f)] private float dropForce = 5f;
     [SerializeField, Min(0f)] private float upwardForce = 2.5f;
     [SerializeField] private float recoveryHeight = -8f;
-    [SerializeField] private string pickupPrompt = "[E] RECOGER POLLO";
+    [SerializeField] private string pickupPrompt = "[F] PICK UP CHICKEN";
 
     public bool IsHeld { get; private set; }
     public string Prompt => pickupPrompt;

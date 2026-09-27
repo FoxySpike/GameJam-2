@@ -199,7 +199,7 @@ public partial class @NIS: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""25265bd5-faf0-4b32-99a1-dc0ad022f22b"",
-                    ""path"": ""<Keyboard>/e"",
+                    ""path"": ""<Keyboard>/f"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -261,9 +261,18 @@ public partial class @NIS: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""DepthMove"",
+                    ""name"": ""RigMove"",
                     ""type"": ""Value"",
-                    ""id"": ""1e0cd630-5c8d-4bf2-820a-580c4622439d"",
+                    ""id"": ""d912bc2e-d55a-437e-8610-0a436627883b"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""RigVerticalMove"",
+                    ""type"": ""Value"",
+                    ""id"": ""19d74db4-2c48-4c3f-889a-0a6acbedd169"",
                     ""expectedControlType"": ""Axis"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -307,7 +316,7 @@ public partial class @NIS: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""51987275-d483-471e-b92f-b9aa7cc67b18"",
-                    ""path"": ""<Keyboard>/e"",
+                    ""path"": ""<Keyboard>/f"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -316,35 +325,90 @@ public partial class @NIS: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
+                    ""name"": ""WASD"",
+                    ""id"": ""a1cc9eda-c1d1-432f-abaf-238bf14abdf9"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RigMove"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""e059818a-dab7-4254-9021-0c3917560785"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RigMove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""ea080423-353c-4e5c-a61e-8ec2e1878f98"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RigMove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""bb241d33-a66b-4a81-b2dc-372c210740b0"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RigMove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""bf004032-8f6c-4a14-a06b-803f42e2bbb4"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RigMove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
                     ""name"": ""1D Axis"",
-                    ""id"": ""68b4f3e2-f552-4abb-8acd-e088e12e6a94"",
+                    ""id"": ""ac3fc0e4-9930-4fa0-88ea-96878a103380"",
                     ""path"": ""1DAxis"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""DepthMove"",
+                    ""action"": ""RigVerticalMove"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": ""negative"",
-                    ""id"": ""be766cff-1d6f-4ff6-a1a2-a5a2c4de47eb"",
-                    ""path"": ""<Keyboard>/s"",
+                    ""id"": ""315a10a5-5346-4f9f-91a2-f3d8cdbe456c"",
+                    ""path"": ""<Keyboard>/q"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""DepthMove"",
+                    ""action"": ""RigVerticalMove"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""positive"",
-                    ""id"": ""19581db8-44e2-4852-b87c-2e812afcfe00"",
-                    ""path"": ""<Keyboard>/w"",
+                    ""id"": ""aa28fb19-5712-46db-8330-054091825715"",
+                    ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""DepthMove"",
+                    ""action"": ""RigVerticalMove"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 }
@@ -365,7 +429,8 @@ public partial class @NIS: IInputActionCollection2, IDisposable
         m_Fridge_HoldBreath = m_Fridge.FindAction("HoldBreath", throwIfNotFound: true);
         m_Fridge_Grab = m_Fridge.FindAction("Grab", throwIfNotFound: true);
         m_Fridge_Exit = m_Fridge.FindAction("Exit", throwIfNotFound: true);
-        m_Fridge_DepthMove = m_Fridge.FindAction("DepthMove", throwIfNotFound: true);
+        m_Fridge_RigMove = m_Fridge.FindAction("RigMove", throwIfNotFound: true);
+        m_Fridge_RigVerticalMove = m_Fridge.FindAction("RigVerticalMove", throwIfNotFound: true);
     }
 
     ~@NIS()
@@ -580,7 +645,8 @@ public partial class @NIS: IInputActionCollection2, IDisposable
     private readonly InputAction m_Fridge_HoldBreath;
     private readonly InputAction m_Fridge_Grab;
     private readonly InputAction m_Fridge_Exit;
-    private readonly InputAction m_Fridge_DepthMove;
+    private readonly InputAction m_Fridge_RigMove;
+    private readonly InputAction m_Fridge_RigVerticalMove;
     /// <summary>
     /// Provides access to input actions defined in input action map "Fridge".
     /// </summary>
@@ -609,9 +675,13 @@ public partial class @NIS: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Exit => m_Wrapper.m_Fridge_Exit;
         /// <summary>
-        /// Provides access to the underlying input action "Fridge/DepthMove".
+        /// Provides access to the underlying input action "Fridge/RigMove".
         /// </summary>
-        public InputAction @DepthMove => m_Wrapper.m_Fridge_DepthMove;
+        public InputAction @RigMove => m_Wrapper.m_Fridge_RigMove;
+        /// <summary>
+        /// Provides access to the underlying input action "Fridge/RigVerticalMove".
+        /// </summary>
+        public InputAction @RigVerticalMove => m_Wrapper.m_Fridge_RigVerticalMove;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -650,9 +720,12 @@ public partial class @NIS: IInputActionCollection2, IDisposable
             @Exit.started += instance.OnExit;
             @Exit.performed += instance.OnExit;
             @Exit.canceled += instance.OnExit;
-            @DepthMove.started += instance.OnDepthMove;
-            @DepthMove.performed += instance.OnDepthMove;
-            @DepthMove.canceled += instance.OnDepthMove;
+            @RigMove.started += instance.OnRigMove;
+            @RigMove.performed += instance.OnRigMove;
+            @RigMove.canceled += instance.OnRigMove;
+            @RigVerticalMove.started += instance.OnRigVerticalMove;
+            @RigVerticalMove.performed += instance.OnRigVerticalMove;
+            @RigVerticalMove.canceled += instance.OnRigVerticalMove;
         }
 
         /// <summary>
@@ -676,9 +749,12 @@ public partial class @NIS: IInputActionCollection2, IDisposable
             @Exit.started -= instance.OnExit;
             @Exit.performed -= instance.OnExit;
             @Exit.canceled -= instance.OnExit;
-            @DepthMove.started -= instance.OnDepthMove;
-            @DepthMove.performed -= instance.OnDepthMove;
-            @DepthMove.canceled -= instance.OnDepthMove;
+            @RigMove.started -= instance.OnRigMove;
+            @RigMove.performed -= instance.OnRigMove;
+            @RigMove.canceled -= instance.OnRigMove;
+            @RigVerticalMove.started -= instance.OnRigVerticalMove;
+            @RigVerticalMove.performed -= instance.OnRigVerticalMove;
+            @RigVerticalMove.canceled -= instance.OnRigVerticalMove;
         }
 
         /// <summary>
@@ -784,11 +860,18 @@ public partial class @NIS: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnExit(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "DepthMove" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "RigMove" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnDepthMove(InputAction.CallbackContext context);
+        void OnRigMove(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "RigVerticalMove" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnRigVerticalMove(InputAction.CallbackContext context);
     }
 }

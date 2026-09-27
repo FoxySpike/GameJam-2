@@ -11,6 +11,7 @@ Apunta con la cruz central; el alcance se mide desde el jugador porque la cámar
 El diálogo del NPC libera el cursor para pulsar **ACEPTAR** o **RECHAZAR**.
 
 Las tres botellas de la escena MVP son reutilizables para probar:
+
 - Cerveza: +10.
 - Guaro: +20.
 - Trago Sospechoso: +5 y adulterado.
@@ -20,12 +21,12 @@ Puedes reemplazar los modelos conservando los componentes y colliders.
 
 ## Archivos modificados
 
-| Archivo | Cambio |
-| --- | --- |
-| Assets/Scripts/Player/PlayerMovement.cs | Mantiene CharacterController, walkSpeed, sprintSpeed y los ejes locales. Lee PlayerInputReader; emite cambio de movimiento; aplica perfiles por AlcoholState. Sin Animator ni NIS. |
-| Assets/Scripts/Player/PlayerLook.cs | Cambia únicamente la fuente de input y su bloqueo, y valida cameraPivot. Conserva cálculo de pitch, yaw y transferencia del exceso de giro al personaje. |
-| Assets/Prefabs/Player/The Boss.prefab | Incorpora y conecta input, alcohol, consumo, tracker, interacción y animación; asigna BossAnim; desactiva root motion; elimina PlayerInput sin callbacks que duplicaba la lectura de acciones. |
-| Assets/Animaciones/Player/BossAnim.controller | Mantiene IsWalking y los clips existentes. Añade IsDrunk, estados sobrios/borrachos y transiciones sin exit time. |
+| Archivo                                       | Cambio                                                                                                                                                                                         |
+| --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Assets/Scripts/Player/PlayerMovement.cs       | Mantiene CharacterController, walkSpeed, sprintSpeed y los ejes locales. Lee PlayerInputReader; emite cambio de movimiento; aplica perfiles por AlcoholState. Sin Animator ni NIS.             |
+| Assets/Scripts/Player/PlayerLook.cs           | Cambia únicamente la fuente de input y su bloqueo, y valida cameraPivot. Conserva cálculo de pitch, yaw y transferencia del exceso de giro al personaje.                                       |
+| Assets/Prefabs/Player/The Boss.prefab         | Incorpora y conecta input, alcohol, consumo, tracker, interacción y animación; asigna BossAnim; desactiva root motion; elimina PlayerInput sin callbacks que duplicaba la lectura de acciones. |
+| Assets/Animaciones/Player/BossAnim.controller | Mantiene IsWalking y los clips existentes. Añade IsDrunk, estados Sobers/borrachos y transiciones sin exit time.                                                                               |
 
 Los GUID de PlayerMovement y PlayerLook se conservan. No se ha modificado NIS ni su asset de acciones.
 
@@ -33,33 +34,35 @@ Los GUID de PlayerMovement y PlayerLook se conservan. No se ha modificado NIS ni
 
 Las rutas siguientes son relativas a **Assets/Scripts**.
 
-| Archivo | Responsabilidad |
-| --- | --- |
-| Player/PlayerInputReader.cs | Única instancia de NIS; MoveInput, LookInput, Sprint, evento Interact y bloqueos por propietario. |
-| Player/PlayerAnimationController.cs | Traduce movimiento y AlcoholState a IsWalking e IsDrunk. |
-| Player/PlayerInteraction.cs | Raycast, oclusión, alcance, contrato IInteractable y evento del prompt. |
-| Player/DrinkingSystem.cs | Consumo compartido, log, aplicación de alcohol y evento OnDrinkConsumed. |
-| Alcohol/AlcoholState.cs | Enum Sober, Tipsy, Drunk y Wasted. |
-| Alcohol/AlcoholSystem.cs | Valor limitado, thresholds configurables y eventos de valor, estado y máximo. |
-| Alcohol/DrinkData.cs | ScriptableObject con nombre, cantidad e indicador de adulteración. |
-| Alcohol/AdulteratedDrinkTracker.cs | Cuenta bebidas adulteradas y emite el evento especial una vez. |
-| Interaction/IInteractable.cs | Contrato Prompt, CanInteract(GameObject) e Interact(GameObject). |
-| Interaction/DrinkInteractable.cs | Solicita el consumo de DrinkData; opción de un solo uso. |
-| NPC/NPCDrinkOffer.cs | Proximidad, oferta, decisión y uso del mismo DrinkingSystem. |
-| NPC/NPCDialogueController.cs | Nombre y frases de atención, oferta, aceptación y rechazo. |
-| UI/InteractionUI.cs | Muestra el prompt recibido por evento. |
-| UI/DialogueUI.cs | Panel, textos, botones, cursor y bloqueo durante una decisión. Emite la elección, sin consumir bebidas. |
-| UI/AlcoholHUD.cs | Slider y etiqueta de estado mediante eventos; prioridad visual para ???. |
-| UI/ObjectiveUI.cs | Recibe y presenta el objetivo. |
-| Level/Level1FlowController.cs | Escucha ambas condiciones, inicia el final una vez y publica disponibilidad para Nivel 2. |
-| Level/WifeCallSequenceController.cs | Fundido, teléfono, diálogo temporal, nuevo objetivo y evento de finalización. |
+| Archivo                             | Responsabilidad                                                                                         |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| Player/PlayerInputReader.cs         | Única instancia de NIS; MoveInput, LookInput, Sprint, evento Interact y bloqueos por propietario.       |
+| Player/PlayerAnimationController.cs | Traduce movimiento y AlcoholState a IsWalking e IsDrunk.                                                |
+| Player/PlayerInteraction.cs         | Raycast, oclusión, alcance, contrato IInteractable y evento del prompt.                                 |
+| Player/DrinkingSystem.cs            | Consumo compartido, log, aplicación de alcohol y evento OnDrinkConsumed.                                |
+| Alcohol/AlcoholState.cs             | Enum Sober, Tipsy, Drunk y Wasted.                                                                      |
+| Alcohol/AlcoholSystem.cs            | Valor limitado, thresholds configurables y eventos de valor, estado y máximo.                           |
+| Alcohol/DrinkData.cs                | ScriptableObject con nombre, cantidad e indicador de adulteración.                                      |
+| Alcohol/AdulteratedDrinkTracker.cs  | Cuenta bebidas adulteradas y emite el evento especial una vez.                                          |
+| Interaction/IInteractable.cs        | Contrato Prompt, CanInteract(GameObject) e Interact(GameObject).                                        |
+| Interaction/DrinkInteractable.cs    | Solicita el consumo de DrinkData; opción de un solo uso.                                                |
+| NPC/NPCDrinkOffer.cs                | Proximidad, oferta, decisión y uso del mismo DrinkingSystem.                                            |
+| NPC/NPCDialogueController.cs        | Nombre y frases de atención, oferta, aceptación y rechazo.                                              |
+| UI/InteractionUI.cs                 | Muestra el prompt recibido por evento.                                                                  |
+| UI/DialogueUI.cs                    | Panel, textos, botones, cursor y bloqueo durante una decisión. Emite la elección, sin consumir bebidas. |
+| UI/AlcoholHUD.cs                    | Slider y etiqueta de estado mediante eventos; prioridad visual para ???.                                |
+| UI/ObjectiveUI.cs                   | Recibe y presenta el objetivo.                                                                          |
+| Level/Level1FlowController.cs       | Escucha ambas condiciones, inicia el final una vez y publica disponibilidad para Nivel 2.               |
+| Level/WifeCallSequenceController.cs | Fundido, teléfono, diálogo temporal, nuevo objetivo y evento de finalización.                           |
 
 Herramientas y pruebas:
+
 - **Assets/Editor/Level1Setup.cs**: menú **La Parranda > Crear escena MVP**. Monta la escena mediante las APIs del Editor y no sobrescribe una escena MVP que ya exista.
 - **Assets/Editor/Level1Automation.cs**: menú **La Parranda > Ejecutar pruebas**, que ejecuta la suite y escribe **Logs/LaParranda.Tests.xml**.
 - **Assets/Tests/Editor/Level1GameplayTests.cs**: pruebas de integración que entran y salen de Play Mode.
 
 Assets creados:
+
 - **Assets/Scenes/Nivel 1 - La parranda MVP.unity**.
 - **Assets/Data/Drinks/Cerveza.asset**, **Guaro.asset**, **Trago Sospechoso.asset**.
 - Cuatro materiales en **Assets/Data/Materials** para las bebidas y el NPC de prueba.
@@ -73,6 +76,7 @@ La escena MVP y el prefab ya están conectados. Estos pasos sirven para integrar
 ### Jugador
 
 En la raíz de **The Boss**:
+
 - CharacterController existente.
 - PlayerInputReader.
 - AlcoholSystem.
@@ -84,6 +88,7 @@ En la raíz de **The Boss**:
 - AdulteratedDrinkTracker.
 
 Referencias:
+
 - PlayerMovement: **Input Reader** y **Alcohol System** de la misma raíz.
 - PlayerLook: **Input Reader** de la raíz y **Camera Pivot** existente. Conserva sensibilidad y límites configurados.
 - PlayerAnimationController: **Movement**, **Alcohol System** y el **Animator** del modelo.
@@ -100,6 +105,7 @@ Los valores se ajustan desde Inspector. Los thresholds se limitan al rango y se 
 El evento de máximo se emite al cruzar hasta el máximo; el coordinador narrativo mantiene su propio guard de una sola ejecución.
 
 **State Profiles** de PlayerMovement configura por estado:
+
 - Speed Multiplier, multiplicador de walkSpeed/sprintSpeed.
 - Lateral Amplitude, intensidad de oscilación lateral al caminar.
 - Lateral Frequency, frecuencia de esa oscilación.
@@ -108,6 +114,7 @@ Sober conserva el desplazamiento estable original. Para quitar toda inestabilida
 No hay gravedad nueva, tropiezos, caídas ni efectos de cámara.
 
 PlayerInteraction:
+
 - **Max Interaction Distance**: 3 inicialmente, medidos desde la raíz del jugador hasta el impacto.
 - **Raycast Mask**: incluye tanto interactuables como paredes/suelo que deban ocluir.
 - Ignora triggers y colliders del propio jugador; las zonas de NPC deben tener también un collider sólido para apuntar.
@@ -118,18 +125,18 @@ PlayerInteraction:
 Usa Canvas en Screen Space Overlay, CanvasScaler y GraphicRaycaster.
 Mantén los scripts de UI en un GameObject activo; sus paneles visuales pueden ser hijos inactivos.
 
-| Componente | Referencias |
-| --- | --- |
-| InteractionUI | PlayerInteraction y TMP_Text del prompt. |
-| AlcoholHUD | AlcoholSystem, AdulteratedDrinkTracker, Slider y TMP_Text del estado. Slider no interactuable. |
-| ObjectiveUI | TMP_Text del objetivo. |
-| DialogueUI | PlayerInputReader, panel hijo, TMP_Text de nombre y diálogo, Button aceptar y rechazar. |
+| Componente    | Referencias                                                                                    |
+| ------------- | ---------------------------------------------------------------------------------------------- |
+| InteractionUI | PlayerInteraction y TMP_Text del prompt.                                                       |
+| AlcoholHUD    | AlcoholSystem, AdulteratedDrinkTracker, Slider y TMP_Text del estado. Slider no interactuable. |
+| ObjectiveUI   | TMP_Text del objetivo.                                                                         |
+| DialogueUI    | PlayerInputReader, panel hijo, TMP_Text de nombre y diálogo, Button aceptar y rechazar.        |
 
 Los botones se conectan mediante código. No añadas un segundo listener persistente que vuelva a consumir.
 Añade un **EventSystem** con **InputSystemUIInputModule**; no uses StandaloneInputModule con el input legacy.
 La escena MVP ya lo incluye.
 
-El HUD no calcula estados: muestra SOBRIO, PRENDIDO, BORRACHO y VUELTO MIERDA.
+El HUD no calcula estados: muestra Sober, Tipsy, BORRACHO y VUELTO MIERDA.
 Al activarse el tracker muestra ??? durante el resto del nivel; al recargar la escena se reinicia.
 
 ### Botella o vaso
@@ -154,6 +161,7 @@ No hace falta modificar código para añadir otra bebida.
 ### NPC que ofrece una bebida
 
 En la raíz del NPC:
+
 - NPCDialogueController con sus cuatro frases y nombre.
 - NPCDrinkOffer con **Offered Drink**, **Dialogue** y **Dialogue UI** del Canvas.
 - Un collider sólido para que el raycast pueda apuntarle.
@@ -172,6 +180,7 @@ NPC puramente ambientales solo necesitan su Animator y clips en loop.
 ### Flujo del nivel y llamada
 
 En **Level 1 Flow**:
+
 - Level1FlowController: AlcoholSystem, AdulteratedDrinkTracker, PlayerInputReader, WifeCallSequenceController y ObjectiveUI.
 - WifeCallSequenceController: CanvasGroup del negro, panel de teléfono, TMP_Text de caller y diálogo, ObjectiveUI.
 
@@ -191,15 +200,16 @@ Un componente futuro de transición puede suscribirse al evento y consultar la p
 ## Animator
 
 Parámetros Bool:
+
 - **IsWalking**: desplazamiento efectivo mediante CharacterController.
 - **IsDrunk**: AlcoholState distinto de Sober.
 
-| Estado | IsWalking | IsDrunk |
-| --- | --- | --- |
-| Sober Idle | false | false |
-| Walking | true | false |
-| Drunk Idle | false | true |
-| Drunk Walk | true | true |
+| Estado     | IsWalking | IsDrunk |
+| ---------- | --------- | ------- |
+| Sober Idle | false     | false   |
+| Walking    | true      | false   |
+| Drunk Idle | false     | true    |
+| Drunk Walk | true      | true    |
 
 BossAnim contiene transiciones desde Any State con ambas condiciones, sin exit time y sin transición a sí mismo.
 Desactiva Apply Root Motion: CharacterController controla la traslación.
@@ -208,15 +218,15 @@ Drinking, Falling, GettingUp y HoldingChicken no se implementan.
 **Limitación de assets detectada:** este repositorio solo contiene los clips Drunk Idle y Walking.
 Sober Idle reutiliza temporalmente Drunk Idle; Drunk Walk reutiliza Walking.
 La selección lógica de las cuatro ramas funciona, pero para obtener las cuatro animaciones visualmente distintas debes importar y asignar los clips que faltan.
-Si Walking es tu clip sobrio, sustituye Drunk Walk por un clip borracho; asigna también Idle sobrio.
+Si Walking es tu clip Sober, sustituye Drunk Walk por un clip borracho; asigna también Idle Sober.
 No se ha generado una animación ficticia.
 
 ## Prueba manual
 
-1. Abre la escena MVP y Play: SOBRIO, barra vacía, objetivo EMBORRÁCHATE.
+1. Abre la escena MVP y Play: Sober, barra vacía, objetivo EMBORRÁCHATE.
 2. Camina, corre y mira; comprueba el límite horizontal y que el cuerpo rota al excederlo.
 3. Apunta a una botella y pulsa E. Debe aparecer el log de consumo y subir la barra.
-4. Con cervezas: a 20 PRENDIDO, 40 BORRACHO, 70 VUELTO MIERDA. Revisa los parámetros del Animator y perfiles del movimiento.
+4. Con cervezas: a 20 Tipsy, 40 BORRACHO, 70 VUELTO MIERDA. Revisa los parámetros del Animator y perfiles del movimiento.
 5. Acércate al NPC; apunta al cuerpo, pulsa E y RECHAZAR: alcohol sin cambios.
 6. Vuelve a hablar y ACEPTAR: añade 20. El cursor y el input regresan al cerrar.
 7. Llega a 100: se bloquean caminar, mirar e interactuar; fundido, llamada, ¿Y EL POLLO?, CONSIGUE EL POLLO.
@@ -235,7 +245,7 @@ Capturas revisadas: **Logs/LaParranda.Start.png** y **Logs/LaParranda.End.png**.
 
 ## Pasos manuales pendientes
 
-- Importar y asignar Idle sobrio y la variante de caminar que falta.
+- Importar y asignar Idle Sober y la variante de caminar que falta.
 - Reemplazar las primitivas de prueba por tus botellas y modelos de NPC; ajustar posiciones y textos.
 - Ajustar balance, perfiles, distancias y tiempos desde Inspector.
 - Si deseas incluir el MVP en un build, añadir **Nivel 1 - La parranda MVP** al perfil de Build. La lista original de escenas no se reemplaza.
