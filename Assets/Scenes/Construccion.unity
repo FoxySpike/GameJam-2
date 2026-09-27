@@ -5393,7 +5393,7 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
@@ -5415,7 +5415,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 0.07649261, y: 0.04623713, z: 0.029746965}
   m_Center: {x: -0.16665818, y: 0.0045555816, z: 0.031110434}
@@ -5426,14 +5426,15 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 720737645}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 86b1c30e953ff76458465f067f0e1e9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SceneTrigger
-  sceneToLoad: Nivel 1 - La parranda MVP
+  sceneToLoad: Nivel 4 - El parque
   level1Flow: {fileID: 0}
   permanentlyLocked: 0
+  enableLevel3TestShortcut: 0
 --- !u!4 &748671920 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1841115678085542156, guid: 3cc8d5e66e6ec96428251a227256ef8f, type: 3}
@@ -8820,7 +8821,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1127770847
 Transform:
   m_ObjectHideFlags: 0
@@ -9037,7 +9038,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1585673283206931827, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3646091401982358240, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
       propertyPath: m_Enabled
@@ -9045,19 +9046,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5326898437293710538, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5326898437293710538, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5326898437293710538, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 6099346891685326864, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
       propertyPath: m_Name
       value: The Boss
+      objectReference: {fileID: 0}
+    - target: {fileID: 6099346891685326864, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6912720872729553578, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
       propertyPath: m_LocalPosition.x
@@ -9101,11 +9106,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7500902275355324340, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7500902275355324340, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -10222,6 +10227,76 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2c93d441e2c1af479cce88a7627572e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AlcoholSystem
+--- !u!1 &1355324767
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1355324770}
+  - component: {fileID: 1355324769}
+  - component: {fileID: 1355324768}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1355324768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1355324767}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86b1c30e953ff76458465f067f0e1e9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SceneTrigger
+  sceneToLoad: Nivel 4 - El parque
+  level1Flow: {fileID: 0}
+  permanentlyLocked: 0
+  enableLevel3TestShortcut: 0
+--- !u!65 &1355324769
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1355324767}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!4 &1355324770
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1355324767}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.14007787, z: -0, w: 0.99014056}
+  m_LocalPosition: {x: 14.95, y: 2.99624, z: -37.31}
+  m_LocalScale: {x: 6.1088, y: 6.1088, z: 6.1088}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 16.105, z: 0}
 --- !u!1001 &1364045590
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16288,3 +16363,4 @@ SceneRoots:
   - {fileID: 470188483}
   - {fileID: 1605804529}
   - {fileID: 1422346344}
+  - {fileID: 1355324770}
