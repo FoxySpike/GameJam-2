@@ -97,17 +97,24 @@ public sealed class ChickenAppearanceTarget : MonoBehaviour
         }
         bool hasOriginalBounds = TryBounds(sizingRenderers, out Bounds originalBounds);
         Transform anchor = visualAnchor != null ? visualAnchor : transform;
-        chicken = Instantiate(chickenPrefab, anchor, false);
-        chicken.name = "Chicken appearance";
+
+        // Keep the direction correction outside the animated prefab. Some chicken
+        // clips animate their root rotation, so applying the offset there would be
+        // overwritten by the Animator every frame.
+        chicken = new GameObject("Chicken appearance");
+        chicken.transform.SetParent(anchor, false);
         chicken.transform.localPosition = Vector3.zero;
         chicken.transform.localRotation = Quaternion.Euler(rotationOffset);
         chicken.transform.localScale = Vector3.one;
+
+        GameObject animatedChicken = Instantiate(chickenPrefab, chicken.transform, false);
+        animatedChicken.name = "Animated chicken";
         foreach (Transform part in chicken.GetComponentsInChildren<Transform>(true))
             part.gameObject.layer = gameObject.layer;
-        chickenAnimator = chicken.GetComponentInChildren<Animator>();
+        chickenAnimator = animatedChicken.GetComponentInChildren<Animator>();
         if (chickenAnimator != null) chickenAnimator.applyRootMotion = false;
 
-        Renderer[] chickenRenderers = chicken.GetComponentsInChildren<Renderer>(true);
+        Renderer[] chickenRenderers = animatedChicken.GetComponentsInChildren<Renderer>(true);
         if (fitOriginalBounds && hasOriginalBounds && TryBounds(chickenRenderers, out Bounds birdBounds))
         {
             // Cars use their longest horizontal dimension; people use their height.
