@@ -1313,6 +1313,7 @@ MonoBehaviour:
   sceneToLoad: Nivel-2-Asadero
   level1Flow: {fileID: 403341044}
   permanentlyLocked: 0
+  enableLevel3TestShortcut: 0
 --- !u!65 &137601397
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2594,6 +2595,7 @@ MonoBehaviour:
   sceneToLoad: Nivel 3 - Cruzar la calle
   level1Flow: {fileID: 403341044}
   permanentlyLocked: 1
+  enableLevel3TestShortcut: 0
 --- !u!65 &291126714
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4463,6 +4465,7 @@ MonoBehaviour:
   sceneToLoad: Construccion
   level1Flow: {fileID: 403341044}
   permanentlyLocked: 1
+  enableLevel3TestShortcut: 0
 --- !u!65 &623257017
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -11577,6 +11580,7 @@ MonoBehaviour:
   sceneToLoad: Nivel 4 - El parque
   level1Flow: {fileID: 403341044}
   permanentlyLocked: 1
+  enableLevel3TestShortcut: 0
 --- !u!65 &2041572440
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -23,6 +23,7 @@ public class PolicePatrol : MonoBehaviour
 
     private void Awake()
     {
+        ChickenAppearanceTarget.Ensure(gameObject);
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
     }

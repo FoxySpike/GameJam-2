@@ -20,6 +20,7 @@ public class FridgeInteractable : MonoBehaviour, IInteractable
 
     private void Awake()
     {
+        IntoxicationCamera.Ensure(fridgeCamera);
         fridgeCamera.gameObject.SetActive(false);
     }
 

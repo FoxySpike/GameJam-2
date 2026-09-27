@@ -36,6 +36,7 @@ public sealed class TrafficVehicle : MonoBehaviour
     private void Awake()
     {
         CreateModel();
+        ChickenAppearanceTarget.Ensure(gameObject);
 
         body = GetComponent<Rigidbody>();
         body.isKinematic = true;

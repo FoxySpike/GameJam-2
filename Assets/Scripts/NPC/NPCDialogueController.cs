@@ -2,6 +2,8 @@ using UnityEngine;
 
 public sealed class NPCDialogueController : MonoBehaviour
 {
+    private void Awake() => ChickenAppearanceTarget.Ensure(gameObject);
+
     [SerializeField] private string characterName = "Buddy";
     [SerializeField, TextArea] private string attention = "Come on, have a drink!";
     [SerializeField, TextArea] private string offer = "How about a drink?";

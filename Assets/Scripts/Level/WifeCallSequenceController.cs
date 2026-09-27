@@ -91,6 +91,9 @@ public sealed class WifeCallSequenceController : MonoBehaviour
         yield return Slide(false);
         phonePanel.SetActive(false);
         if (phoneRect != null) phoneRect.anchoredPosition = visiblePosition;
+        // Only adulterated drinks request this reveal. Keep exits locked until it finishes.
+        if (ChickenEasterEgg.Instance != null)
+            yield return ChickenEasterEgg.Instance.RevealAfterCall(dialogueText.font);
         objectiveUI.SetObjective(nextObjective);
         IsComplete = true;
         sequence = null;
