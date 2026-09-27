@@ -3,47 +3,36 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class PlatformRider : MonoBehaviour
 {
-    [Header("Detección de Plataforma")]
-    [SerializeField] private LayerMask platformLayer;
-    [SerializeField] private float rayDistance = 0.3f;
-    [SerializeField] private float rayOriginOffset = 0.1f;
+    CharacterController cc;
+    MovingPlatform currentPlatform;
+    bool touchedPlatformThisStep;
 
-    private CharacterController characterController;
-    private Transform currentPlatform;
-    private Vector3 lastPlatformPos;
-
-    private void Awake()
+    void Awake()
     {
-        characterController = GetComponent<CharacterController>();
+        cc = GetComponent<CharacterController>();
     }
 
-    private void Update()
+    void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        FollowPlatform();
+        if (hit.normal.y < 0.5f) return;
+
+        MovingPlatform mp = hit.collider.GetComponentInParent<MovingPlatform>();
+        if (mp == null) return;
+
+        currentPlatform = mp;
+        touchedPlatformThisStep = true;
     }
 
-    private void FollowPlatform()
+    void LateUpdate()
     {
-        Transform detectedPlatform = null;
-
-        Vector3 origin = transform.position + Vector3.up * rayOriginOffset;
-
-        if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, rayDistance, platformLayer))
+        if (touchedPlatformThisStep && currentPlatform != null)
         {
-            detectedPlatform = hit.transform;
+            cc.enabled = false;
+            transform.position += currentPlatform.LastDelta;
+            cc.enabled = true;
         }
 
-        if (detectedPlatform != currentPlatform)
-        {
-            currentPlatform = detectedPlatform;
-            if (currentPlatform != null)
-                lastPlatformPos = currentPlatform.position;
-        }
-        else if (currentPlatform != null)
-        {
-            Vector3 platformDelta = currentPlatform.position - lastPlatformPos;
-            characterController.Move(platformDelta);
-            lastPlatformPos = currentPlatform.position;
-        }
+        touchedPlatformThisStep = false;
+        currentPlatform = null;
     }
 }
