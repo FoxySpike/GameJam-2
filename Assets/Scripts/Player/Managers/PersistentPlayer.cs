@@ -8,9 +8,9 @@ public class PersistentPlayer : MonoBehaviour
 
     [Header("Referencias Globales (Asignar en Escena 1)")]
     [Tooltip("El script de la mano que controla el pollo")]
-    public PlayerHand PlayerHandComponent;
+    //public PlayerHand PlayerHandComponent;
 
-    [Tooltip("El contenedor principal de la UI del jugador (1st/3rd person panels)")]
+    //[Tooltip("El contenedor principal de la UI del jugador (1st/3rd person panels)")]
     public GameObject Player3rdPersonHUD;
 
     // NUEVO: Agregamos el panel de la nevera/1ra persona
@@ -30,7 +30,19 @@ public class PersistentPlayer : MonoBehaviour
 
         InputReader = GetComponent<PlayerInputReader>();
 
+        // Install only on the surviving player, never on a duplicate scene player.
+        ChickenEasterEgg easterEgg = GetComponent<ChickenEasterEgg>();
+        if (easterEgg == null) easterEgg = gameObject.AddComponent<ChickenEasterEgg>();
+        easterEgg.Initialize();
+        if (GetComponent<DrunkenVision>() == null)
+            gameObject.AddComponent<DrunkenVision>();
+
         if (InputReader == null)
-            Debug.LogError("[PersistentPlayer] ¡Falta el PlayerInputReader en el jugador!");
+            Debug.LogError("[PersistentPlayer] ï¿½Falta el PlayerInputReader en el jugador!");
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this) Instance = null;
     }
 }

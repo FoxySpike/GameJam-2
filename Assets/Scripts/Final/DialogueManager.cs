@@ -50,6 +50,14 @@ public class DialogueManager : MonoBehaviour
 
     void EndGame()
     {
+        // Returning to the first level begins a new session, including drink counters and vision.
+        if (PersistentPlayer.Instance != null)
+        {
+            GameObject oldPlayer = PersistentPlayer.Instance.gameObject;
+            PersistentPlayer.Instance = null;
+            oldPlayer.SetActive(false);
+            Destroy(oldPlayer);
+        }
         SceneManager.LoadScene(menuSceneName);
     }
 }

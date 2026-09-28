@@ -692,7 +692,7 @@ MonoBehaviour:
   - '"Well alright then. At least you brought somethin'' to eat, so I guess I''ll
     let you live tonight."                                                                       
     (Press F to continue)'
-  menuSceneName: Nivel 1 - La parranda MVP
+  menuSceneName: Menu Inicial
 --- !u!4 &1028498826
 Transform:
   m_ObjectHideFlags: 0
