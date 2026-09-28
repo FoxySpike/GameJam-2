@@ -67,19 +67,29 @@ public class FridgeInteractable : MonoBehaviour, IInteractable
 
     public void OnItemExtracted(GameObject extractedItem)
     {
+        // 1. Validamos que el objeto extraído realmente sea el pollo usando el Tag que le pusiste
+        if (!extractedItem.CompareTag("Pollo"))
+        {
+            Debug.Log($"[FridgeInteractable] Se extrajo un objeto, pero no era el pollo. Era: {extractedItem.name}");
+            return;
+        }
+
+        // Si llegó hasta aquí, sabemos que es el pollo. Lo destruimos de la escena.
         Destroy(extractedItem);
 
-        // SOLUCIÓN: En lugar de buscar en el Singleton, buscamos en el jugador activo
         if (activeInputReader != null)
         {
-            // Como activeInputReader está en el jugador, buscamos el componente PlayerHand ahí mismo
-            if (activeInputReader.TryGetComponent(out PlayerHand playerHand))
+            // 2. Usamos GetComponentInChildren. 
+            // Esto buscará el PlayerHand en el objeto raíz y en todos sus hijos (donde sea que esté la mano).
+            PlayerHand playerHand = activeInputReader.GetComponentInChildren<PlayerHand>();
+
+            if (playerHand != null)
             {
                 playerHand.GiveChicken();
             }
             else
             {
-                Debug.LogWarning("[FridgeInteractable] El jugador interactuando no tiene el script PlayerHand.");
+                Debug.LogError("[FridgeInteractable] No se encontró el script PlayerHand en el jugador ni en sus hijos.");
             }
         }
 

@@ -72,9 +72,27 @@ public class HandGrabber : MonoBehaviour
                 // Apagamos las colisiones entre el brazo y el objeto
                 ToggleCollisions(true);
 
+                // ---> NUEVO: Buscamos tu componente
+                GrabbableItem grabbable = heldItemRb.GetComponent<GrabbableItem>();
+
                 heldItemRb.transform.SetParent(grabPoint);
-                heldItemRb.transform.localPosition = Vector3.zero;
                 heldItemRb.transform.localRotation = Quaternion.identity;
+
+                // ---> NUEVO: Usamos el gripPoint si existe
+                if (grabbable != null && grabbable.gripPoint != null)
+                {
+                    // TRUCO DE OFFSET: 
+                    // Averiguamos la distancia entre el centro de la botella y el punto de agarre
+                    Vector3 offset = heldItemRb.transform.position - grabbable.gripPoint.position;
+
+                    // Teletransportamos la botella a la mano, pero sumando esa diferencia
+                    heldItemRb.transform.position = grabPoint.position + offset;
+                }
+                else
+                {
+                    // Fallback por si agarraste algo sin el script
+                    heldItemRb.transform.localPosition = Vector3.zero;
+                }
             }
         }
     }
