@@ -12,6 +12,15 @@ public sealed class AlcoholHUD : MonoBehaviour
 
     private void Awake()
     {
+        if (PersistentPlayer.Instance != null)
+        {
+            if (alcoholSystem == null)
+                alcoholSystem = PersistentPlayer.Instance.GetComponent<AlcoholSystem>();
+
+            if (adulteratedTracker == null)
+                adulteratedTracker = PersistentPlayer.Instance.GetComponent<AdulteratedDrinkTracker>();
+        }
+
         if (alcoholSystem != null && alcoholBar != null && stateText != null) return;
         Debug.LogError("AlcoholHUD requiere AlcoholSystem, Slider y texto de estado.", this);
         enabled = false;

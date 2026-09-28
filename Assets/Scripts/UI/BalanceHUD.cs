@@ -9,6 +9,12 @@ public sealed class BalanceHUD : MonoBehaviour
 
     private void Awake()
     {
+        if (balanceSystem == null && PersistentPlayer.Instance != null)
+        {
+            PlayerMovementV3 movement = PersistentPlayer.Instance.GetComponent<PlayerMovementV3>();
+            if (movement != null) balanceSystem = movement.BalanceSystem;
+        }
+
         if (balanceSystem != null && balanceSlider != null) return;
 
         Debug.LogError("BalanceHUD requiere un PlayerBalanceSystem y un Slider.", this);
@@ -35,10 +41,10 @@ public sealed class BalanceHUD : MonoBehaviour
 
     private void UpdateSlider(float balanceValue)
     {
-        // El valor 0 quedará exactamente en la mitad del Slider
+        // El valor 0 quedarÃ¡ exactamente en la mitad del Slider
         balanceSlider.SetValueWithoutNotify(balanceValue);
 
-        // Opcional: Aquí podríamos hacer que el slider cambie de color a rojo 
+        // Opcional: AquÃ­ podrÃ­amos hacer que el slider cambie de color a rojo
         // si se acerca mucho a los extremos (ej: > 0.8 o < -0.8).
     }
 }

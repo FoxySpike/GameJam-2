@@ -225,6 +225,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 257e505a49c3d004e816c4d056d5950f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3683293937222904364}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 257e505a49c3d004e816c4d056d5950f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 910000000000000003}
   m_SourcePrefab: {fileID: 100100000, guid: 257e505a49c3d004e816c4d056d5950f, type: 3}
 --- !u!1 &315255584265284716 stripped
 GameObject:
@@ -302,6 +305,20 @@ MonoBehaviour:
   upwardForce: 2.5
   recoveryHeight: -8
   pickupPrompt: '[F] PICK UP CHICKEN'
+--- !u!114 &910000000000000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 315255584265284716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b63c018be4d448be91d78ee6d66f5e32, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::DropChickenOnPlayerHit
+  hitReaction: {fileID: 0}
+  chicken: {fileID: 3683293937222904364}
 --- !u!4 &1093200310826399446 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 257e505a49c3d004e816c4d056d5950f, type: 3}

@@ -3,10 +3,17 @@ using UnityEngine;
 public class FridgeInteractable : MonoBehaviour, IInteractable
 {
     [Header("UI & Messaging")]
-    [SerializeField] private string promptMessage = "Presiona E para abrir la nevera";
+    [SerializeField] private string promptMessage = "Presiona F para abrir la nevera";
 
     [Header("Camera Setup")]
     [SerializeField] private Camera fridgeCamera;
+
+    [Header("Level UI")]
+    [SerializeField] private GameObject thirdPersonHUD;
+    [SerializeField] private GameObject firstPersonHUD;
+
+    [Header("Persistent Chicken")]
+    [SerializeField] private ChickenCarryController carryChickenPrefab;
 
     private PlayerInputReader activeInputReader;
     private Camera mainCamera;
@@ -46,15 +53,8 @@ public class FridgeInteractable : MonoBehaviour, IInteractable
         if (mainCamera != null) mainCamera.gameObject.SetActive(false);
         if (fridgeCamera != null) fridgeCamera.gameObject.SetActive(true);
 
-        // Sigue siendo v·lido usar el Singleton para la UI global del sistema
-        if (PersistentPlayer.Instance != null)
-        {
-            if (PersistentPlayer.Instance.Player3rdPersonHUD != null)
-                PersistentPlayer.Instance.Player3rdPersonHUD.SetActive(false);
-
-            if (PersistentPlayer.Instance.Player1stPersonHUD != null)
-                PersistentPlayer.Instance.Player1stPersonHUD.SetActive(true);
-        }
+        if (thirdPersonHUD != null) thirdPersonHUD.SetActive(false);
+        if (firstPersonHUD != null) firstPersonHUD.SetActive(true);
 
         activeInputReader.SetContext(PlayerInputReader.InputContext.Fridge);
         activeInputReader.ExitFridge += HandleManualExit;
@@ -67,20 +67,30 @@ public class FridgeInteractable : MonoBehaviour, IInteractable
 
     public void OnItemExtracted(GameObject extractedItem)
     {
+        // 1. Validamos que el objeto extra√≠do realmente sea el pollo usando el Tag que le pusiste
+        if (!extractedItem.CompareTag("Pollo"))
+        {
+            Debug.Log($"[FridgeInteractable] Se extrajo un objeto, pero no era el pollo. Era: {extractedItem.name}");
+            return;
+        }
+
+        // Si lleg√≥ hasta aqu√≠, sabemos que es el pollo. Lo destruimos de la escena.
         Destroy(extractedItem);
 
-        // SOLUCI”N: En lugar de buscar en el Singleton, buscamos en el jugador activo
-        if (activeInputReader != null)
+        if (activeInputReader != null && carryChickenPrefab != null)
         {
-            // Como activeInputReader est· en el jugador, buscamos el componente PlayerHand ahÌ mismo
-            if (activeInputReader.TryGetComponent(out PlayerHand playerHand))
+            ChickenCarryController existingChicken =
+                activeInputReader.GetComponentInChildren<ChickenCarryController>(true);
+
+            if (existingChicken == null)
             {
-                playerHand.GiveChicken();
+                ChickenCarryController chicken = Instantiate(carryChickenPrefab);
+                chicken.Interact(activeInputReader.gameObject);
             }
-            else
-            {
-                Debug.LogWarning("[FridgeInteractable] El jugador interactuando no tiene el script PlayerHand.");
-            }
+        }
+        else if (carryChickenPrefab == null)
+        {
+            Debug.LogError("[FridgeInteractable] Falta asignar el prefab persistente del pollo.", this);
         }
 
         ExitMinigame();
@@ -94,21 +104,15 @@ public class FridgeInteractable : MonoBehaviour, IInteractable
         {
             activeInputReader.ExitFridge -= HandleManualExit;
             activeInputReader.SetContext(PlayerInputReader.InputContext.Player);
-            // No hacemos activeInputReader = null; aquÌ para que OnItemExtracted pueda usarlo.
+            // No hacemos activeInputReader = null; aqu√≠ para que OnItemExtracted pueda usarlo.
             // Si quieres limpiar la referencia, hazlo al final de todo.
         }
 
         if (fridgeCamera != null) fridgeCamera.gameObject.SetActive(false);
         if (mainCamera != null) mainCamera.gameObject.SetActive(true);
 
-        if (PersistentPlayer.Instance != null)
-        {
-            if (PersistentPlayer.Instance.Player1stPersonHUD != null)
-                PersistentPlayer.Instance.Player1stPersonHUD.SetActive(false);
-
-            if (PersistentPlayer.Instance.Player3rdPersonHUD != null)
-                PersistentPlayer.Instance.Player3rdPersonHUD.SetActive(true);
-        }
+        if (firstPersonHUD != null) firstPersonHUD.SetActive(false);
+        if (thirdPersonHUD != null) thirdPersonHUD.SetActive(true);
 
         isInMinigame = false;
     }

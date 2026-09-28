@@ -8,6 +8,9 @@ public sealed class InteractionUI : MonoBehaviour
 
     private void Awake()
     {
+        if (interaction == null && PersistentPlayer.Instance != null)
+            interaction = PersistentPlayer.Instance.GetComponent<PlayerInteraction>();
+
         if (interaction != null && promptText != null) return;
         Debug.LogError("InteractionUI requires PlayerInteraction and prompt text.", this);
         enabled = false;

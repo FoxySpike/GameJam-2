@@ -1,132 +1,162 @@
+using System.Collections;
 using UnityEngine;
-using System.Collections.Generic;
 
 public class HandGrabber : MonoBehaviour
 {
     [Header("Dependencies")]
-    [SerializeField] private PlayerInputReader inputReader;
-
-    [Tooltip("Referencia al controlador del brazo para sincronizar el empuje al agarrar.")]
-    [SerializeField] private FridgeHandController handController; // <-- NUEVA DEPENDENCIA
-
-    [Tooltip("El GameObject vacío que actúa como la palma de la mano. Usado solo para posición.")]
+    private PlayerInputReader inputReader;
     [SerializeField] private Transform grabPoint;
-
-    [Tooltip("El Rigidbody del brazo principal (BrazoPivote). NO poner en la mano.")]
-    [SerializeField] private Rigidbody armPivotRigidbody;
+    [Tooltip("Asigna aquí el BrazoPivote. El script buscará automáticamente todos los colliders hijos (Cilindros, Mano, etc.).")]
+    [SerializeField] private Transform playerRoot;
 
     [Header("Grab Settings")]
     [SerializeField] private float grabRadius = 0.2f;
     [SerializeField] private LayerMask grabbableLayer;
 
-    private Rigidbody currentlyHeldObject;
-    private FixedJoint currentJoint;
+    [Header("Controlador del brazo")]
+    [SerializeField] private FridgeHandController handController;
+
+    // Array para almacenar automáticamente todos los colliders del brazo
+    private Collider[] playerColliders;
+
+    private Rigidbody heldItemRb;
+    private Collider[] heldItemColliders;
 
     private void Awake()
     {
-        if (grabPoint == null)
-            Debug.LogError("[HandGrabber] Falta asignar el GrabPoint.");
+        if (playerRoot == null)
+        {
+            Debug.LogWarning("[SimpleHandGrabber] Asigna el PlayerRoot en el Inspector.");
+            return;
+        }
 
-        if (armPivotRigidbody == null)
-            Debug.LogError("[HandGrabber] Falta asignar el Rigidbody del pivote del brazo.");
-
-        if (handController == null)
-            Debug.LogWarning("[HandGrabber] No se asignó FridgeHandController. La mano no hará espacio para los objetos.");
+        // Recopilamos TODOS los colliders que estén dentro de la jerarquía del playerRoot
+        playerColliders = playerRoot.GetComponentsInChildren<Collider>();
+    }
+    private void Start()
+    {
+        if (PersistentPlayer.Instance != null)
+        {
+            inputReader = PersistentPlayer.Instance.InputReader;
+        }
     }
 
     private void Update()
     {
-        if (inputReader == null || inputReader.CurrentContext != PlayerInputReader.InputContext.Fridge)
-            return;
+        if (inputReader == null || inputReader.CurrentContext != PlayerInputReader.InputContext.Fridge) return;
 
-        HandleGrabState();
-    }
-
-    private void HandleGrabState()
-    {
-        bool isHoldingGrabKey = inputReader.IsGrabbing;
-
-        if (isHoldingGrabKey && currentlyHeldObject == null)
+        if (inputReader.IsGrabbing && heldItemRb == null)
         {
             AttemptGrab();
         }
-        else if (!isHoldingGrabKey && currentlyHeldObject != null)
+        else if (!inputReader.IsGrabbing && heldItemRb != null)
         {
-            ReleaseObject();
+            Release();
         }
     }
 
     private void AttemptGrab()
     {
         Collider[] colliders = Physics.OverlapSphere(grabPoint.position, grabRadius, grabbableLayer);
-
         if (colliders.Length > 0)
         {
-            Rigidbody targetRb = colliders[0].GetComponentInParent<Rigidbody>();
+            heldItemRb = colliders[0].GetComponentInParent<Rigidbody>();
 
-            if (targetRb != null)
+            if (heldItemRb != null)
             {
-                GrabObject(targetRb);
+                heldItemRb.isKinematic = true;
+
+                // Extraemos todos los colliders del objeto agarrado
+                heldItemColliders = heldItemRb.GetComponentsInChildren<Collider>();
+
+                // Apagamos las colisiones entre el brazo y el objeto
+                ToggleCollisions(true);
+
+                // ---> NUEVO: Buscamos tu componente
+                GrabbableItem grabbable = heldItemRb.GetComponent<GrabbableItem>();
+
+                heldItemRb.transform.SetParent(grabPoint);
+                heldItemRb.transform.localRotation = Quaternion.identity;
+
+                // ---> NUEVO: Usamos el gripPoint si existe
+                if (grabbable != null && grabbable.gripPoint != null)
+                {
+                    // TRUCO DE OFFSET: 
+                    // Averiguamos la distancia entre el centro de la botella y el punto de agarre
+                    Vector3 offset = heldItemRb.transform.position - grabbable.gripPoint.position;
+
+                    // Teletransportamos la botella a la mano, pero sumando esa diferencia
+                    heldItemRb.transform.position = grabPoint.position + offset;
+                }
+                else
+                {
+                    // Fallback por si agarraste algo sin el script
+                    heldItemRb.transform.localPosition = Vector3.zero;
+                }
             }
         }
     }
 
-    private void GrabObject(Rigidbody target)
+    private void Release()
     {
-        currentlyHeldObject = target;
+        heldItemRb.transform.SetParent(null);
 
-        // 1. Detenemos cualquier impulso previo del objeto
-        currentlyHeldObject.linearVelocity = Vector3.zero;
-        currentlyHeldObject.angularVelocity = Vector3.zero;
+        // 1. Definimos cuánto vamos a empujar las cosas
+        Vector3 pushOffset = Vector3.up * 0.1f;
 
-        // 2. EL TRUCO FÍSICO: Calculamos el vector exacto desde la mano hacia el objeto.
-        // Y empujamos el brazo hacia allá ANTES de mover el objeto.
+        // 2. Empujamos la botella
+        heldItemRb.transform.position += pushOffset;
+
+        // 3. EMPUJAMOS LA MANO en la misma dirección y distancia
         if (handController != null)
         {
-            Vector3 offsetToTarget = currentlyHeldObject.transform.position - grabPoint.position;
-            handController.DisplaceHandForGrab(offsetToTarget);
+            handController.DisplaceHandForGrab(pushOffset);
         }
 
-        // 3. Teleportación. Como acabamos de mover la mano al centro del objeto, 
-        // este movimiento es ahora de distancia casi cero. No atravesará el cristal.
-        currentlyHeldObject.transform.position = grabPoint.position;
-        currentlyHeldObject.transform.rotation = grabPoint.rotation;
+        // Reactivamos las físicas
+        heldItemRb.isKinematic = false;
+        heldItemRb.linearVelocity = Vector3.zero;
+        heldItemRb.angularVelocity = Vector3.zero;
 
-        // 4. Creamos el Joint
-        currentJoint = armPivotRigidbody.gameObject.AddComponent<FixedJoint>();
-        currentJoint.connectedBody = currentlyHeldObject;
+        StartCoroutine(RestoreCollisionsAfterDelay(heldItemColliders, playerColliders, 0.25f));
 
-        Debug.Log($"[HandGrabber] Agarré y centré con Joint: {currentlyHeldObject.name}");
+        heldItemRb = null;
+        heldItemColliders = null;
     }
 
-    private void ReleaseObject()
+    private void ToggleCollisions(bool ignore)
     {
-        if (currentJoint != null)
-        {
-            Destroy(currentJoint);
-            currentJoint = null;
-        }
+        if (playerColliders == null || heldItemColliders == null) return;
 
-        // --- LA SOLUCIÓN ---
-        // Le quitamos toda la inercia y temblor heredados del brazo
-        // en el instante exacto en que la soltamos.
-        if (currentlyHeldObject != null)
+        foreach (Collider itemCol in heldItemColliders)
         {
-            currentlyHeldObject.linearVelocity = Vector3.zero;
-            currentlyHeldObject.angularVelocity = Vector3.zero;
+            foreach (Collider playerCol in playerColliders)
+            {
+                Physics.IgnoreCollision(itemCol, playerCol, ignore);
+            }
         }
-        // -------------------
-
-        Debug.Log($"[HandGrabber] Solté: {currentlyHeldObject.name}");
-        currentlyHeldObject = null;
     }
 
-    private void OnDrawGizmosSelected()
+    // --- NUEVA CORRUTINA ---
+    private IEnumerator RestoreCollisionsAfterDelay(Collider[] itemCols, Collider[] playerCols, float delay)
     {
-        if (grabPoint != null)
+        // 1. Esperamos una fracción de segundo para que la botella caiga
+        yield return new WaitForSeconds(delay);
+
+        // 2. Verificamos que los objetos no hayan sido destruidos en ese cuarto de segundo
+        if (itemCols == null || playerCols == null) yield break;
+
+        // 3. Restauramos las colisiones
+        foreach (Collider itemCol in itemCols)
         {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(grabPoint.position, grabRadius);
+            if (itemCol == null) continue; // Por si el objeto se destruyó al chocar
+
+            foreach (Collider playerCol in playerCols)
+            {
+                if (playerCol == null) continue;
+
+                Physics.IgnoreCollision(itemCol, playerCol, false);
+            }
         }
     }
 }

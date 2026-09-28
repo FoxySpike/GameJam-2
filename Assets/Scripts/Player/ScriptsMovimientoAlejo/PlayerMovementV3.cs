@@ -4,6 +4,8 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController), typeof(PlayerInputReader))]
 public class PlayerMovementV3 : MonoBehaviour
 {
+    public PlayerBalanceSystem BalanceSystem => balanceSystem;
+
     [Serializable]
     private struct PerfilBorrachera
     {
