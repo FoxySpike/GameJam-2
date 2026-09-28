@@ -40,6 +40,15 @@ public class FinalSceneController : MonoBehaviour
 
         if (camaraTransform != null && senoraLookTarget != null)
         {
+            // The player persists between scenes, so its body can arrive with the
+            // yaw from the previous level. Set both body and view toward the wife.
+            Vector3 lookDirection = senoraLookTarget.position - player.transform.position;
+            lookDirection.y = 0f;
+            if (lookDirection.sqrMagnitude > 0.001f)
+            {
+                player.transform.rotation = Quaternion.LookRotation(lookDirection);
+            }
+
             camaraTransform.LookAt(senoraLookTarget);
         }
 
