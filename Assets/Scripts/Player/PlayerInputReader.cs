@@ -9,7 +9,8 @@ public sealed class PlayerInputReader : MonoBehaviour
     public enum InputContext
     {
         Player,
-        Fridge
+        Fridge,
+        Grill
     }
 
     private readonly HashSet<object> blockers = new HashSet<object>();
@@ -33,6 +34,9 @@ public sealed class PlayerInputReader : MonoBehaviour
 
     public bool HoldBreath => GameplayEnabled && CurrentContext == InputContext.Fridge && actions.Fridge.HoldBreath.IsPressed();
     public bool IsGrabbing => GameplayEnabled && CurrentContext == InputContext.Fridge && actions.Fridge.Grab.IsPressed();
+
+    public float GrillHeatControl { get; internal set; }
+    public Vector2 GrillLookInput { get; internal set; }
 
     // --- EVENTOS ---
     public event Action Interact;
