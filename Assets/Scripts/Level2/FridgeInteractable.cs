@@ -3,7 +3,7 @@ using UnityEngine;
 public class FridgeInteractable : MonoBehaviour, IInteractable
 {
     [Header("UI & Messaging")]
-    [SerializeField] private string promptMessage = "Presiona E para abrir la nevera";
+    [SerializeField] private string promptMessage = "Presiona F para abrir la nevera";
 
     [Header("Camera Setup")]
     [SerializeField] private Camera fridgeCamera;
