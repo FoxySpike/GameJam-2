@@ -6,6 +6,7 @@ public sealed class DrinkingSystem : MonoBehaviour
 {
     [SerializeField] private AlcoholSystem alcoholSystem;
     private bool isConsuming;
+    private AudioSource consumptionAudio;
     public event Action<DrinkData> OnDrinkConsumed;
 
     private void Awake()
@@ -26,6 +27,26 @@ public sealed class DrinkingSystem : MonoBehaviour
             return true;
         }
         finally { isConsuming = false; }
+    }
+
+    public void PlayDrinkSound(AudioSource source)
+    {
+        if (source == null || source.clip == null) return;
+
+        // Keep the sound alive when a single-use bottle is deactivated.
+        if (consumptionAudio == null)
+        {
+            consumptionAudio = gameObject.AddComponent<AudioSource>();
+            consumptionAudio.playOnAwake = false;
+            consumptionAudio.loop = false;
+            consumptionAudio.spatialBlend = 0f;
+        }
+
+        consumptionAudio.outputAudioMixerGroup = source.outputAudioMixerGroup;
+        consumptionAudio.volume = source.volume;
+        consumptionAudio.pitch = source.pitch;
+        consumptionAudio.mute = source.mute;
+        consumptionAudio.PlayOneShot(source.clip);
     }
 
     private void ApplyConsumption(DrinkData drink)

@@ -9,6 +9,7 @@ public sealed class NPCDrinkOffer : MonoBehaviour, IInteractable
     [SerializeField] private DialogueUI dialogueUI;
     [SerializeField] private bool singleOffer = true;
     [SerializeField] private string interactionPrompt = "[F] Talk";
+    [SerializeField] private AudioSource bebida;
     private readonly HashSet<Collider> playerColliders = new HashSet<Collider>();
     private DrinkingSystem nearbyPlayer;
     private bool offerUsed;
@@ -67,6 +68,7 @@ public sealed class NPCDrinkOffer : MonoBehaviour, IInteractable
         if (!ReferenceEquals(source, this) || nearbyPlayer == null || offerUsed) return;
         if (accepted)
         {
+            bebida.Play();
             offerUsed = singleOffer;
             if (!nearbyPlayer.ConsumeDrink(offeredDrink)) { offerUsed = false; return; }
 
