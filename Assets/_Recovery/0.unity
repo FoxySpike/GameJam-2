@@ -2508,7 +2508,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SceneTrigger
   sceneToLoad: Nivel 3 - Cruzar la calle
   level1Flow: {fileID: 403341044}
-  permanentlyLocked: 0
+  permanentlyLocked: 1
   enableLevel3TestShortcut: 0
   requireHeldChicken: 0
 --- !u!65 &291126714
@@ -2997,7 +2997,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 385319579}
-  m_Mesh: {fileID: 855131390749405241, guid: dc6b24fd145817a469184ad30b8d48ca, type: 3}
+  m_Mesh: {fileID: 855131390749405241, guid: b3de53f123537824d8efca6d49a7b8b3, type: 3}
 --- !u!4 &385319582
 Transform:
   m_ObjectHideFlags: 0
@@ -3605,7 +3605,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 456591547}
-  m_Mesh: {fileID: 855131390749405241, guid: dc6b24fd145817a469184ad30b8d48ca, type: 3}
+  m_Mesh: {fileID: 855131390749405241, guid: b3de53f123537824d8efca6d49a7b8b3, type: 3}
 --- !u!4 &456591550
 Transform:
   m_ObjectHideFlags: 0
@@ -3812,7 +3812,7 @@ PrefabInstance:
     - target: {fileID: 1174166323374602601, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
       propertyPath: m_fontAsset
       value: 
-      objectReference: {fileID: 11400000, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
+      objectReference: {fileID: 11400000, guid: 8a89fa14b10d46a99122fd4f73fca9a2, type: 2}
     - target: {fileID: 1174166323374602601, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
       propertyPath: m_fontStyle
       value: 0
@@ -3831,7 +3831,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1174166323374602601, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
       propertyPath: m_hasFontAssetChanged
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1585673283206931827, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
       propertyPath: m_AnchorMax.y
@@ -3928,7 +3928,7 @@ PrefabInstance:
     - target: {fileID: 2519834649297921485, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
       propertyPath: m_fontAsset
       value: 
-      objectReference: {fileID: 11400000, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
+      objectReference: {fileID: 11400000, guid: 8a89fa14b10d46a99122fd4f73fca9a2, type: 2}
     - target: {fileID: 2519834649297921485, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
       propertyPath: m_fontSizeBase
       value: 25
@@ -3947,7 +3947,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2519834649297921485, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
       propertyPath: m_hasFontAssetChanged
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2519834649297921485, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
       propertyPath: m_enableVertexGradient
@@ -6624,7 +6624,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 891696724}
-  m_Mesh: {fileID: 855131390749405241, guid: dc6b24fd145817a469184ad30b8d48ca, type: 3}
+  m_Mesh: {fileID: 855131390749405241, guid: b3de53f123537824d8efca6d49a7b8b3, type: 3}
 --- !u!4 &891696727
 Transform:
   m_ObjectHideFlags: 0
@@ -7222,7 +7222,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1046627317}
-  m_Mesh: {fileID: 855131390749405241, guid: dc6b24fd145817a469184ad30b8d48ca, type: 3}
+  m_Mesh: {fileID: 855131390749405241, guid: b3de53f123537824d8efca6d49a7b8b3, type: 3}
 --- !u!4 &1046627320
 Transform:
   m_ObjectHideFlags: 0
@@ -7746,7 +7746,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1107636795}
-  m_Mesh: {fileID: 855131390749405241, guid: dc6b24fd145817a469184ad30b8d48ca, type: 3}
+  m_Mesh: {fileID: 855131390749405241, guid: b3de53f123537824d8efca6d49a7b8b3, type: 3}
 --- !u!4 &1107636798
 Transform:
   m_ObjectHideFlags: 0
@@ -9235,7 +9235,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1368208025}
-  m_Mesh: {fileID: 7807538432633192378, guid: dc6b24fd145817a469184ad30b8d48ca, type: 3}
+  m_Mesh: {fileID: 7807538432633192378, guid: b3de53f123537824d8efca6d49a7b8b3, type: 3}
 --- !u!4 &1368208028
 Transform:
   m_ObjectHideFlags: 0
@@ -9742,7 +9742,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1414499918}
-  m_Mesh: {fileID: 7807538432633192378, guid: dc6b24fd145817a469184ad30b8d48ca, type: 3}
+  m_Mesh: {fileID: 7807538432633192378, guid: b3de53f123537824d8efca6d49a7b8b3, type: 3}
 --- !u!4 &1414499921
 Transform:
   m_ObjectHideFlags: 0
@@ -9999,7 +9999,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1436363496}
-  m_Mesh: {fileID: 7807538432633192378, guid: dc6b24fd145817a469184ad30b8d48ca, type: 3}
+  m_Mesh: {fileID: 7807538432633192378, guid: b3de53f123537824d8efca6d49a7b8b3, type: 3}
 --- !u!4 &1436363499
 Transform:
   m_ObjectHideFlags: 0
@@ -12009,7 +12009,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1825792247}
-  m_Mesh: {fileID: 855131390749405241, guid: dc6b24fd145817a469184ad30b8d48ca, type: 3}
+  m_Mesh: {fileID: 855131390749405241, guid: b3de53f123537824d8efca6d49a7b8b3, type: 3}
 --- !u!4 &1825792250
 Transform:
   m_ObjectHideFlags: 0
@@ -13672,7 +13672,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2076475753}
-  m_Mesh: {fileID: 7807538432633192378, guid: dc6b24fd145817a469184ad30b8d48ca, type: 3}
+  m_Mesh: {fileID: 7807538432633192378, guid: b3de53f123537824d8efca6d49a7b8b3, type: 3}
 --- !u!4 &2076475756
 Transform:
   m_ObjectHideFlags: 0
@@ -14832,7 +14832,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2677512408879336787}
-  m_Mesh: {fileID: 855131390749405241, guid: dc6b24fd145817a469184ad30b8d48ca, type: 3}
+  m_Mesh: {fileID: 855131390749405241, guid: b3de53f123537824d8efca6d49a7b8b3, type: 3}
 --- !u!64 &8505261587137389224
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -14881,7 +14881,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8564640755304598238}
-  m_Mesh: {fileID: 7807538432633192378, guid: dc6b24fd145817a469184ad30b8d48ca, type: 3}
+  m_Mesh: {fileID: 7807538432633192378, guid: b3de53f123537824d8efca6d49a7b8b3, type: 3}
 --- !u!64 &8950622723903770683
 MeshCollider:
   m_ObjectHideFlags: 0
