@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Trago Sospechoso
   m_EditorClassIdentifier: Assembly-CSharp::DrinkData
   drinkName: Trago Sospechoso
-  alcoholAmount: 5
+  alcoholAmount: 25
   isAdulterated: 1
