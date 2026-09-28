@@ -1492,23 +1492,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovementV3
   perfilesEstado:
   - estado: 0
-    walkSpeed: 1.5
-    sprintSpeed: 2
+    walkSpeed: 3
+    sprintSpeed: 4
     driftAngleMax: 0
     strafeWeight: 1
   - estado: 1
-    walkSpeed: 3
-    sprintSpeed: 5.5
+    walkSpeed: 1.8
+    sprintSpeed: 3.7
     driftAngleMax: 20
     strafeWeight: 0.8
   - estado: 2
-    walkSpeed: 2.5
-    sprintSpeed: 4
+    walkSpeed: 1.5
+    sprintSpeed: 3.3
     driftAngleMax: 45
     strafeWeight: 0.9
   - estado: 3
-    walkSpeed: 2
-    sprintSpeed: 2.5
+    walkSpeed: 1.2
+    sprintSpeed: 2.8
     driftAngleMax: 75
     strafeWeight: 1
   cameraTransform: {fileID: 2741261536094228852}

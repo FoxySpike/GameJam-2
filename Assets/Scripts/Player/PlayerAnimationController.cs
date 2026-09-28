@@ -65,18 +65,16 @@ public sealed class PlayerAnimationController : MonoBehaviour
             animator.SetBool(IsSprinting, false);
     }
 
-    private void SetSprinting(bool sprinting)
-    {
-        bool isSober = !animator.GetBool(IsDrunk);
-        animator.SetBool(IsSprinting, sprinting && isSober);
-    }
+private void SetSprinting(bool sprinting)
+{
+    animator.SetBool(IsSprinting, sprinting);
+}
 
-    private void SetAlcoholState(NivelBorrachera state)
-    {
-        bool isDrunk = state != NivelBorrachera.Sober;
-        animator.SetBool(IsDrunk, isDrunk);
-
-        if (isDrunk)
-            animator.SetBool(IsSprinting, false);
-    }
+private void SetAlcoholState(NivelBorrachera state)
+{
+    animator.SetBool(
+        IsDrunk,
+        state != NivelBorrachera.Sober
+    );
+}
 }

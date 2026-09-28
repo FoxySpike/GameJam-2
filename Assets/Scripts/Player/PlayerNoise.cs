@@ -6,32 +6,31 @@ public class PlayerNoise : MonoBehaviour
     [SerializeField] private float sprintNoiseRadius = 12f;
     [SerializeField] private float noiseCooldown = 1f;
 
-    private PlayerInputReader inputReader;
+    private PlayerMovementV3 movement;
 
     private float noiseTimer;
 
     private void Awake()
     {
-        inputReader = GetComponent<PlayerInputReader>();
+        movement = GetComponent<PlayerMovementV3>();
     }
 
-    private void Update()
+private void Update()
+{
+    if (movement == null || !movement.IsSprinting)
     {
-        if (!inputReader.Sprint)
-        {
-            noiseTimer = 0f;
-            return;
-        }
-
-        noiseTimer -= Time.deltaTime;
-
-        if (noiseTimer > 0f)
-            return;
-
-        MakeNoise();
-
-        noiseTimer = noiseCooldown;
+        noiseTimer = 0f;
+        return;
     }
+
+    noiseTimer -= Time.deltaTime;
+
+    if (noiseTimer > 0f)
+        return;
+
+    MakeNoise();
+    noiseTimer = noiseCooldown;
+}
 
     private void MakeNoise()
     {

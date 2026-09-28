@@ -201,7 +201,7 @@ public class PlayerMovementV3 : MonoBehaviour
         else
         {
             IsMoving = true;
-            IsSprinting = inputReader.Sprint && currentAlcoholState == NivelBorrachera.Sober;
+            IsSprinting = inputReader.Sprint;
 
             Vector3 camForward = cameraTransform.forward;
             Vector3 camRight = cameraTransform.right;
@@ -240,13 +240,12 @@ public class PlayerMovementV3 : MonoBehaviour
                 : currentWalkSpeed;
         }
 
-        ApplyGravity();
+ApplyGravity();
 
-        finalMoveDirection.y = verticalVelocity;
+Vector3 velocity = finalMoveDirection * currentSpeed;
+velocity.y = verticalVelocity;
 
-        characterController.Move(
-            finalMoveDirection * Time.deltaTime * Mathf.Max(currentSpeed, 1f)
-        );
+characterController.Move(velocity * Time.deltaTime);
     }
 
     private void ApplyGravity()
@@ -267,9 +266,6 @@ public class PlayerMovementV3 : MonoBehaviour
     private void SetTargetProfile(NivelBorrachera newState)
     {
         currentAlcoholState = newState;
-
-        if (newState != NivelBorrachera.Sober)
-            IsSprinting = false;
 
         foreach (PerfilBorrachera perfil in perfilesEstado)
         {
