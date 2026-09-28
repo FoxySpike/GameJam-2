@@ -9,7 +9,8 @@ public sealed class PlayerInputReader : MonoBehaviour
     public enum InputContext
     {
         Player,
-        Fridge
+        Fridge,
+        Grill
     }
 
     private readonly HashSet<object> blockers = new HashSet<object>();
@@ -33,6 +34,9 @@ public sealed class PlayerInputReader : MonoBehaviour
 
     public bool HoldBreath => GameplayEnabled && CurrentContext == InputContext.Fridge && actions.Fridge.HoldBreath.IsPressed();
     public bool IsGrabbing => GameplayEnabled && CurrentContext == InputContext.Fridge && actions.Fridge.Grab.IsPressed();
+
+    public float GrillHeatControl => (GameplayEnabled && CurrentContext == InputContext.Grill) ? actions.Grill.HeatControl.ReadValue<float>() : 0f;
+    public Vector2 GrillLookInput => (GameplayEnabled && CurrentContext == InputContext.Grill) ? actions.Grill.Look.ReadValue<Vector2>() : Vector2.zero;
 
     // --- EVENTOS ---
     public event Action Interact;
@@ -85,6 +89,7 @@ public sealed class PlayerInputReader : MonoBehaviour
     {
         actions.Player.Disable();
         actions.Fridge.Disable();
+        actions.Grill.Disable(); // NUEVO: Asegurarnos de apagarlo también
 
         if (GameplayEnabled)
         {
@@ -95,6 +100,9 @@ public sealed class PlayerInputReader : MonoBehaviour
                     break;
                 case InputContext.Fridge:
                     actions.Fridge.Enable();
+                    break;
+                case InputContext.Grill: // NUEVO: Encender los controles de la parrilla
+                    actions.Grill.Enable();
                     break;
             }
         }

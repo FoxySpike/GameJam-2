@@ -1,4 +1,4 @@
-using System;
+Ôªøusing System;
 using UnityEngine;
 
 public class NoiseManager : MonoBehaviour
@@ -12,41 +12,32 @@ public class NoiseManager : MonoBehaviour
     [Tooltip("Cantidad de ruido que se disipa por segundo.")]
     [SerializeField] private float noiseDecreaseRate = 15f;
 
-    // Evento para que la UI se entere cuando el ruido cambie
+    // Eventos
     public event Action<float, float> OnNoiseChanged;
-
-    // Evento para cuando se llena la barra
     public event Action OnMaxNoiseReached;
 
     private bool isMaxNoiseReached = false;
-
 
     private void Awake()
     {
         if (Instance == null)
         {
-            Instance = this; // Si soy el primero, me asigno como LA instancia
+            Instance = this;
         }
         else
         {
-            // Si ya existe otro NoiseManager, me destruyo para evitar duplicados
-            Debug.LogWarning("Se intentÛ crear m·s de un NoiseManager. Destruyendo duplicado.");
+            Debug.LogWarning("Se intent√≥ crear m√°s de un NoiseManager. Destruyendo duplicado.");
             Destroy(gameObject);
         }
     }
 
     private void Update()
     {
-        // Si ya perdimos/llegamos al m·ximo, o si no hay ruido, no hacemos nada
         if (isMaxNoiseReached || currentNoise <= 0f) return;
 
-        // Reducimos el ruido bas·ndonos en el tiempo que pasÛ este frame
         currentNoise -= noiseDecreaseRate * Time.deltaTime;
-
-        // Evitamos que baje de 0
         if (currentNoise < 0f) currentNoise = 0f;
 
-        // MUY IMPORTANTE: Le avisamos a la UI que el valor cambiÛ
         OnNoiseChanged?.Invoke(currentNoise, maxNoise);
     }
 
@@ -57,14 +48,29 @@ public class NoiseManager : MonoBehaviour
         currentNoise += amount;
         currentNoise = Mathf.Clamp(currentNoise, 0, maxNoise);
 
-        // Avisamos a la UI del pico de ruido
         OnNoiseChanged?.Invoke(currentNoise, maxNoise);
 
         if (currentNoise >= maxNoise)
         {
             isMaxNoiseReached = true;
+
+            // 1. Notificamos a cualquier observador externo que se llen√≥ el ruido
             OnMaxNoiseReached?.Invoke();
-            Debug.Log("°BARRA DE RUIDO LLENA! Ejecutando evento secreto...");
+
+            // 2. Ejecutamos la consecuencia de la derrota global
+            TriggerGameOverEvent();
         }
+    }
+
+    /// <summary>
+    /// Este m√©todo se dispara √öNICAMENTE cuando la barra de ruido llega al 100%.
+    /// Aqu√≠ puedes poner la l√≥gica secreta de derrota cuando est√©s listo.
+    /// </summary>
+    private void TriggerGameOverEvent()
+    {
+        Debug.Log("üö® ¬°RUIDO M√ÅXIMO ALCANZADO!");
+
+        // Notificamos a GameOverManager (y a cualquier otro interesado)
+        OnMaxNoiseReached?.Invoke();
     }
 }
