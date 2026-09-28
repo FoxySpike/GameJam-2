@@ -192,6 +192,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa00a970fa5fba449b4ab33cce6999a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GrabbableItem
+  gripPoint: {fileID: 0}
 --- !u!82 &27277548
 AudioSource:
   m_ObjectHideFlags: 0
@@ -500,6 +501,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa00a970fa5fba449b4ab33cce6999a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GrabbableItem
+  gripPoint: {fileID: 0}
 --- !u!82 &100048806
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1800,6 +1802,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa00a970fa5fba449b4ab33cce6999a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GrabbableItem
+  gripPoint: {fileID: 0}
 --- !u!82 &518828957
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2991,6 +2994,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa00a970fa5fba449b4ab33cce6999a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GrabbableItem
+  gripPoint: {fileID: 0}
 --- !u!1 &948639527
 GameObject:
   m_ObjectHideFlags: 0
@@ -3337,6 +3341,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa00a970fa5fba449b4ab33cce6999a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GrabbableItem
+  gripPoint: {fileID: 0}
 --- !u!82 &1028326917
 AudioSource:
   m_ObjectHideFlags: 0
@@ -4281,6 +4286,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa00a970fa5fba449b4ab33cce6999a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GrabbableItem
+  gripPoint: {fileID: 0}
 --- !u!82 &1206356289
 AudioSource:
   m_ObjectHideFlags: 0
@@ -4558,6 +4564,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa00a970fa5fba449b4ab33cce6999a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GrabbableItem
+  gripPoint: {fileID: 0}
 --- !u!82 &1264974910
 AudioSource:
   m_ObjectHideFlags: 0
@@ -4910,6 +4917,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa00a970fa5fba449b4ab33cce6999a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GrabbableItem
+  gripPoint: {fileID: 0}
 --- !u!82 &1371951995
 AudioSource:
   m_ObjectHideFlags: 0
@@ -5369,6 +5377,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 261bd264d89f7954cbc963b11c76809f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FridgeExtractionZone
+  fridgeController: {fileID: 2038239968}
 --- !u!1001 &1565890617
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5784,9 +5793,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1652021214}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ec1d4d17c1391d45b332a6dbec3b141, type: 3}
+  m_Script: {fileID: 11500000, guid: 54945972670f6af41bed82cb8049444e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GrillMinigameUI
+  minigameController: {fileID: 673353579}
+  progressBarFill: {fileID: 1867044510}
+  needleTransform: {fileID: 1332448387}
+  minHeatAngle: -100
+  maxHeatAngle: 270
 --- !u!1 &1673991482
 GameObject:
   m_ObjectHideFlags: 0
@@ -5897,6 +5911,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa00a970fa5fba449b4ab33cce6999a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GrabbableItem
+  gripPoint: {fileID: 0}
 --- !u!82 &1684987182
 AudioSource:
   m_ObjectHideFlags: 0
@@ -6785,8 +6800,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FridgeInteractable
   promptMessage: Presiona F para abrir la nevera
   fridgeCamera: {fileID: 300891211}
-  playerHUD: {fileID: 0}
-  fridgeHUD: {fileID: 0}
 --- !u!1 &2081908090
 GameObject:
   m_ObjectHideFlags: 0
@@ -15137,6 +15150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa00a970fa5fba449b4ab33cce6999a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GrabbableItem
+  gripPoint: {fileID: 0}
 --- !u!114 &9125429497333444854
 MonoBehaviour:
   m_ObjectHideFlags: 0
