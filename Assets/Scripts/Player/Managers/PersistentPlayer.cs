@@ -38,7 +38,7 @@ public class PersistentPlayer : MonoBehaviour
             gameObject.AddComponent<DrunkenVision>();
 
         if (InputReader == null)
-            Debug.LogError("[PersistentPlayer] �Falta el PlayerInputReader en el jugador!");
+            Debug.LogError("[PersistentPlayer]  Falta el PlayerInputReader en el jugador!");
     }
 
     private void OnDestroy()

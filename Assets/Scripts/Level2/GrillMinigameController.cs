@@ -20,8 +20,8 @@ public class GrillMinigameController : MonoBehaviour
     [SerializeField] private float driftChangeInterval = 4f;
 
     [Tooltip("Fuerza base del jugador dentro de la zona segura (40-60)")]
-    [SerializeField] private float baseHeatUpRate = 45f;
-    [SerializeField] private float baseActiveCooldownRate = 45f;
+    [SerializeField] private float baseHeatUpRate = 70f;
+    [SerializeField] private float baseActiveCooldownRate = 70f;
 
     [Tooltip("Multiplicador de potencia cuando la aguja entra en zona de peligro (<40 o >60)")]
     [SerializeField] private float rescueMultiplier = 1.8f;
@@ -62,6 +62,12 @@ public class GrillMinigameController : MonoBehaviour
     public void StartMinigame(PlayerInputReader playerInput)
     {
         inputReader = playerInput;
+
+        if (inputReader != null)
+        {
+            inputReader.SetContext(PlayerInputReader.InputContext.Grill);
+        }
+
         isPlaying = true;
         currentHeat = 50f;
         currentProgress = 0f;

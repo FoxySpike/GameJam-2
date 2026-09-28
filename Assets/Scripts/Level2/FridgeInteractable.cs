@@ -8,10 +8,6 @@ public class FridgeInteractable : MonoBehaviour, IInteractable
     [Header("Camera Setup")]
     [SerializeField] private Camera fridgeCamera;
 
-    [Header("UI Panels Optional (Opcional)")]
-    [SerializeField] private GameObject playerHUD;
-    [SerializeField] private GameObject fridgeHUD;
-
     private PlayerInputReader activeInputReader;
     private Camera mainCamera;
     private bool isInMinigame;
@@ -20,13 +16,12 @@ public class FridgeInteractable : MonoBehaviour, IInteractable
 
     private void Awake()
     {
-        IntoxicationCamera.Ensure(fridgeCamera);
-        fridgeCamera.gameObject.SetActive(false);
+        if (fridgeCamera != null)
+            fridgeCamera.gameObject.SetActive(false);
     }
 
     public bool CanInteract(GameObject interactor)
     {
-        // No se puede interactuar si ya estamos dentro del minijuego
         return !isInMinigame;
     }
 
@@ -34,10 +29,9 @@ public class FridgeInteractable : MonoBehaviour, IInteractable
     {
         if (isInMinigame) return;
 
-        // 1. Obtener el componente del jugador de forma segura
         if (!interactor.TryGetComponent(out activeInputReader))
         {
-            Debug.LogWarning($"[FridgeInteractable] El objeto '{interactor.name}' no tiene un componente PlayerInputReader.", this);
+            Debug.LogWarning($"[FridgeInteractable] El objeto '{interactor.name}' no tiene PlayerInputReader.", this);
             return;
         }
 
@@ -48,55 +42,82 @@ public class FridgeInteractable : MonoBehaviour, IInteractable
     {
         isInMinigame = true;
 
-        // 2. Gestionar la transición de cámaras
         mainCamera = Camera.main;
         if (mainCamera != null) mainCamera.gameObject.SetActive(false);
         if (fridgeCamera != null) fridgeCamera.gameObject.SetActive(true);
 
-        // 3. Gestionar la visibilidad de la interfaz de usuario (UI)
-        if (playerHUD != null) playerHUD.SetActive(false);
-        if (fridgeHUD != null) fridgeHUD.SetActive(true);
+        // Sigue siendo válido usar el Singleton para la UI global del sistema
+        if (PersistentPlayer.Instance != null)
+        {
+            if (PersistentPlayer.Instance.Player3rdPersonHUD != null)
+                PersistentPlayer.Instance.Player3rdPersonHUD.SetActive(false);
 
-        // 4. Cambiar el contexto de controles en el InputReader
+            if (PersistentPlayer.Instance.Player1stPersonHUD != null)
+                PersistentPlayer.Instance.Player1stPersonHUD.SetActive(true);
+        }
+
         activeInputReader.SetContext(PlayerInputReader.InputContext.Fridge);
+        activeInputReader.ExitFridge += HandleManualExit;
+    }
 
-        // 5. Escuchar la orden de salida
-        activeInputReader.ExitFridge += ExitMinigame;
+    private void HandleManualExit()
+    {
+        ExitMinigame();
+    }
 
-        Debug.Log("Entrando a la nevera...");
+    public void OnItemExtracted(GameObject extractedItem)
+    {
+        Destroy(extractedItem);
+
+        // SOLUCIÓN: En lugar de buscar en el Singleton, buscamos en el jugador activo
+        if (activeInputReader != null)
+        {
+            // Como activeInputReader está en el jugador, buscamos el componente PlayerHand ahí mismo
+            if (activeInputReader.TryGetComponent(out PlayerHand playerHand))
+            {
+                playerHand.GiveChicken();
+            }
+            else
+            {
+                Debug.LogWarning("[FridgeInteractable] El jugador interactuando no tiene el script PlayerHand.");
+            }
+        }
+
+        ExitMinigame();
     }
 
     private void ExitMinigame()
     {
         if (!isInMinigame) return;
 
-        // 1. Desuscribirse INMEDIATAMENTE para evitar llamadas duplicadas o fugas de memoria
         if (activeInputReader != null)
         {
-            activeInputReader.ExitFridge -= ExitMinigame;
+            activeInputReader.ExitFridge -= HandleManualExit;
             activeInputReader.SetContext(PlayerInputReader.InputContext.Player);
-            activeInputReader = null;
+            // No hacemos activeInputReader = null; aquí para que OnItemExtracted pueda usarlo.
+            // Si quieres limpiar la referencia, hazlo al final de todo.
         }
 
-        // 2. Restaurar cámaras
         if (fridgeCamera != null) fridgeCamera.gameObject.SetActive(false);
         if (mainCamera != null) mainCamera.gameObject.SetActive(true);
 
-        // 3. Restaurar UI
-        if (fridgeHUD != null) fridgeHUD.SetActive(false);
-        if (playerHUD != null) playerHUD.SetActive(true);
+        if (PersistentPlayer.Instance != null)
+        {
+            if (PersistentPlayer.Instance.Player1stPersonHUD != null)
+                PersistentPlayer.Instance.Player1stPersonHUD.SetActive(false);
+
+            if (PersistentPlayer.Instance.Player3rdPersonHUD != null)
+                PersistentPlayer.Instance.Player3rdPersonHUD.SetActive(true);
+        }
 
         isInMinigame = false;
-
-        Debug.Log("Saliendo de la nevera...");
     }
 
     private void OnDisable()
     {
-        // Limpieza de seguridad: Si el objeto se desactiva mientras jugamos, cancelamos la suscripción
         if (isInMinigame && activeInputReader != null)
         {
-            activeInputReader.ExitFridge -= ExitMinigame;
+            activeInputReader.ExitFridge -= HandleManualExit;
             activeInputReader.SetContext(PlayerInputReader.InputContext.Player);
             isInMinigame = false;
         }
