@@ -683,7 +683,7 @@ GameObject:
   - component: {fileID: 244970972}
   - component: {fileID: 244970971}
   - component: {fileID: 244970970}
-  m_Layer: 11
+  m_Layer: 10
   m_Name: Cube (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1410,14 +1410,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a995c7cb27f90246bf5ed94f3de1cd9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HandGrabber
-  inputReader: {fileID: 6279258556390847891}
-  handController: {fileID: 381056148}
   grabPoint: {fileID: 161882274}
-  armPivotRigidbody: {fileID: 381056146}
+  playerRoot: {fileID: 0}
   grabRadius: 0.16
   grabbableLayer:
     serializedVersion: 2
     m_Bits: 64
+  handController: {fileID: 381056148}
 --- !u!54 &381056146
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1476,7 +1475,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee50a5c20a4102b4c8b4c87a603b3693, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FridgeHandController
-  inputReader: {fileID: 6279258556390847891}
   xySensitivity: 0.005
   followSpeed: 25
   maxVelocity: 8
@@ -2266,7 +2264,7 @@ GameObject:
   - component: {fileID: 600668806}
   - component: {fileID: 600668805}
   - component: {fileID: 600668804}
-  m_Layer: 11
+  m_Layer: 10
   m_Name: Cube (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2908,7 +2906,7 @@ GameObject:
   - component: {fileID: 776759879}
   - component: {fileID: 776759878}
   - component: {fileID: 776759877}
-  m_Layer: 11
+  m_Layer: 10
   m_Name: Cube (8)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3416,7 +3414,7 @@ GameObject:
   - component: {fileID: 948639531}
   - component: {fileID: 948639530}
   - component: {fileID: 948639529}
-  m_Layer: 11
+  m_Layer: 10
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6678,7 +6676,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 280686530dfb3ab4ca4e6d41eac67b1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FridgeRigController
-  inputReader: {fileID: 6279258556390847891}
   moveSpeed: 2
   minRigBounds: {x: -0.1, y: -0.37, z: 0}
   maxRigBounds: {x: 0.48, y: 0.28, z: 1.5}
@@ -7236,7 +7233,7 @@ GameObject:
   - component: {fileID: 1761502332}
   - component: {fileID: 1761502331}
   - component: {fileID: 1761502330}
-  m_Layer: 11
+  m_Layer: 10
   m_Name: Cube (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7807,7 +7804,7 @@ GameObject:
   - component: {fileID: 1855851364}
   - component: {fileID: 1855851363}
   - component: {fileID: 1855851362}
-  m_Layer: 11
+  m_Layer: 10
   m_Name: Cube (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

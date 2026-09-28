@@ -5,18 +5,19 @@ TagManager:
   serializedVersion: 3
   tags:
   - SpawnPoint
+  - TargetItem
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - ItemEnMano
   - Water
   - UI
   - Grabbable Layer
   - MovingPlatform
   - Intoxication
-  - 
-  - 
+  - Mesa
+  - Nevera
   - 
   - 
   - 
