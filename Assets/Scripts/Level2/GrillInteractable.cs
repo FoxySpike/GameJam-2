@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class GrillInteractable : MonoBehaviour, IInteractable
 {
@@ -25,7 +25,7 @@ public class GrillInteractable : MonoBehaviour, IInteractable
             return currentState switch
             {
                 GrillState.Empty => "Presiona E para colocar el pollo",
-                GrillState.Cooking => "Cocinando... ¡Concéntrate!",
+                GrillState.Cooking => "Cocinando... Â¡ConcÃ©ntrate!",
                 GrillState.Finished_Perfect => "Presiona E para recoger tu pollo cocinado",
                 _ => ""
             };
@@ -69,7 +69,7 @@ public class GrillInteractable : MonoBehaviour, IInteractable
 
                 currentPlayerInput.SetContext(PlayerInputReader.InputContext.Grill);
 
-                // Suscripción a eventos del minijuego
+                // SuscripciÃ³n a eventos del minijuego
                 grillMinigame.OnMinigameWon += HandleVictory;
                 grillMinigame.OnMinigameLost += HandleDefeat;
 
@@ -97,17 +97,17 @@ public class GrillInteractable : MonoBehaviour, IInteractable
         if (chickenOnGrillVisual != null) chickenOnGrillVisual.SetActive(false);
         currentState = GrillState.Empty;
 
-        // Ejecutamos la lógica/evento de derrota
+        // Ejecutamos la lÃ³gica/evento de derrota
         OnChickenRuined();
     }
 
     /// <summary>
-    /// Método / Función vacía para implementar más adelante cuando el pollo se arruine.
+    /// MÃ©todo / FunciÃ³n vacÃ­a para implementar mÃ¡s adelante cuando el pollo se arruine.
     /// </summary>
     private void OnChickenRuined()
     {
-        // TODO: Agregar partículas de humo negro, sonido de quemado o restar puntuación.
-        Debug.Log("[EVENTO DERROTA]: El pollo se arruinó.");
+        // TODO: Agregar partÃ­culas de humo negro, sonido de quemado o restar puntuaciÃ³n.
+        Debug.Log("[EVENTO DERROTA]: El pollo se arruinÃ³.");
     }
 
     private void EndCookingPhase()
@@ -124,8 +124,19 @@ public class GrillInteractable : MonoBehaviour, IInteractable
 
     private void CollectPerfectChicken(GameObject interactor)
     {
-        if (chickenOnGrillVisual != null) chickenOnGrillVisual.SetActive(false);
-        currentState = GrillState.Empty;
-        Debug.Log("Pollo cocinado recogido.");
+        if (interactor.TryGetComponent(out PlayerHand hand))
+        {
+            // ðŸŸ¢ ENTREGAMOS EL POLLO COCINADO AL JUGADOR
+            hand.GiveChicken();
+
+            if (chickenOnGrillVisual != null) chickenOnGrillVisual.SetActive(false);
+            currentState = GrillState.Empty;
+
+            Debug.Log("Pollo cocinado recogido correctamente.");
+        }
+        else
+        {
+            Debug.LogWarning("El interactor no tiene el componente PlayerHand.");
+        }
     }
 }
