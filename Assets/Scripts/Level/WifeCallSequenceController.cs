@@ -14,6 +14,12 @@ public sealed class WifeCallSequenceController : MonoBehaviour
     [SerializeField] private TMP_Text statusText;
     [SerializeField] private TMP_Text timerText;
     [SerializeField] private ObjectiveUI objectiveUI;
+
+    [Header("Call Audio")]
+    [SerializeField] private AudioClip ringtoneClip;
+    [SerializeField] private AudioClip beepClip;
+    [SerializeField] private AudioClip wifeCallClip;
+
     [SerializeField, Min(0f)] private float slideDuration = 0.35f;
     [SerializeField, Min(0f)] private float incomingCallDuration = 2f;
     [SerializeField, Min(0f)] private float lineDuration = 2.5f;
@@ -25,6 +31,7 @@ public sealed class WifeCallSequenceController : MonoBehaviour
     private Vector2 visiblePosition;
     private bool connected;
     private float connectedAt;
+    private AudioSource callAudioSource;
 
     public bool IsPlaying => sequence != null;
     public bool IsComplete { get; private set; }
@@ -48,6 +55,11 @@ public sealed class WifeCallSequenceController : MonoBehaviour
             blackout.gameObject.SetActive(false);
         }
         phoneRect = phonePanel.GetComponent<RectTransform>();
+        callAudioSource = GetComponent<AudioSource>();
+        if (callAudioSource == null) callAudioSource = gameObject.AddComponent<AudioSource>();
+        callAudioSource.playOnAwake = false;
+        callAudioSource.loop = false;
+        callAudioSource.spatialBlend = 0f;
         if (phoneRect != null) visiblePosition = phoneRect.anchoredPosition;
         if (phoneGroup != null)
         {
@@ -74,16 +86,31 @@ public sealed class WifeCallSequenceController : MonoBehaviour
         dialogueText.text = "Incoming call...";
         if (statusText != null) statusText.text = "INCOMING CALL";
         if (timerText != null) timerText.text = string.Empty;
+
+        float ringtoneStartedAt = Time.realtimeSinceStartup;
+        PlayCallClip(ringtoneClip);
         yield return Slide(true);
-        yield return new WaitForSecondsRealtime(incomingCallDuration);
+        float remainingRingtoneTime = incomingCallDuration - (Time.realtimeSinceStartup - ringtoneStartedAt);
+        if (remainingRingtoneTime > 0f)
+            yield return new WaitForSecondsRealtime(remainingRingtoneTime);
+
+        callAudioSource.Stop();
+        if (beepClip != null)
+        {
+            PlayCallClip(beepClip);
+            yield return new WaitForSecondsRealtime(beepClip.length);
+        }
+
         connected = true;
         connectedAt = Time.unscaledTime;
         if (statusText != null) statusText.text = "CALL CONNECTED";
+        PlayCallClip(wifeCallClip);
         foreach (string line in dialogueLines)
         {
             dialogueText.text = line;
             yield return new WaitForSecondsRealtime(lineDuration);
         }
+        callAudioSource.Stop();
         connected = false;
         if (statusText != null) statusText.text = "CALL ENDED";
         dialogueText.text = "You'd better get that chicken.";
@@ -126,11 +153,19 @@ public sealed class WifeCallSequenceController : MonoBehaviour
         if (phoneGroup != null) phoneGroup.alpha = entering ? 1f : 0f;
     }
 
+    private void PlayCallClip(AudioClip clip)
+    {
+        if (clip == null || callAudioSource == null) return;
+        callAudioSource.clip = clip;
+        callAudioSource.Play();
+    }
+
     private void OnDisable()
     {
         if (sequence != null) StopCoroutine(sequence);
         sequence = null;
         connected = false;
+        if (callAudioSource != null) callAudioSource.Stop();
         if (phonePanel != null) phonePanel.SetActive(false);
         if (phoneRect != null) phoneRect.anchoredPosition = visiblePosition;
     }
