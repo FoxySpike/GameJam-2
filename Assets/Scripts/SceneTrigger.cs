@@ -12,6 +12,8 @@ public class SceneTrigger : MonoBehaviour
     private bool loading;
     private Collider triggerCollider;
 
+    [SerializeField] private bool requireHeldChicken;
+
     public event Action OnEntryStarted;
 
     public string SceneToLoad => sceneToLoad;
@@ -56,6 +58,14 @@ public class SceneTrigger : MonoBehaviour
         if (!CanEnter) return;
         var player = other.GetComponentInParent<PlayerInputReader>();
         if (!other.CompareTag("Player") && player == null) return;
+        if (requireHeldChicken)
+        {
+            ChickenCarryController chicken =
+                FindAnyObjectByType<ChickenCarryController>();
+
+            if (chicken == null || !chicken.IsHeld)
+                return;
+        }
         if (SceneLoader.Instance == null) return;
         loading = true;
         OnEntryStarted?.Invoke();

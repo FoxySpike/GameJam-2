@@ -33,10 +33,19 @@ public sealed class ChickenCarryController : MonoBehaviour, IInteractable
         carrierRoot = targetCarrier;
     }
 
-    private void Start()
+private void Start()
+{
+    PersistentPlayer player = PersistentPlayer.Instance;
+
+    if (player != null)
     {
-        if (startHeld) AttachToCarrier(false);
+        carrierRoot = player.transform;
+        holdPoint = player.transform.Find("ChickenAttachPoint");
     }
+
+    if (startHeld)
+        AttachToCarrier(false);
+}
 
     private void Update()
     {
