@@ -27,6 +27,21 @@ public sealed class Level3FlowController : MonoBehaviour
         objectiveUI = objective;
     }
 
+    private void Awake()
+{
+    if (PersistentPlayer.Instance != null)
+        inputReader = PersistentPlayer.Instance.InputReader;
+
+    if (chicken == null || !chicken.gameObject.activeInHierarchy)
+        chicken = FindFirstObjectByType<ChickenCarryController>();
+
+    if (finishTrigger == null)
+        finishTrigger = FindFirstObjectByType<Level3FinishTrigger>();
+
+    if (objectiveUI == null)
+        objectiveUI = FindFirstObjectByType<ObjectiveUI>();
+}
+
     private void OnEnable()
     {
         if (chicken != null)

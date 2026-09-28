@@ -11,11 +11,17 @@ public sealed class DropChickenOnPlayerHit : MonoBehaviour
         if (chicken == null) chicken = GetComponent<ChickenCarryController>();
     }
 
-    private void OnEnable()
+private void OnEnable()
+{
+    if (PersistentPlayer.Instance != null)
     {
-        if (hitReaction != null)
-            hitReaction.OnHit += DropChicken;
+        hitReaction =
+            PersistentPlayer.Instance.GetComponent<PlayerHitReaction>();
     }
+
+    if (hitReaction != null)
+        hitReaction.OnHit += DropChicken;
+}
 
     private void OnDisable()
     {
