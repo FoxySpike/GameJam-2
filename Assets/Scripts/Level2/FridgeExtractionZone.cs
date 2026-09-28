@@ -8,7 +8,7 @@ public class FridgeExtractionZone : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         // Verificamos si lo que cruzó el trigger es nuestro objetivo
-        if (other.CompareTag("TargetItem"))
+        if (other.CompareTag("Pollo"))
         {
             Debug.Log("[ExtractionZone] ¡El objetivo fue extraído!");
 
