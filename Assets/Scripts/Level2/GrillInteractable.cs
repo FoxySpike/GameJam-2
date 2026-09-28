@@ -11,9 +11,13 @@ public class GrillInteractable : MonoBehaviour, IInteractable
 
     [Header("Visuals")]
     [SerializeField] private GameObject chickenOnGrillVisual;
+    [SerializeField] private Renderer chickenRenderer;
+    [SerializeField] private Material rawChickenMaterial;
+    [SerializeField] private Material cookedChickenMaterial;
 
     [Header("Referencias")]
     [SerializeField] private GrillMinigameController grillMinigame;
+    [SerializeField] private ChickenCarryController carryChickenPrefab;
 
     private GrillState currentState = GrillState.Empty;
     private PlayerInputReader currentPlayerInput;
@@ -24,9 +28,9 @@ public class GrillInteractable : MonoBehaviour, IInteractable
         {
             return currentState switch
             {
-                GrillState.Empty => "Presiona E para colocar el pollo",
-                GrillState.Cooking => "Cocinando... ¡Concéntrate!",
-                GrillState.Finished_Perfect => "Presiona E para recoger tu pollo cocinado",
+                GrillState.Empty => "Press [F] to place the raw chicken on the grill",
+                GrillState.Cooking => "Cooking... Focus!",
+                GrillState.Finished_Perfect => "Press [F] to collect your cooked chicken",
                 _ => ""
             };
         }
@@ -34,6 +38,7 @@ public class GrillInteractable : MonoBehaviour, IInteractable
 
     private void Awake()
     {
+        SetChickenMaterial(rawChickenMaterial);
         if (chickenOnGrillVisual != null) chickenOnGrillVisual.SetActive(false);
         if (grillMinigame == null) grillMinigame = GetComponent<GrillMinigameController>();
     }
@@ -58,33 +63,49 @@ public class GrillInteractable : MonoBehaviour, IInteractable
 
     private void TryPlaceChicken(GameObject interactor)
     {
-        if (interactor.TryGetComponent(out PlayerHand hand) && hand.HasChicken)
-        {
-            if (interactor.TryGetComponent(out currentPlayerInput))
-            {
-                hand.ClearHand();
-                if (chickenOnGrillVisual != null) chickenOnGrillVisual.SetActive(true);
+        ChickenCarryController chicken =
+            interactor.GetComponentInChildren<ChickenCarryController>(true);
 
-                currentState = GrillState.Cooking;
-
-                currentPlayerInput.SetContext(PlayerInputReader.InputContext.Grill);
-
-                // Suscripción a eventos del minijuego
-                grillMinigame.OnMinigameWon += HandleVictory;
-                grillMinigame.OnMinigameLost += HandleDefeat;
-
-                grillMinigame.StartMinigame(currentPlayerInput);
-            }
-        }
-        else
+        if (chicken == null || !chicken.IsHeld)
         {
             Debug.Log("No tienes el pollo crudo en la mano.");
+            return;
         }
+
+        if (!interactor.TryGetComponent(out currentPlayerInput))
+            return;
+
+        Destroy(chicken.gameObject);
+
+        SetChickenMaterial(rawChickenMaterial);
+
+        if (chickenOnGrillVisual != null)
+            chickenOnGrillVisual.SetActive(true);
+
+        currentState = GrillState.Cooking;
+        currentPlayerInput.SetContext(PlayerInputReader.InputContext.Grill);
+
+        grillMinigame.OnMinigameWon += HandleVictory;
+        grillMinigame.OnMinigameLost += HandleDefeat;
+        grillMinigame.StartMinigame(currentPlayerInput);
+    }
+
+    private void GiveChickenTo(GameObject interactor)
+    {
+        if (carryChickenPrefab == null)
+        {
+            Debug.LogError("[GrillInteractable] Falta asignar el prefab persistente del pollo.", this);
+            return;
+        }
+
+        ChickenCarryController chicken = Instantiate(carryChickenPrefab);
+        chicken.Interact(interactor);
     }
 
     private void HandleVictory()
     {
         EndCookingPhase();
+        SetChickenMaterial(cookedChickenMaterial);
         currentState = GrillState.Finished_Perfect;
         Debug.Log("Pollo perfecto listo para recoger.");
     }
@@ -124,19 +145,18 @@ public class GrillInteractable : MonoBehaviour, IInteractable
 
     private void CollectPerfectChicken(GameObject interactor)
     {
-        if (interactor.TryGetComponent(out PlayerHand hand))
-        {
-            // 🟢 ENTREGAMOS EL POLLO COCINADO AL JUGADOR
-            hand.GiveChicken();
+        GiveChickenTo(interactor);
 
-            if (chickenOnGrillVisual != null) chickenOnGrillVisual.SetActive(false);
-            currentState = GrillState.Empty;
+        if (chickenOnGrillVisual != null)
+            chickenOnGrillVisual.SetActive(false);
 
-            Debug.Log("Pollo cocinado recogido correctamente.");
-        }
-        else
-        {
-            Debug.LogWarning("El interactor no tiene el componente PlayerHand.");
-        }
+        currentState = GrillState.Empty;
+        Debug.Log("Pollo cocinado recogido correctamente.");
+    }
+
+    private void SetChickenMaterial(Material material)
+    {
+        if (chickenRenderer != null && material != null)
+            chickenRenderer.sharedMaterial = material;
     }
 }

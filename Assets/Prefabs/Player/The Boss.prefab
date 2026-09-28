@@ -576,6 +576,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1924753163419943847}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 910000000000000001}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 910000000000000002}
     - targetCorrespondingSourceObject: {fileID: 1082271958561512970, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4906114525833725254}
@@ -1696,6 +1702,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DropChickenOnFall
   chicken: {fileID: 0}
+--- !u!114 &910000000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6099346891685326864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6a85a781df8adc41ac3d4004e309848, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerBumpDetector
+--- !u!114 &910000000000000002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6099346891685326864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0af52cccb39fd0f41ac9f208fd265c11, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerPhysicsPusher
+  pushPower: 2
 --- !u!1 &6296404893056406347 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1082271958561512970, guid: 65d3c9a63eedfd64f810faac5a9df99a, type: 3}

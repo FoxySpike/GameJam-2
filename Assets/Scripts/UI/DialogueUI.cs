@@ -24,6 +24,9 @@ public sealed class DialogueUI : MonoBehaviour
 
     private void Awake()
     {
+        if (inputReader == null && PersistentPlayer.Instance != null)
+            inputReader = PersistentPlayer.Instance.InputReader;
+
         if (inputReader != null && panel != null && characterText != null &&
             dialogueText != null && acceptButton != null && rejectButton != null)
         {
