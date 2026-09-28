@@ -12,6 +12,9 @@ public class NoiseManager : MonoBehaviour
     [Tooltip("Cantidad de ruido que se disipa por segundo.")]
     [SerializeField] private float noiseDecreaseRate = 15f;
 
+    public float CurrentNoise => currentNoise;
+    public float MaxNoise => maxNoise;
+
     // Eventos
     public event Action<float, float> OnNoiseChanged;
     public event Action OnMaxNoiseReached;
@@ -53,11 +56,6 @@ public class NoiseManager : MonoBehaviour
         if (currentNoise >= maxNoise)
         {
             isMaxNoiseReached = true;
-
-            // 1. Notificamos a cualquier observador externo que se llenó el ruido
-            OnMaxNoiseReached?.Invoke();
-
-            // 2. Ejecutamos la consecuencia de la derrota global
             TriggerGameOverEvent();
         }
     }
@@ -69,8 +67,12 @@ public class NoiseManager : MonoBehaviour
     private void TriggerGameOverEvent()
     {
         Debug.Log("🚨 ¡RUIDO MÁXIMO ALCANZADO!");
-
-        // Notificamos a GameOverManager (y a cualquier otro interesado)
         OnMaxNoiseReached?.Invoke();
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+            Instance = null;
     }
 }

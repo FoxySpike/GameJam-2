@@ -4,35 +4,33 @@ using UnityEngine.SceneManagement;
 
 public class GameOverManager : MonoBehaviour
 {
-    [Header("Referencias de Escena")]
-    [SerializeField] private SleeperNPC sleeperNPC;
-    [SerializeField] private GameObject gameOverCanvas;
+    [Header("Derrota")]
+    [TextArea]
+    [SerializeField] private string defeatMessage = "¡DESPERTASTE AL EMPLEADO!\nReintentando nivel...";
+    [SerializeField] private float delayBeforeRestart = 3f;
 
-    [Header("Cinemática y Cámara")]
-    [Tooltip("Objeto o Transform hacia donde la cámara enfocará al perder (ej. la cara del NPC)")]
-    [SerializeField] private Transform npcFocusPoint;
-    [Tooltip("Tiempo en segundos antes de mostrar la UI de GameOver tras despertar el NPC")]
-    [SerializeField] private float delayBeforeShowUI = 2.5f;
+    private NoiseManager noiseManager;
+    private PlayerInputReader blockedInput;
+    private string levelSceneName;
+    private bool isGameOver;
 
-    [Header("Opcional: Desactivar Input Jugador")]
-    [SerializeField] private MonoBehaviour playerMovementScript;
-
-    private bool isGameOver = false;
-
-    private void OnEnable()
+    private void Start()
     {
-        if (NoiseManager.Instance != null)
-        {
-            NoiseManager.Instance.OnMaxNoiseReached += HandleGameOver;
-        }
+        levelSceneName = gameObject.scene.name;
+        noiseManager = NoiseManager.Instance;
+
+        if (noiseManager != null)
+            noiseManager.OnMaxNoiseReached += HandleGameOver;
+        else
+            Debug.LogError("[GameOverManager] No se encontró el NoiseManager.", this);
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
-        if (NoiseManager.Instance != null)
-        {
-            NoiseManager.Instance.OnMaxNoiseReached -= HandleGameOver;
-        }
+        if (noiseManager != null)
+            noiseManager.OnMaxNoiseReached -= HandleGameOver;
+
+        ReleasePlayerInput();
     }
 
     private void HandleGameOver()
@@ -42,41 +40,50 @@ public class GameOverManager : MonoBehaviour
 
         Debug.Log("🚨 [GameOverManager] Secuencia de Game Over iniciada.");
 
-        // 1. Desactivamos el control del jugador
-        if (playerMovementScript != null)
-        {
-            playerMovementScript.enabled = false;
-        }
-
-        // 2. Despertamos al NPC
-        if (sleeperNPC != null)
-        {
-            sleeperNPC.WakeUp();
-        }
-
-        // 3. Enfocamos la cámara (si tienes tu GrillCameraController u otro script de cámara, llámalo aquí)
-        // Ejemplo genérico haciendo que la cámara mire al NPC:
-        if (Camera.main != null && npcFocusPoint != null)
-        {
-            Camera.main.transform.LookAt(npcFocusPoint);
-        }
-
-        // 4. Iniciamos la espera para mostrar la interfaz
-        StartCoroutine(ShowGameOverSequence());
+        BlockPlayerInput();
+        ShowDefeatMessage();
+        StartCoroutine(RestartAfterDelay());
     }
 
-    private IEnumerator ShowGameOverSequence()
+    private void BlockPlayerInput()
     {
-        yield return new WaitForSeconds(delayBeforeShowUI);
+        if (PersistentPlayer.Instance != null)
+            blockedInput = PersistentPlayer.Instance.InputReader;
+        else
+            blockedInput = FindFirstObjectByType<PlayerInputReader>();
 
-        if (gameOverCanvas != null)
-        {
-            gameOverCanvas.SetActive(true);
+        if (blockedInput != null)
+            blockedInput.SetGameplayBlocked(this, true);
+    }
 
-            // Liberamos el cursor para que el jugador pueda hacer clic en Reintentar
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-        }
+    private void ShowDefeatMessage()
+    {
+        ObjectiveUI objectiveUI = null;
+
+        if (PersistentPlayer.Instance != null)
+            objectiveUI = PersistentPlayer.Instance.GetComponentInChildren<ObjectiveUI>(true);
+
+        if (objectiveUI == null)
+            objectiveUI = FindFirstObjectByType<ObjectiveUI>();
+
+        if (objectiveUI != null)
+            objectiveUI.SetObjective(defeatMessage);
+        else
+            Debug.LogWarning("[GameOverManager] No se encontró el ObjectiveUI.", this);
+    }
+
+    private IEnumerator RestartAfterDelay()
+    {
+        yield return new WaitForSeconds(delayBeforeRestart);
+        RetryLevel();
+    }
+
+    private void ReleasePlayerInput()
+    {
+        if (blockedInput == null) return;
+
+        blockedInput.SetGameplayBlocked(this, false);
+        blockedInput = null;
     }
 
     /// <summary>
@@ -84,8 +91,7 @@ public class GameOverManager : MonoBehaviour
     /// </summary>
     public void RetryLevel()
     {
-        // Reinicia la escena actual desde cero
-        Scene currentScene = SceneManager.GetActiveScene();
-        SceneManager.LoadScene(currentScene.buildIndex);
+        ReleasePlayerInput();
+        SceneManager.LoadScene(levelSceneName);
     }
 }
