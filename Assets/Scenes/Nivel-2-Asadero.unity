@@ -10074,6 +10074,51 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4823701557039441620, guid: 58f9b202636c6b14ba3b97f403ef2014, type: 3}
+--- !u!1 &1585963341
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1585963343}
+  - component: {fileID: 1585963342}
+  m_Layer: 0
+  m_Name: NoiseNPCConnector
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1585963342
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1585963341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 493f123b40616a54795aa8c56b15937e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GrillNPCConnector
+  sleepingNPC: {fileID: 1748055088}
+--- !u!4 &1585963343
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1585963341}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4.42949, y: 7.46334, z: 7.40712}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1606231876
 GameObject:
   m_ObjectHideFlags: 0
@@ -16578,19 +16623,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1332539541993285426}
   m_CullTransparentMesh: 1
---- !u!114 &2123246485761103256
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6099346892146545460}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ef875dbe09588b4cac9c1ba585653a0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerHand
-  chickenInHand: {fileID: 0}
 --- !u!1 &2187307932663601937
 GameObject:
   m_ObjectHideFlags: 0
@@ -20970,7 +21002,6 @@ GameObject:
   - component: {fileID: 7833742972674999358}
   - component: {fileID: 7325358611634136543}
   - component: {fileID: 7049680607397964956}
-  - component: {fileID: 2123246485761103256}
   - component: {fileID: 6692086836262647725}
   - component: {fileID: 5816418083398260953}
   m_Layer: 8
@@ -24791,3 +24822,4 @@ SceneRoots:
   - {fileID: 1252886337538076007}
   - {fileID: 6270857692028043858}
   - {fileID: 5229665216019347452}
+  - {fileID: 1585963343}
