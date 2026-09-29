@@ -1,44 +1,49 @@
+using System;
 using UnityEngine;
 
 public class FridgeInteractable : MonoBehaviour, IInteractable
 {
+    [Header("Minigame Dependencies")]
+    [Tooltip("Arrastra aquí el brazo pivote que tiene el BreathStaminaSystem")]
+    [SerializeField] private BreathStaminaSystem fridgeStaminaSystem;
+    [SerializeField] private GameObject fridgeRigRoot; // <--- AÑADE ESTO
+
     [Header("UI & Messaging")]
     [SerializeField] private string promptMessage = "Presiona F para abrir la nevera";
 
     [Header("Camera Setup")]
     [SerializeField] private Camera fridgeCamera;
 
-    [Header("Level UI")]
-    [SerializeField] private GameObject thirdPersonHUD;
-    [SerializeField] private GameObject firstPersonHUD;
-
     [Header("Persistent Chicken")]
     [SerializeField] private ChickenCarryController carryChickenPrefab;
 
     private PlayerInputReader activeInputReader;
-    private Camera mainCamera;
     private bool isInMinigame;
+
+    public static event Action OnChickenExtracted;
 
     public string Prompt => promptMessage;
 
     private void Awake()
     {
-        if (fridgeCamera != null)
-            fridgeCamera.gameObject.SetActive(false);
+        if (fridgeCamera != null) fridgeCamera.gameObject.SetActive(false);
+        if (fridgeRigRoot != null) fridgeRigRoot.SetActive(false); // <--- APAGA EL BRAZO AL INICIAR
     }
 
-    public bool CanInteract(GameObject interactor)
-    {
-        return !isInMinigame;
-    }
+    public bool CanInteract(GameObject interactor) => !isInMinigame;
 
     public void Interact(GameObject interactor)
     {
         if (isInMinigame) return;
 
-        if (!interactor.TryGetComponent(out activeInputReader))
+        // ELIMINA EL TryGetComponent y usa el Singleton como fuente de verdad
+        if (PersistentPlayer.Instance != null && PersistentPlayer.Instance.InputReader != null)
         {
-            Debug.LogWarning($"[FridgeInteractable] El objeto '{interactor.name}' no tiene PlayerInputReader.", this);
+            activeInputReader = PersistentPlayer.Instance.InputReader;
+        }
+        else
+        {
+            Debug.LogError("No se encontró el InputReader global.");
             return;
         }
 
@@ -49,12 +54,23 @@ public class FridgeInteractable : MonoBehaviour, IInteractable
     {
         isInMinigame = true;
 
-        mainCamera = Camera.main;
-        if (mainCamera != null) mainCamera.gameObject.SetActive(false);
+        if (fridgeRigRoot != null) fridgeRigRoot.SetActive(true); // <--- ENCIENDE EL BRAZO
+
+        // 1. PRIMERO: Encendemos la cámara (Esto fuerza a que el Awake() 
+        // de BreathStaminaSystem se ejecute y CurrentStamina sea 100).
         if (fridgeCamera != null) fridgeCamera.gameObject.SetActive(true);
 
-        if (thirdPersonHUD != null) thirdPersonHUD.SetActive(false);
-        if (firstPersonHUD != null) firstPersonHUD.SetActive(true);
+        // 2. SEGUNDO: Ahora sí configuramos la UI. Al leer el sistema, 
+        // la estamina ya tendrá el valor correcto.
+        if (PersistentPlayer.Instance != null)
+        {
+            PersistentPlayer.Instance.SetMinigameMode(
+                inMinigame: true, 
+                showFirstPersonUI: true, 
+                showStaminaUI: true, 
+                staminaSystem: fridgeStaminaSystem
+            );
+        }
 
         activeInputReader.SetContext(PlayerInputReader.InputContext.Fridge);
         activeInputReader.ExitFridge += HandleManualExit;
@@ -67,14 +83,12 @@ public class FridgeInteractable : MonoBehaviour, IInteractable
 
     public void OnItemExtracted(GameObject extractedItem)
     {
-        // 1. Validamos que el objeto extraído realmente sea el pollo usando el Tag que le pusiste
         if (!extractedItem.CompareTag("Pollo"))
         {
             Debug.Log($"[FridgeInteractable] Se extrajo un objeto, pero no era el pollo. Era: {extractedItem.name}");
             return;
         }
 
-        // Si llegó hasta aquí, sabemos que es el pollo. Lo destruimos de la escena.
         Destroy(extractedItem);
 
         if (activeInputReader != null && carryChickenPrefab != null)
@@ -93,6 +107,8 @@ public class FridgeInteractable : MonoBehaviour, IInteractable
             Debug.LogError("[FridgeInteractable] Falta asignar el prefab persistente del pollo.", this);
         }
 
+        OnChickenExtracted?.Invoke();
+
         ExitMinigame();
     }
 
@@ -104,15 +120,21 @@ public class FridgeInteractable : MonoBehaviour, IInteractable
         {
             activeInputReader.ExitFridge -= HandleManualExit;
             activeInputReader.SetContext(PlayerInputReader.InputContext.Player);
-            // No hacemos activeInputReader = null; aquí para que OnItemExtracted pueda usarlo.
-            // Si quieres limpiar la referencia, hazlo al final de todo.
         }
 
         if (fridgeCamera != null) fridgeCamera.gameObject.SetActive(false);
-        if (mainCamera != null) mainCamera.gameObject.SetActive(true);
+        if (fridgeRigRoot != null) fridgeRigRoot.SetActive(false); // <--- APAGA EL BRAZO AL SALIR
 
-        if (firstPersonHUD != null) firstPersonHUD.SetActive(false);
-        if (thirdPersonHUD != null) thirdPersonHUD.SetActive(true);
+        if (PersistentPlayer.Instance != null)
+        {
+            // Al salir manualmente, restablece 3ra persona y apaga 1ra persona
+            PersistentPlayer.Instance.SetMinigameMode(
+                inMinigame: false,
+                showFirstPersonUI: false,
+                showStaminaUI: false,
+                staminaSystem: null
+            );
+        }
 
         isInMinigame = false;
     }

@@ -33,6 +33,26 @@ public class Level2IntroSequence : MonoBehaviour
 
     private void Start()
     {
+        // NUEVO: Verificamos si venimos de un reintento
+        if (PersistentPlayer.Instance != null && PersistentPlayer.Instance.isRetryingLevel)
+        {
+            // Apagamos la bandera para que no afecte a futuros niveles
+            PersistentPlayer.Instance.isRetryingLevel = false;
+
+            // Saltamos la cinemática: Configuramos la UI y el objetivo directamente
+            if (PersistentPlayer.Instance.PlayerObjective != null)
+                PersistentPlayer.Instance.PlayerObjective.SetObjective(newObjective);
+
+            PersistentPlayer.Instance.SetUIVisibility(true);
+
+            // Aseguramos que el cursor se bloquee para jugar
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+
+            return; // ¡IMPORTANTE! Salimos del Start para no iniciar la corrutina
+        }
+
+        // Si es la primera vez que jugamos, iniciamos la cinemática normal
         StartCoroutine(PlayIntroSequence());
     }
 

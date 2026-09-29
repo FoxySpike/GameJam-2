@@ -3,58 +3,46 @@ using UnityEngine.UI;
 
 public class StaminaBarUI : MonoBehaviour
 {
-    [Header("Dependencies")]
-    [SerializeField] private BreathStaminaSystem staminaSystem;
-
     [Header("UI References")]
     [SerializeField] private Image fillImage;
-
     [Header("Visual Settings")]
     [SerializeField] private float lerpSpeed = 10f;
-    [SerializeField] private Color normalColor = new Color(0.2f, 0.7f, 1f); // Azul oxígeno
-    [SerializeField] private Color exhaustedColor = new Color(1f, 0.2f, 0.2f); // Rojo agotado
+    [SerializeField] private Color normalColor = new Color(0.2f, 0.7f, 1f);
+    [SerializeField] private Color exhaustedColor = new Color(1f, 0.2f, 0.2f);
 
     private float targetFillAmount = 1f;
 
-    private void OnEnable()
-    {
-        if (staminaSystem != null)
-        {
-            // Nos suscribimos al evento
-            staminaSystem.OnStaminaChanged += HandleStaminaChanged;
-        }
-    }
+    // Ya no lo serializamos. Ahora lo recibiremos dinámicamente.
+    private BreathStaminaSystem currentStaminaSystem;
 
-    private void OnDisable()
+    // NUEVO: Método para inyectar la dependencia
+    public void SetStaminaSystem(BreathStaminaSystem newSystem)
     {
-        if (staminaSystem != null)
+        // 1. Si ya teníamos un sistema asignado antes, nos desuscribimos por seguridad
+        if (currentStaminaSystem != null)
         {
-            // Siempre nos desuscribimos para evitar fugas de memoria
-            staminaSystem.OnStaminaChanged -= HandleStaminaChanged;
+            currentStaminaSystem.OnStaminaChanged -= HandleStaminaChanged;
         }
-    }
 
-    private void Start()
-    {
-        if (staminaSystem != null)
+        currentStaminaSystem = newSystem;
+
+        // 2. Si nos pasaron un sistema válido, nos suscribimos e inicializamos
+        if (currentStaminaSystem != null)
         {
-            // Inicializamos la barra al valor actual
-            float initialRatio = staminaSystem.CurrentStamina / 100f; // o tu maxStamina
-            UpdateUIImmediate(initialRatio);
+            currentStaminaSystem.OnStaminaChanged += HandleStaminaChanged;
+            UpdateUIImmediate(currentStaminaSystem.CurrentStamina / 100f);
         }
     }
 
     private void Update()
     {
-        // Interpola suavemente el fillAmount para que el cambio no sea brusco
         fillImage.fillAmount = Mathf.Lerp(fillImage.fillAmount, targetFillAmount, Time.deltaTime * lerpSpeed);
 
-        // Cambia el color si el jugador está exhausto
-        if (staminaSystem != null)
+        if (currentStaminaSystem != null)
         {
             fillImage.color = Color.Lerp(
                 fillImage.color,
-                staminaSystem.IsExhausted ? exhaustedColor : normalColor,
+                currentStaminaSystem.IsExhausted ? exhaustedColor : normalColor,
                 Time.deltaTime * lerpSpeed
             );
         }
@@ -69,5 +57,15 @@ public class StaminaBarUI : MonoBehaviour
     {
         targetFillAmount = normalizedStamina;
         fillImage.fillAmount = normalizedStamina;
+    }
+
+    // Limpieza importante si la UI se apaga
+    private void OnDisable()
+    {
+        if (currentStaminaSystem != null)
+        {
+            currentStaminaSystem.OnStaminaChanged -= HandleStaminaChanged;
+            currentStaminaSystem = null; // Soltamos la referencia
+        }
     }
 }

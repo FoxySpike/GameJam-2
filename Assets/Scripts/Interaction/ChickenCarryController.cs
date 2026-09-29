@@ -113,10 +113,13 @@ private void Start()
         }
 
         IsHeld = true;
-        chickenBody.isKinematic = true;
-        chickenBody.useGravity = false;
+        // Primero frenamos el pollo en seco (mientras aún responde a físicas)
         chickenBody.linearVelocity = Vector3.zero;
         chickenBody.angularVelocity = Vector3.zero;
+
+        // Luego lo volvems cinemático para que se quede pegado a la mano
+        chickenBody.isKinematic = true;
+        chickenBody.useGravity = false;
         chickenCollider.enabled = false;
         transform.SetParent(holdPoint, false);
         transform.localPosition = Vector3.zero;

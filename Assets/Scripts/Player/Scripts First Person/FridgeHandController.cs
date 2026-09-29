@@ -74,6 +74,13 @@ public class FridgeHandController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // Si no estamos en la nevera, matamos cualquier inercia fantasma y abortamos
+        if (inputReader == null || inputReader.CurrentContext != PlayerInputReader.InputContext.Fridge)
+        {
+            rb.linearVelocity = Vector3.zero;
+            return;
+        }
+
         Vector3 targetWorldPosition = transform.parent != null
             ? transform.parent.TransformPoint(targetLocalWithSway)
             : targetLocalWithSway;

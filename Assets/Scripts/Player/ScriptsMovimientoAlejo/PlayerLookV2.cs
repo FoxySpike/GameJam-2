@@ -72,6 +72,21 @@ public class PlayerLookV2 : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
     }
 
+    private void Start()
+    {
+        // Sincronizamos las variables de la cámara con la rotación inicial del transform del jugador
+        // (Asumiendo que PlayerLookV2 está en el mismo objeto o un hijo del cuerpo principal)
+        Vector3 initialEuler = transform.eulerAngles;
+
+        // cameraRotationX = initialEuler.x; // (Opcional) Si quieres que respete la inclinación vertical inicial
+        cameraRotationY = initialEuler.y;
+    }
+
+    public void SyncRotation(float newYaw)
+    {
+        cameraRotationY = newYaw;
+    }
+
     private void OnEnable()
     {
         if (alcoholSystem != null)

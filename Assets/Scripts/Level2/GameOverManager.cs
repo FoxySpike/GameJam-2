@@ -117,18 +117,13 @@ public class GameOverManager : MonoBehaviour
     {
         ReleasePlayerInput();
 
-        // NUEVO: Restauramos el estado del jugador persistente antes de irnos
         if (PersistentPlayer.Instance != null)
         {
-            // Volvemos a prender la UI
-            PersistentPlayer.Instance.SetUIVisibility(true);
-
-            // NOTA: Si en algún script apagaste el GameObject de la cámara del jugador, 
-            // este es el momento de volver a prenderla. Por ejemplo:
-            // PersistentPlayer.Instance.TuReferenciaALaCamara.SetActive(true);
+            PersistentPlayer.Instance.ResetToDefaultState();
+            // NUEVO: Le decimos al jugador persistente que esto es un reintento
+            PersistentPlayer.Instance.isRetryingLevel = true;
         }
 
-        // Ahora sí, recargamos la escena
         SceneManager.LoadScene(levelSceneName);
     }
 }

@@ -9,23 +9,26 @@ public class PlayerBootstrapper : MonoBehaviour
     [SerializeField] private Transform debugSpawnPoint;
 
     private void Awake()
+{
+    if (PersistentPlayer.Instance == null)
     {
-        // Revisamos si el Singleton existe. Si es nulo, significa que abrimos esta escena directamente.
-        if (PersistentPlayer.Instance == null)
-        {
-            Debug.LogWarning("[Bootstrapper] No se encontró al jugador. Instanciando Prefab de debug...");
+        Debug.LogWarning("[Bootstrapper] No se encontró al jugador. Instanciando Prefab de debug...");
 
-            if (playerPrefab != null)
-            {
-                // Instanciamos al jugador
-                GameObject newPlayer = Instantiate(playerPrefab, debugSpawnPoint.position, debugSpawnPoint.rotation);
-                // NOTA: El Awake del PersistentPlayer dentro del prefab se ejecutará aquí 
-                // y se asignará a sí mismo como Instance y ejecutará el DontDestroyOnLoad.
-            }
-            else
-            {
-                Debug.LogError("No asignaste el PlayerPrefab en el Bootstrapper.");
-            }
+        if (playerPrefab != null)
+        {
+            // Instanciamos respetando la posición y rotación del SpawnPoint
+            Instantiate(playerPrefab, debugSpawnPoint.position, debugSpawnPoint.rotation);
+        }
+        else
+        {
+            Debug.LogError("No asignaste el PlayerPrefab en el Bootstrapper.");
         }
     }
+    else
+    {
+        // SI YA EXISTE: Mover al jugador persistente al SpawnPoint de esta escena
+        Debug.Log("[Bootstrapper] Jugador persistente detectado. Reubicando...");
+        PersistentPlayer.Instance.TeleportTo(debugSpawnPoint);
+    }
+}
 }

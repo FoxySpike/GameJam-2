@@ -63,8 +63,7 @@ public class GrillInteractable : MonoBehaviour, IInteractable
 
     private void TryPlaceChicken(GameObject interactor)
     {
-        ChickenCarryController chicken =
-            interactor.GetComponentInChildren<ChickenCarryController>(true);
+        ChickenCarryController chicken = interactor.GetComponentInChildren<ChickenCarryController>(true);
 
         if (chicken == null || !chicken.IsHeld)
         {
@@ -72,17 +71,21 @@ public class GrillInteractable : MonoBehaviour, IInteractable
             return;
         }
 
-        if (!interactor.TryGetComponent(out currentPlayerInput))
+        // ELIMINA EL TryGetComponent y unifícalo con tu Singleton
+        if (PersistentPlayer.Instance == null || PersistentPlayer.Instance.InputReader == null)
+        {
+            Debug.LogError("No se encontró el InputReader global.");
             return;
+        }
+        currentPlayerInput = PersistentPlayer.Instance.InputReader;
 
         Destroy(chicken.gameObject);
-
         SetChickenMaterial(rawChickenMaterial);
-
-        if (chickenOnGrillVisual != null)
-            chickenOnGrillVisual.SetActive(true);
+        if (chickenOnGrillVisual != null) chickenOnGrillVisual.SetActive(true);
 
         currentState = GrillState.Cooking;
+
+        // Ahora esto sí afectará al input real
         currentPlayerInput.SetContext(PlayerInputReader.InputContext.Grill);
 
         grillMinigame.OnMinigameWon += HandleVictory;

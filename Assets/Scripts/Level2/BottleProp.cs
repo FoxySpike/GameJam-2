@@ -4,55 +4,60 @@ using UnityEngine;
 [RequireComponent(typeof(AudioSource))]
 public class BottleProp : MonoBehaviour
 {
-    [Header("Dependencies")]
-    // Eliminamos la variable noiseManager. Ya no la necesitamos.
     private AudioSource audioSource;
 
-    [Header("Tilt / Fall Settings")]
+    [Header("Tilt Settings (Caerse de lado)")]
     [Tooltip("Ángulo a partir del cual consideramos que la botella se acostó")]
     [SerializeField] private float fallAngleThreshold = 60f;
-    [SerializeField] private float tiltNoiseAmount = 15f;
-    [SerializeField] private AudioClip tiltClip;
+    [Tooltip("Ángulo para considerar que volvió a estar de pie")]
+    [SerializeField] private float uprightAngleThreshold = 30f;
 
-    [Header("Impact Settings")]
-    [Tooltip("Velocidad mínima para considerar un golpecito suave (ignora la fricción al rodar)")]
-    [SerializeField] private float minImpactVelocity = 1.5f;
-    [Tooltip("Velocidad a partir de la cual se considera un impacto fuerte (caída desde alto)")]
-    [SerializeField] private float hardImpactVelocity = 5.0f;
+    // Eliminamos las variables específicas de tilt, usaremos las del impacto medio
+    private bool isTilted = false;
 
-    [SerializeField] private float lightImpactNoise = 8f;
-    [SerializeField] private float hardImpactNoise = 30f;
+    [Header("Impact Thresholds (Velocidades)")]
+    [SerializeField] private float lightImpactVelocity = 1.5f;
+    [SerializeField] private float mediumImpactVelocity = 3.5f;
+    [SerializeField] private float hardImpactVelocity = 6.0f;
 
+    [Header("Impact Audio Clips")]
     [SerializeField] private AudioClip lightImpactClip;
+    [SerializeField] private AudioClip mediumImpactClip; // Servirá también cuando se caiga
     [SerializeField] private AudioClip hardImpactClip;
 
-    [Header("Anti-Spam Settings")]
-    [Tooltip("Tiempo mínimo en segundos entre ruidos de impacto consecutivas")]
-    [SerializeField] private float impactCooldown = 0.25f;
+    [Header("Noise Amounts (Para el NoiseManager)")]
+    [SerializeField] private float lightImpactNoise = 8f;
+    [SerializeField] private float mediumImpactNoise = 15f; // Servirá también cuando se caiga
+    [SerializeField] private float hardImpactNoise = 30f;
 
-    private bool isTilted = false;
+    [Header("Anti-Spam Settings")]
+    [SerializeField] private float impactCooldown = 0.25f;
     private float lastImpactTime = -999f;
 
     private void Awake()
     {
         audioSource = GetComponent<AudioSource>();
-        // Eliminamos el costoso FindAnyObjectByType. La botella ya no busca activamente.
     }
 
     private void Update()
     {
-        if (!isTilted)
-        {
-            float currentAngle = Vector3.Angle(transform.up, Vector3.up);
-            if (currentAngle > fallAngleThreshold)
-            {
-                isTilted = true;
-                PlaySound(tiltClip, 0.8f);
+        float currentAngle = Vector3.Angle(transform.up, Vector3.up);
 
-                // Llamamos directamente al Singleton, pero verificamos que exista primero
-                if (NoiseManager.Instance != null)
-                    NoiseManager.Instance.AddNoise(tiltNoiseAmount);
-            }
+        // Si NO está acostada, revisamos si se acaba de caer
+        if (!isTilted && currentAngle > fallAngleThreshold)
+        {
+            isTilted = true;
+
+            // Asumimos que caerse es equivalente a un "Impacto Medio"
+            Debug.Log("[BottleProp] Se cayó de lado (Medio)");
+            PlaySound(mediumImpactClip, 0.8f);
+            NotifyNoise(mediumImpactNoise);
+        }
+        // Si SÍ está acostada, revisamos si el jugador la volvió a poner de pie
+        else if (isTilted && currentAngle < uprightAngleThreshold)
+        {
+            // Reseteamos el estado para que pueda volver a sonar si se cae otra vez
+            isTilted = false;
         }
     }
 
@@ -61,25 +66,29 @@ public class BottleProp : MonoBehaviour
         if (Time.time - lastImpactTime < impactCooldown) return;
 
         float impactForce = collision.relativeVelocity.magnitude;
-
-        // IMPRIMIMOS LA FUERZA REAL EN CONSOLA PARA DEPURAR
-        Debug.Log($"[BottleProp] Fuerza de impacto detectada: {impactForce}");
-
-        if (impactForce < minImpactVelocity) return;
+        if (impactForce < lightImpactVelocity) return; // Si es muy suave, lo ignoramos
 
         lastImpactTime = Time.time;
+        Debug.Log($"[BottleProp] Fuerza: {impactForce}");
 
+        // IMPORTANTE: Evaluamos de MAYOR a MENOR.
         if (impactForce >= hardImpactVelocity)
         {
-            Debug.Log("-> Clasificado como: IMPACTO FUERTE");
+            Debug.Log("-> IMPACTO FUERTE");
             PlaySound(hardImpactClip, 1.0f);
-            if (NoiseManager.Instance != null) NoiseManager.Instance.AddNoise(hardImpactNoise);
+            NotifyNoise(hardImpactNoise);
         }
-        else
+        else if (impactForce >= mediumImpactVelocity)
         {
-            Debug.Log("-> Clasificado como: IMPACTO SUAVE");
+            Debug.Log("-> IMPACTO MEDIO");
+            PlaySound(mediumImpactClip, 0.7f);
+            NotifyNoise(mediumImpactNoise);
+        }
+        else // Si llegó aquí, es mayor que light pero menor que medium
+        {
+            Debug.Log("-> IMPACTO LEVE");
             PlaySound(lightImpactClip, 0.5f);
-            if (NoiseManager.Instance != null) NoiseManager.Instance.AddNoise(lightImpactNoise);
+            NotifyNoise(lightImpactNoise);
         }
     }
 
@@ -87,7 +96,18 @@ public class BottleProp : MonoBehaviour
     {
         if (clip != null && audioSource != null)
         {
+            // Pequeño truco: Variar ligeramente el pitch hace que el sonido no canse el oído
+            audioSource.pitch = Random.Range(0.9f, 1.1f);
             audioSource.PlayOneShot(clip, volume);
+        }
+    }
+
+    // Encapsulamos la llamada al Singleton para no duplicar código
+    private void NotifyNoise(float noiseAmount)
+    {
+        if (NoiseManager.Instance != null)
+        {
+            NoiseManager.Instance.AddNoise(noiseAmount);
         }
     }
 }

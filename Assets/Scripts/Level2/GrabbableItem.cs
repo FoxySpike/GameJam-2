@@ -1,19 +1,19 @@
 using UnityEngine;
 
-// Se lo pones a la Botella o al Pollo
 public class GrabbableItem : MonoBehaviour
 {
     [Tooltip("El punto exacto por donde la mano debe agarrar este objeto")]
     public Transform gripPoint;
 
-    // Guardamos la capa original para devolvérsela al soltar
+    // Guardamos tanto la capa como el padre original
     public int originalLayer { get; private set; }
+    public Transform OriginalParent { get; private set; } // <--- NUEVO
 
     private void Awake()
     {
         originalLayer = gameObject.layer;
+        OriginalParent = transform.parent; // <--- Guardamos quién era su padre al iniciar
 
-        // Si se te olvida poner el GripPoint, usamos el centro del objeto por defecto
         if (gripPoint == null) gripPoint = transform;
     }
 }

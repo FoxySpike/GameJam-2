@@ -99,21 +99,23 @@ public class HandGrabber : MonoBehaviour
 
     private void Release()
     {
-        heldItemRb.transform.SetParent(null);
+        // Buscamos si el objeto tiene información de su padre original
+        GrabbableItem grabbable = heldItemRb.GetComponent<GrabbableItem>();
+        Transform parentToRestore = (grabbable != null && grabbable.OriginalParent != null)
+            ? grabbable.OriginalParent
+            : null;
 
-        // 1. Definimos cuánto vamos a empujar las cosas
+        // Le devolvemos su padre original (ej. el contenedor "Botellas" en el FridgePrefab)
+        heldItemRb.transform.SetParent(parentToRestore);
+
         Vector3 pushOffset = Vector3.up * 0.1f;
-
-        // 2. Empujamos la botella
         heldItemRb.transform.position += pushOffset;
 
-        // 3. EMPUJAMOS LA MANO en la misma dirección y distancia
         if (handController != null)
         {
             handController.DisplaceHandForGrab(pushOffset);
         }
 
-        // Reactivamos las físicas
         heldItemRb.isKinematic = false;
         heldItemRb.linearVelocity = Vector3.zero;
         heldItemRb.angularVelocity = Vector3.zero;
