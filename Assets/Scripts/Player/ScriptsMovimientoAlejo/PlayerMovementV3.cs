@@ -190,6 +190,12 @@ public class PlayerMovementV3 : MonoBehaviour
 
     private void MoveAndCorrect()
     {
+
+        if (cameraTransform == null && Camera.main != null)
+        {
+            cameraTransform = Camera.main.transform;
+        }
+
         Vector2 moveInput = inputReader.MoveInput;
 
         Vector3 finalMoveDirection = Vector3.zero;

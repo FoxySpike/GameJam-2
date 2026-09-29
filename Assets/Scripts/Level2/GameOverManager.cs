@@ -4,10 +4,19 @@ using UnityEngine.SceneManagement;
 
 public class GameOverManager : MonoBehaviour
 {
-    [Header("Derrota")]
-    [TextArea]
-    [SerializeField] private string defeatMessage = "¡DESPERTASTE AL EMPLEADO!\nReintentando nivel...";
-    [SerializeField] private float delayBeforeRestart = 3f;
+    [Header("Referencias de Cinemática")]
+    [Tooltip("El NPC que se va a despertar")]
+    [SerializeField] private SleeperNPC sleepingNPC;
+
+    [Tooltip("La nueva cámara que enfoca al NPC despertando")]
+    [SerializeField] private GameObject gameOverCamera;
+
+    [Tooltip("El panel de UI de Game Over (donde estará el botón de Reintentar)")]
+    [SerializeField] private GameObject gameOverUIPanel;
+
+    [Header("Tiempos")]
+    [Tooltip("Cuánto tiempo vemos la animación antes de que salga el panel de Game Over")]
+    [SerializeField] private float delayBeforeUIPanel = 3f;
 
     private NoiseManager noiseManager;
     private PlayerInputReader blockedInput;
@@ -18,6 +27,10 @@ public class GameOverManager : MonoBehaviour
     {
         levelSceneName = gameObject.scene.name;
         noiseManager = NoiseManager.Instance;
+
+        // Asegurarnos de que las cosas de Game Over estén apagadas al inicio
+        if (gameOverCamera != null) gameOverCamera.SetActive(false);
+        if (gameOverUIPanel != null) gameOverUIPanel.SetActive(false);
 
         if (noiseManager != null)
             noiseManager.OnMaxNoiseReached += HandleGameOver;
@@ -40,9 +53,42 @@ public class GameOverManager : MonoBehaviour
 
         Debug.Log("🚨 [GameOverManager] Secuencia de Game Over iniciada.");
 
+        // En lugar de hacer las cosas de golpe, iniciamos la "cinemática"
+        StartCoroutine(PlayGameOverSequence());
+    }
+
+    private IEnumerator PlayGameOverSequence()
+    {
+        // 1. BLOQUEAR JUGADOR Y APAGAR SU UI
         BlockPlayerInput();
-        ShowDefeatMessage();
-        StartCoroutine(RestartAfterDelay());
+        if (PersistentPlayer.Instance != null)
+        {
+            PersistentPlayer.Instance.SetUIVisibility(false);
+        }
+
+        // 2. CAMBIAR A LA CÁMARA DE GAME OVER
+        if (gameOverCamera != null) gameOverCamera.SetActive(true);
+
+        // 3. DESPERTAR AL NPC
+        if (sleepingNPC != null)
+        {
+            sleepingNPC.WakeUp();
+        }
+        else
+        {
+            Debug.LogWarning("[GameOverManager] Falta asignar el SleeperNPC en el inspector.");
+        }
+
+        // 4. ESPERAR A QUE TERMINE LA ANIMACIÓN
+        yield return new WaitForSeconds(delayBeforeUIPanel);
+
+        // 5. MOSTRAR EL PANEL DE GAME OVER Y LIBERAR EL CURSOR
+        if (gameOverUIPanel != null)
+            gameOverUIPanel.SetActive(true);
+
+        // NUEVO: Liberamos el cursor de Unity para poder hacer clic
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     private void BlockPlayerInput()
@@ -56,28 +102,6 @@ public class GameOverManager : MonoBehaviour
             blockedInput.SetGameplayBlocked(this, true);
     }
 
-    private void ShowDefeatMessage()
-    {
-        ObjectiveUI objectiveUI = null;
-
-        if (PersistentPlayer.Instance != null)
-            objectiveUI = PersistentPlayer.Instance.GetComponentInChildren<ObjectiveUI>(true);
-
-        if (objectiveUI == null)
-            objectiveUI = FindFirstObjectByType<ObjectiveUI>();
-
-        if (objectiveUI != null)
-            objectiveUI.SetObjective(defeatMessage);
-        else
-            Debug.LogWarning("[GameOverManager] No se encontró el ObjectiveUI.", this);
-    }
-
-    private IEnumerator RestartAfterDelay()
-    {
-        yield return new WaitForSeconds(delayBeforeRestart);
-        RetryLevel();
-    }
-
     private void ReleasePlayerInput()
     {
         if (blockedInput == null) return;
@@ -87,11 +111,24 @@ public class GameOverManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Este método se asigna directamente al evento OnClick del botón "Reintentar" en la UI.
+    /// Este método se asigna directamente al evento OnClick del botón "Reintentar" en tu nuevo panel de UI.
     /// </summary>
     public void RetryLevel()
     {
         ReleasePlayerInput();
+
+        // NUEVO: Restauramos el estado del jugador persistente antes de irnos
+        if (PersistentPlayer.Instance != null)
+        {
+            // Volvemos a prender la UI
+            PersistentPlayer.Instance.SetUIVisibility(true);
+
+            // NOTA: Si en algún script apagaste el GameObject de la cámara del jugador, 
+            // este es el momento de volver a prenderla. Por ejemplo:
+            // PersistentPlayer.Instance.TuReferenciaALaCamara.SetActive(true);
+        }
+
+        // Ahora sí, recargamos la escena
         SceneManager.LoadScene(levelSceneName);
     }
 }

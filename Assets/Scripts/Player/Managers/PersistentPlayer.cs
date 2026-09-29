@@ -7,18 +7,17 @@ public class PersistentPlayer : MonoBehaviour
     public PlayerInputReader InputReader { get; private set; }
 
     [Header("Referencias Globales (Asignar en Escena 1)")]
-    [Tooltip("El script de la mano que controla el pollo")]
-    //public PlayerHand PlayerHandComponent;
-
-    //[Tooltip("El contenedor principal de la UI del jugador (1st/3rd person panels)")]
+    // NUEVO: Referencia al contenedor principal de toda tu UI
+    [Tooltip("Arrastra aquí el objeto 'La Parranda UI'")]
+    public GameObject mainPlayerUIRoot;
+    public ObjectiveUI PlayerObjective { get; private set; }
     public GameObject Player3rdPersonHUD;
-
-    // NUEVO: Agregamos el panel de la nevera/1ra persona
-    [Tooltip("El HUD para interacciones en primera persona (ej. 1stPersonPanel)")]
     public GameObject Player1stPersonHUD;
 
     private void Awake()
     {
+        PlayerObjective = GetComponentInChildren<ObjectiveUI>(true);
+
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -30,15 +29,28 @@ public class PersistentPlayer : MonoBehaviour
 
         InputReader = GetComponent<PlayerInputReader>();
 
-        // Install only on the surviving player, never on a duplicate scene player.
         ChickenEasterEgg easterEgg = GetComponent<ChickenEasterEgg>();
         if (easterEgg == null) easterEgg = gameObject.AddComponent<ChickenEasterEgg>();
         easterEgg.Initialize();
+
         if (GetComponent<DrunkenVision>() == null)
             gameObject.AddComponent<DrunkenVision>();
 
         if (InputReader == null)
-            Debug.LogError("[PersistentPlayer]  Falta el PlayerInputReader en el jugador!");
+            Debug.LogError("[PersistentPlayer] Falta el PlayerInputReader en el jugador!");
+    }
+
+    // NUEVO: Método para que otros scripts puedan prender/apagar la UI de forma segura
+    public void SetUIVisibility(bool isVisible)
+    {
+        if (mainPlayerUIRoot != null)
+        {
+            mainPlayerUIRoot.SetActive(isVisible);
+        }
+        else
+        {
+            Debug.LogWarning("[PersistentPlayer] No has asignado el mainPlayerUIRoot en el Inspector.");
+        }
     }
 
     private void OnDestroy()
