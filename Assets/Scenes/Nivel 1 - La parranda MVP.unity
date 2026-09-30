@@ -383,6 +383,17 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &59037015 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8392686504024476183, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
+  m_PrefabInstance: {fileID: 941830735}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1 &75660927
 GameObject:
   m_ObjectHideFlags: 0
@@ -1240,6 +1251,7 @@ MonoBehaviour:
   permanentlyLocked: 0
   enableLevel3TestShortcut: 1
   requireHeldChicken: 0
+  requiredChickenStatus: 1
 --- !u!65 &137601397
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2511,6 +2523,7 @@ MonoBehaviour:
   permanentlyLocked: 0
   enableLevel3TestShortcut: 0
   requireHeldChicken: 0
+  requiredChickenStatus: 1
 --- !u!65 &291126714
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3308,11 +3321,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fa9fb7cae0baaf42b1fffcd491c9fac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Level1FlowController
-  alcoholSystem: {fileID: 542460063}
-  adulteratedTracker: {fileID: 542460062}
-  inputReader: {fileID: 542460061}
+  alcoholSystem: {fileID: 2144742030}
+  adulteratedTracker: {fileID: 2144742028}
+  inputReader: {fileID: 2144742031}
   wifeCallSequence: {fileID: 403341045}
-  objectiveUI: {fileID: 1155185983}
+  objectiveUI: {fileID: 1396875059}
   initialObjective: GET DRUNK
   presentationVersion: 3
 --- !u!114 &403341045
@@ -3327,14 +3340,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a3cb613943476d40bfaba30a1c4da77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WifeCallSequenceController
-  blackout: {fileID: 1267730972}
+  blackout: {fileID: 601482151}
   phonePanel: {fileID: 2060844314}
   phoneGroup: {fileID: 2060844316}
   callerText: {fileID: 45951648}
   dialogueText: {fileID: 2027475292}
   statusText: {fileID: 1177140935}
   timerText: {fileID: 163430825}
-  objectiveUI: {fileID: 1155185983}
+  objectiveUI: {fileID: 1396875059}
   ringtoneClip: {fileID: 8300000, guid: b8d3aacaff029324c87edbb1eac6c2ab, type: 3}
   beepClip: {fileID: 8300000, guid: 5a0adfa15a02a704ab5482fcfded324f, type: 3}
   wifeCallClip: {fileID: 8300000, guid: 744b665460be05441be0b18054f5301a, type: 3}
@@ -3672,7 +3685,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33b298a27a07e2a4590940eb7025873c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SceneLoader
-  panelText: {fileID: 1427505201}
+  panelText: {fileID: 59037015}
   level1Text: GET DRUNK
   level2Text: MAKE THE CHICKEN
   level3Text: CROSS THE STREET
@@ -3757,124 +3770,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5894300457122220956, guid: c43dd0ddddca97e4a8ca8a5179650f39, type: 3}
   m_PrefabInstance: {fileID: 1224852739}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &542460060
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 793476773699406107, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1585673283206931827, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5326898437293710538, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5326898437293710538, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5326898437293710538, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
-      propertyPath: m_AnchorMin.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6099346891685326864, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
-      propertyPath: m_Name
-      value: The Boss
-      objectReference: {fileID: 0}
-    - target: {fileID: 6912720872729553578, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -8.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6912720872729553578, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.035
-      objectReference: {fileID: 0}
-    - target: {fileID: 6912720872729553578, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -2.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6912720872729553578, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: -0.8017165
-      objectReference: {fileID: 0}
-    - target: {fileID: 6912720872729553578, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6912720872729553578, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0.59770447
-      objectReference: {fileID: 0}
-    - target: {fileID: 6912720872729553578, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6912720872729553578, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6912720872729553578, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: -286.589
-      objectReference: {fileID: 0}
-    - target: {fileID: 6912720872729553578, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7500902275355324340, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7500902275355324340, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
---- !u!114 &542460061 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6279258555779143351, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
-  m_PrefabInstance: {fileID: 542460060}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf3adee24166d2f4d865f00b8f2fcf0a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerInputReader
---- !u!114 &542460062 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4897165221593040674, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
-  m_PrefabInstance: {fileID: 542460060}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0fcc8315c1a7da9448192e70d530d9de, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AdulteratedDrinkTracker
---- !u!114 &542460063 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6816280125691406241, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
-  m_PrefabInstance: {fileID: 542460060}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c2c93d441e2c1af479cce88a7627572e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AlcoholSystem
 --- !u!1001 &555815120
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3962,6 +3857,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RotarObjeto
   velocidadRotacion: {x: 0, y: 100, z: 0}
+--- !u!225 &601482151 stripped
+CanvasGroup:
+  m_CorrespondingSourceObject: {fileID: 3436683913412229159, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
+  m_PrefabInstance: {fileID: 941830735}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &606349178
 GameObject:
   m_ObjectHideFlags: 0
@@ -4450,6 +4350,7 @@ MonoBehaviour:
   permanentlyLocked: 1
   enableLevel3TestShortcut: 0
   requireHeldChicken: 0
+  requiredChickenStatus: 1
 --- !u!65 &623257017
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6322,6 +6223,91 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
+--- !u!1001 &941830735
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 576648300092975708, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2118009159090277819, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2118009159090277819, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2118009159090277819, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4493123789546416722, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4493123789546416722, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5388465483606093471, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -5.92
+      objectReference: {fileID: 0}
+    - target: {fileID: 5388465483606093471, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.0000014449299
+      objectReference: {fileID: 0}
+    - target: {fileID: 5388465483606093471, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -3.51
+      objectReference: {fileID: 0}
+    - target: {fileID: 5388465483606093471, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.7391023
+      objectReference: {fileID: 0}
+    - target: {fileID: 5388465483606093471, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5388465483606093471, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.6735932
+      objectReference: {fileID: 0}
+    - target: {fileID: 5388465483606093471, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5388465483606093471, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5388465483606093471, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -275.31
+      objectReference: {fileID: 0}
+    - target: {fileID: 5388465483606093471, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6204769329206176087, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
+      propertyPath: m_Name
+      value: The Boss
+      objectReference: {fileID: 0}
+    - target: {fileID: 7002342725162562892, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
 --- !u!1 &947302872
 GameObject:
   m_ObjectHideFlags: 0
@@ -7519,28 +7505,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5894300457122220956, guid: c43dd0ddddca97e4a8ca8a5179650f39, type: 3}
   m_PrefabInstance: {fileID: 1568008065}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1155185981 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2223856701857388904, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
-  m_PrefabInstance: {fileID: 542460060}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f121c4e57386fdf48826adb916fb772e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DialogueUI
---- !u!114 &1155185983 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6837395154940061288, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
-  m_PrefabInstance: {fileID: 542460060}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a8e5d5ef4f6a8f744938e0a26c919493, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ObjectiveUI
 --- !u!4 &1169894687 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5894300457122220956, guid: c43dd0ddddca97e4a8ca8a5179650f39, type: 3}
@@ -7917,8 +7881,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPCDrinkOffer
   offeredDrink: {fileID: 11400000, guid: 5793802e73eacdd459759d7377bd1c47, type: 2}
-  dialogue: {fileID: 0}
-  dialogueUI: {fileID: 1155185981}
+  dialogue: {fileID: 1224747942}
+  dialogueUI: {fileID: 1396875056}
   singleOffer: 1
   interactionPrompt: '[F] Talk'
   bebida: {fileID: 2062765995}
@@ -7951,7 +7915,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f68dcafad294004dbbb99b2acd5f82b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPCApproachPlayer
-  player: {fileID: 542460061}
+  player: {fileID: 2144742031}
   detectionDistance: 8
   repathInterval: 0.25
   animator: {fileID: 1224747945}
@@ -8210,11 +8174,6 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
---- !u!225 &1267730972 stripped
-CanvasGroup:
-  m_CorrespondingSourceObject: {fileID: 440904559934936891, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
-  m_PrefabInstance: {fileID: 542460060}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1298361025
 GameObject:
   m_ObjectHideFlags: 0
@@ -9113,6 +9072,28 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c43dd0ddddca97e4a8ca8a5179650f39, type: 3}
+--- !u!114 &1396875056 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1690871456147386308, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
+  m_PrefabInstance: {fileID: 941830735}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f121c4e57386fdf48826adb916fb772e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueUI
+--- !u!114 &1396875059 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3059929833718986227, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
+  m_PrefabInstance: {fileID: 941830735}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8e5d5ef4f6a8f744938e0a26c919493, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObjectiveUI
 --- !u!1 &1400549998
 GameObject:
   m_ObjectHideFlags: 0
@@ -9434,17 +9415,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 200.312, z: 0}
---- !u!114 &1427505201 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4941902746840460064, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
-  m_PrefabInstance: {fileID: 542460060}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1 &1436363496
 GameObject:
   m_ObjectHideFlags: 0
@@ -12509,6 +12479,7 @@ MonoBehaviour:
   permanentlyLocked: 1
   enableLevel3TestShortcut: 0
   requireHeldChicken: 0
+  requiredChickenStatus: 1
 --- !u!65 &2041572440
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -13558,6 +13529,39 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RotarObjeto
   velocidadRotacion: {x: 0, y: 100, z: 0}
+--- !u!114 &2144742028 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 928124734793294221, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
+  m_PrefabInstance: {fileID: 941830735}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fcc8315c1a7da9448192e70d530d9de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AdulteratedDrinkTracker
+--- !u!114 &2144742030 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2678379151339372264, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
+  m_PrefabInstance: {fileID: 941830735}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2c93d441e2c1af479cce88a7627572e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AlcoholSystem
+--- !u!114 &2144742031 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8239354538988116444, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
+  m_PrefabInstance: {fileID: 941830735}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf3adee24166d2f4d865f00b8f2fcf0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInputReader
 --- !u!23 &462341282563023906
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -14437,7 +14441,6 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 140049290}
-  - {fileID: 542460060}
   - {fileID: 403341046}
   - {fileID: 174397290}
   - {fileID: 6724618107956263851}
@@ -14475,3 +14478,4 @@ SceneRoots:
   - {fileID: 1004272839}
   - {fileID: 1561257684}
   - {fileID: 737351365}
+  - {fileID: 941830735}

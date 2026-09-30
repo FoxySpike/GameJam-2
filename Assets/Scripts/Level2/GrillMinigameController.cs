@@ -4,8 +4,16 @@ using UnityEngine;
 [RequireComponent(typeof(GrillCameraController))]
 public class GrillMinigameController : MonoBehaviour
 {
-    public event Action OnMinigameWon;
-    public event Action OnMinigameLost;
+
+    public enum CookingResult
+    {
+        Raw,        // Crudo (Se enfrió mucho)
+        Perfect,    // Cocinado en su punto
+        Burned      // Se pasó de calor
+    }
+
+    public event Action<CookingResult> OnMinigameEnded;
+    public static event Action<CookingResult> OnAnyMinigameEnded;
 
     [Header("Referencias")]
     [SerializeField] private GrillCameraController cameraController;
@@ -141,9 +149,14 @@ public class GrillMinigameController : MonoBehaviour
 
         currentHeat = Mathf.Clamp(currentHeat, 0f, 100f);
 
-        if (currentHeat <= 0f || currentHeat >= 100f)
+        // 3. NUEVA LÓGICA DE DERROTA INMEDIATA POR TEMPERATURA EXTREMA
+        if (currentHeat <= 0f)
         {
-            EndMinigame(isVictory: false);
+            EndMinigame(CookingResult.Raw);
+        }
+        else if (currentHeat >= 100f)
+        {
+            EndMinigame(CookingResult.Burned);
         }
     }
 
@@ -158,11 +171,21 @@ public class GrillMinigameController : MonoBehaviour
 
         if (currentProgress >= maxCookingTime)
         {
-            bool isNeedleInRed = currentHeat < SWEET_SPOT_MIN || currentHeat > SWEET_SPOT_MAX;
+            // Se acabó el tiempo. Evaluamos cómo quedó:
             bool isCookedEnough = timeInSweetSpot >= (maxCookingTime * 0.65f);
 
-            if (isNeedleInRed || !isCookedEnough) EndMinigame(isVictory: false);
-            else EndMinigame(isVictory: true);
+            if (currentHeat > SWEET_SPOT_MAX)
+            {
+                EndMinigame(CookingResult.Burned);
+            }
+            else if (currentHeat < SWEET_SPOT_MIN || !isCookedEnough)
+            {
+                EndMinigame(CookingResult.Raw);
+            }
+            else
+            {
+                EndMinigame(CookingResult.Perfect);
+            }
         }
     }
 
@@ -200,13 +223,16 @@ public class GrillMinigameController : MonoBehaviour
         nextFluctuationTime = Time.time + currentFluctuationTimer + UnityEngine.Random.Range(1f, 2.5f);
     }
 
-    private void EndMinigame(bool isVictory)
+    private void EndMinigame(CookingResult result)
     {
         isPlaying = false;
         cameraController.DeactivateCamera();
         inputReader = null;
 
-        if (isVictory) OnMinigameWon?.Invoke();
-        else OnMinigameLost?.Invoke();
+        // Avisamos a los scripts locales (GrillInteractable, FireAlarm)
+        OnMinigameEnded?.Invoke(result);
+
+        // Avisamos a los sistemas globales (ObjectiveUIController)
+        OnAnyMinigameEnded?.Invoke(result);
     }
 }

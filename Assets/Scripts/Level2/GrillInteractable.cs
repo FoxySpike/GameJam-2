@@ -2,25 +2,37 @@
 
 public class GrillInteractable : MonoBehaviour, IInteractable
 {
-    private enum GrillState
-    {
-        Empty,
-        Cooking,
-        Finished_Perfect
-    }
+    // Mantenemos el estado interno del asador
+    private enum GrillState { Empty, Cooking, Has_Raw, Has_Perfect, Has_Burned }
 
-    [Header("Visuals")]
+    [Header("Audio")]
+    [Tooltip("El sonido placeholder de fritura")]
+    [SerializeField] private AudioClip fryingSoundPlaceholder;
+    private AudioSource audioSource; // Nuestra referencia al parlante
+
+    [Header("Visuals (Unity Setup)")]
     [SerializeField] private GameObject chickenOnGrillVisual;
+    [Tooltip("Arrastra aquí el hijo 'Pollo (1)' que tiene el MeshRenderer")]
     [SerializeField] private Renderer chickenRenderer;
-    [SerializeField] private Material rawChickenMaterial;
-    [SerializeField] private Material cookedChickenMaterial;
+
+    [Header("Materiales")]
+    [SerializeField] private Material rawMaterial;
+    [SerializeField] private Material cookedMaterial;
+    [SerializeField] private Material burnedMaterial;
+
+    [Header("Prefabs para agarrar (Inventario)")]
+    [SerializeField] private ChickenCarryController rawChickenCarryPrefab;
+    [SerializeField] private ChickenCarryController cookedChickenCarryPrefab;
+    [SerializeField] private ChickenCarryController burnedChickenCarryPrefab;
 
     [Header("Referencias")]
     [SerializeField] private GrillMinigameController grillMinigame;
-    [SerializeField] private ChickenCarryController carryChickenPrefab;
 
     private GrillState currentState = GrillState.Empty;
     private PlayerInputReader currentPlayerInput;
+
+    // NUEVO: Variable para guardar al jugador y poder ocultarlo
+    private GameObject currentPlayer;
 
     public string Prompt
     {
@@ -28,9 +40,11 @@ public class GrillInteractable : MonoBehaviour, IInteractable
         {
             return currentState switch
             {
-                GrillState.Empty => "Press [F] to place the raw chicken on the grill",
+                GrillState.Empty => "Press [F] to place raw chicken",
                 GrillState.Cooking => "Cooking... Focus!",
-                GrillState.Finished_Perfect => "Press [F] to collect your cooked chicken",
+                GrillState.Has_Raw => "Press [F] to take RAW chicken (or try again)",
+                GrillState.Has_Perfect => "Press [F] to collect PERFECT chicken",
+                GrillState.Has_Burned => "Press [F] to throw away BURNED chicken",
                 _ => ""
             };
         }
@@ -38,128 +52,148 @@ public class GrillInteractable : MonoBehaviour, IInteractable
 
     private void Awake()
     {
-        SetChickenMaterial(rawChickenMaterial);
         if (chickenOnGrillVisual != null) chickenOnGrillVisual.SetActive(false);
         if (grillMinigame == null) grillMinigame = GetComponent<GrillMinigameController>();
+
+        audioSource = GetComponent<AudioSource>();
+        audioSource.loop = true;
     }
 
-    public bool CanInteract(GameObject interactor)
-    {
-        return currentState != GrillState.Cooking;
-    }
+    public bool CanInteract(GameObject interactor) => currentState != GrillState.Cooking;
 
     public void Interact(GameObject interactor)
     {
-        switch (currentState)
-        {
-            case GrillState.Empty:
-                TryPlaceChicken(interactor);
-                break;
-            case GrillState.Finished_Perfect:
-                CollectPerfectChicken(interactor);
-                break;
-        }
+        if (currentState == GrillState.Empty) TryPlaceChicken(interactor);
+        else CollectChicken(interactor);
     }
 
     private void TryPlaceChicken(GameObject interactor)
     {
         ChickenCarryController chicken = interactor.GetComponentInChildren<ChickenCarryController>(true);
 
-        if (chicken == null || !chicken.IsHeld)
-        {
-            Debug.Log("No tienes el pollo crudo en la mano.");
-            return;
-        }
+        if (chicken == null || !chicken.IsHeld) return;
 
-        // ELIMINA EL TryGetComponent y unifícalo con tu Singleton
-        if (PersistentPlayer.Instance == null || PersistentPlayer.Instance.InputReader == null)
-        {
-            Debug.LogError("No se encontró el InputReader global.");
-            return;
-        }
-        currentPlayerInput = PersistentPlayer.Instance.InputReader;
+        // 1. Guardamos al jugador y lo ocultamos físicamente
+        currentPlayer = interactor;
+        TogglePlayerVisuals(false);
 
         Destroy(chicken.gameObject);
-        SetChickenMaterial(rawChickenMaterial);
-        if (chickenOnGrillVisual != null) chickenOnGrillVisual.SetActive(true);
+
+        SetChickenMaterial(rawMaterial);
+        chickenOnGrillVisual.SetActive(true);
 
         currentState = GrillState.Cooking;
-
-        // Ahora esto sí afectará al input real
+        currentPlayerInput = PersistentPlayer.Instance.InputReader;
         currentPlayerInput.SetContext(PlayerInputReader.InputContext.Grill);
 
-        grillMinigame.OnMinigameWon += HandleVictory;
-        grillMinigame.OnMinigameLost += HandleDefeat;
-        grillMinigame.StartMinigame(currentPlayerInput);
-    }
-
-    private void GiveChickenTo(GameObject interactor)
-    {
-        if (carryChickenPrefab == null)
+        // 2. NUEVO: Apagamos la UI y la cámara del jugador usando tu PersistentPlayer
+        if (PersistentPlayer.Instance != null)
         {
-            Debug.LogError("[GrillInteractable] Falta asignar el prefab persistente del pollo.", this);
-            return;
+            PersistentPlayer.Instance.SetMinigameMode(
+                inMinigame: true,
+                showFirstPersonUI: false, // <-- Lo ponemos en false para que la pantalla esté limpia
+                showStaminaUI: false,
+                staminaSystem: null
+            );
         }
 
-        ChickenCarryController chicken = Instantiate(carryChickenPrefab);
-        chicken.Interact(interactor);
+        grillMinigame.OnMinigameEnded += HandleMinigameEnded;
+        grillMinigame.StartMinigame(currentPlayerInput);
+
+        if (fryingSoundPlaceholder != null)
+        {
+            audioSource.clip = fryingSoundPlaceholder;
+            audioSource.Play();
+        }
     }
 
-    private void HandleVictory()
+    private void HandleMinigameEnded(GrillMinigameController.CookingResult result)
     {
         EndCookingPhase();
-        SetChickenMaterial(cookedChickenMaterial);
-        currentState = GrillState.Finished_Perfect;
-        Debug.Log("Pollo perfecto listo para recoger.");
-    }
 
-    private void HandleDefeat()
-    {
-        EndCookingPhase();
+        switch (result)
+        {
+            case GrillMinigameController.CookingResult.Raw:
+                SetChickenMaterial(rawMaterial);
+                currentState = GrillState.Has_Raw;
+                Debug.Log("Pollo crudo. Se puede volver a cocinar o recoger.");
+                break;
 
-        // Ocultamos el pollo de la parrilla y la dejamos lista de nuevo
-        if (chickenOnGrillVisual != null) chickenOnGrillVisual.SetActive(false);
-        currentState = GrillState.Empty;
+            case GrillMinigameController.CookingResult.Perfect:
+                SetChickenMaterial(cookedMaterial);
+                currentState = GrillState.Has_Perfect;
+                Debug.Log("Pollo perfecto.");
+                break;
 
-        // Ejecutamos la lógica/evento de derrota
-        OnChickenRuined();
-    }
-
-    /// <summary>
-    /// Método / Función vacía para implementar más adelante cuando el pollo se arruine.
-    /// </summary>
-    private void OnChickenRuined()
-    {
-        // TODO: Agregar partículas de humo negro, sonido de quemado o restar puntuación.
-        Debug.Log("[EVENTO DERROTA]: El pollo se arruinó.");
+            case GrillMinigameController.CookingResult.Burned:
+                SetChickenMaterial(burnedMaterial);
+                currentState = GrillState.Has_Burned;
+                Debug.Log("Pollo quemado.");
+                break;
+        }
     }
 
     private void EndCookingPhase()
     {
-        grillMinigame.OnMinigameWon -= HandleVictory;
-        grillMinigame.OnMinigameLost -= HandleDefeat;
-
+        grillMinigame.OnMinigameEnded -= HandleMinigameEnded;
         if (currentPlayerInput != null)
         {
             currentPlayerInput.SetContext(PlayerInputReader.InputContext.Player);
             currentPlayerInput = null;
         }
+
+        audioSource.Stop();
+
+        // 3. NUEVO: Restauramos la UI y cámara del jugador al salir
+        if (PersistentPlayer.Instance != null)
+        {
+            PersistentPlayer.Instance.SetMinigameMode(
+                inMinigame: false,
+                showFirstPersonUI: false,
+                showStaminaUI: false,
+                staminaSystem: null
+            );
+        }
+
+        // 4. Volvemos a mostrar el cuerpo del jugador
+        TogglePlayerVisuals(true);
+        currentPlayer = null;
     }
 
-    private void CollectPerfectChicken(GameObject interactor)
+    private void CollectChicken(GameObject interactor)
     {
-        GiveChickenTo(interactor);
+        ChickenCarryController prefabToGive = null;
 
-        if (chickenOnGrillVisual != null)
-            chickenOnGrillVisual.SetActive(false);
+        if (currentState == GrillState.Has_Raw) prefabToGive = rawChickenCarryPrefab;
+        else if (currentState == GrillState.Has_Perfect) prefabToGive = cookedChickenCarryPrefab;
+        else if (currentState == GrillState.Has_Burned) prefabToGive = burnedChickenCarryPrefab;
 
+        if (prefabToGive != null)
+        {
+            ChickenCarryController chicken = Instantiate(prefabToGive);
+            chicken.Interact(interactor);
+        }
+
+        chickenOnGrillVisual.SetActive(false);
         currentState = GrillState.Empty;
-        Debug.Log("Pollo cocinado recogido correctamente.");
     }
 
     private void SetChickenMaterial(Material material)
     {
         if (chickenRenderer != null && material != null)
             chickenRenderer.sharedMaterial = material;
+    }
+
+    // Método de la respuesta anterior para apagar las mallas del jugador
+    private void TogglePlayerVisuals(bool isVisible)
+    {
+        if (currentPlayer != null)
+        {
+            Renderer[] renderers = currentPlayer.GetComponentsInChildren<Renderer>();
+            foreach (Renderer r in renderers)
+            {
+                r.enabled = isVisible;
+            }
+        }
     }
 }

@@ -93,6 +93,13 @@ public class PersistentPlayer : MonoBehaviour
             InputReader.SetContext(PlayerInputReader.InputContext.Player);
             InputReader.SetGameplayBlocked(this, false);
         }
+
+        // NUEVO: Buscamos si tenemos algún pollo pegado en nuestras manos y lo destruimos
+        ChickenCarryController carriedChicken = GetComponentInChildren<ChickenCarryController>(true);
+        if (carriedChicken != null)
+        {
+            Destroy(carriedChicken.gameObject);
+        }
     }
 
     public void TeleportTo(Transform spawnPoint)

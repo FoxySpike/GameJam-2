@@ -6,9 +6,13 @@ public class FireAlarm : MonoBehaviour
     [Header("Referencias")]
     [SerializeField] private GrillMinigameController minigameController;
 
+    [Tooltip("Arrastra aquí el componente Light (Point Light o Spot Light)")]
+    [SerializeField] private Light alarmLight; // SOLAMENTE LA LUZ
+
     [Header("Configuración de Alarma")]
     [Tooltip("Cantidad de ruido por segundo que genera la alarma encendida")]
     [SerializeField] private float noisePerSecond = 35f;
+    [SerializeField] private float flashSpeed = 8f; // Velocidad del parpadeo
     [SerializeField] private AudioClip alarmLoopSound;
 
     private AudioSource audioSource;
@@ -18,23 +22,28 @@ public class FireAlarm : MonoBehaviour
     {
         audioSource = GetComponent<AudioSource>();
         audioSource.loop = true; // Que el sonido se repita automáticamente
+
+        // Aseguramos que la luz empiece apagada
+        if (alarmLight != null) alarmLight.enabled = false;
     }
 
     private void OnEnable()
     {
-        // Nos suscribimos al evento de derrota del minijuego
         if (minigameController != null)
-        {
-            minigameController.OnMinigameLost += StartAlarm;
-        }
+            minigameController.OnMinigameEnded += CheckForAlarm;
     }
 
     private void OnDisable()
     {
-        // Siempre desuscribirse para evitar errores de memoria (Memory Leaks)
         if (minigameController != null)
+            minigameController.OnMinigameEnded -= CheckForAlarm;
+    }
+
+    private void CheckForAlarm(GrillMinigameController.CookingResult result)
+    {
+        if (result == GrillMinigameController.CookingResult.Burned)
         {
-            minigameController.OnMinigameLost -= StartAlarm;
+            StartAlarm();
         }
     }
 
@@ -46,6 +55,12 @@ public class FireAlarm : MonoBehaviour
         if (NoiseManager.Instance != null)
         {
             NoiseManager.Instance.AddNoise(noisePerSecond * Time.deltaTime);
+        }
+
+        // Parpadeo puramente de la Luz usando una onda matemática
+        if (alarmLight != null)
+        {
+            alarmLight.enabled = Mathf.Sin(Time.time * flashSpeed) > 0;
         }
     }
 
@@ -70,5 +85,8 @@ public class FireAlarm : MonoBehaviour
         {
             audioSource.Stop();
         }
+
+        // Apagamos la luz al detener la alarma
+        if (alarmLight != null) alarmLight.enabled = false;
     }
 }

@@ -12,9 +12,9 @@ public class GrillMinigameUI : MonoBehaviour
     [Header("Temperatura (Aguja)")]
     [SerializeField] private RectTransform needleTransform;
     [Tooltip("Rotación en Z cuando la temperatura es 0")]
-    [SerializeField] private float minHeatAngle = 75f;
+    [SerializeField] private float minHeatAngle = -100f;
     [Tooltip("Rotación en Z cuando la temperatura es 100")]
-    [SerializeField] private float maxHeatAngle = -75f;
+    [SerializeField] private float maxHeatAngle = 270f;
 
     private void Update()
     {

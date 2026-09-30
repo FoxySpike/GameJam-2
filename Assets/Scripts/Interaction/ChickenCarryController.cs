@@ -5,11 +5,18 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody), typeof(Collider))]
 public sealed class ChickenCarryController : MonoBehaviour, IInteractable
 {
+    [Header("Estado del Pollo")]
+    [SerializeField] private GrillMinigameController.CookingResult chickenStatus = GrillMinigameController.CookingResult.Raw;
+    public GrillMinigameController.CookingResult ChickenStatus => chickenStatus;
+
+    [Header("Configuración de Agarre")]
     [SerializeField] private Transform holdPoint;
     [SerializeField] private Transform carrierRoot;
     [SerializeField] private Rigidbody chickenBody;
     [SerializeField] private Collider chickenCollider;
     [SerializeField] private bool startHeld = false;
+
+    [Header("Físicas")]
     [SerializeField, Min(0f)] private float dropForce = 5f;
     [SerializeField, Min(0f)] private float upwardForce = 2.5f;
     [SerializeField] private float recoveryHeight = -8f;
@@ -33,19 +40,23 @@ public sealed class ChickenCarryController : MonoBehaviour, IInteractable
         carrierRoot = targetCarrier;
     }
 
-private void Start()
-{
-    PersistentPlayer player = PersistentPlayer.Instance;
-
-    if (player != null)
+    private void Start()
     {
-        carrierRoot = player.transform;
-        holdPoint = player.transform.Find("ChickenAttachPoint");
-    }
+        PersistentPlayer player = PersistentPlayer.Instance;
 
-    if (startHeld)
-        AttachToCarrier(false);
-}
+        if (player != null)
+        {
+            carrierRoot = player.transform;
+            holdPoint = player.transform.Find("ChickenAttachPoint");
+        }
+
+        bool isRetrying = player != null && player.isRetryingLevel;
+
+        if (startHeld && !isRetrying)
+        {
+            AttachToCarrier(false);
+        }
+    }
 
     private void Update()
     {
@@ -113,11 +124,9 @@ private void Start()
         }
 
         IsHeld = true;
-        // Primero frenamos el pollo en seco (mientras aún responde a físicas)
         chickenBody.linearVelocity = Vector3.zero;
         chickenBody.angularVelocity = Vector3.zero;
 
-        // Luego lo volvems cinemático para que se quede pegado a la mano
         chickenBody.isKinematic = true;
         chickenBody.useGravity = false;
         chickenCollider.enabled = false;
