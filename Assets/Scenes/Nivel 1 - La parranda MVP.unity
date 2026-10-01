@@ -6235,6 +6235,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 928124734793294221, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
+      propertyPath: requiredAdulteratedDrinks
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2118009159090277819, guid: 0949913ef8e7f6846b0e732d63de2548, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0

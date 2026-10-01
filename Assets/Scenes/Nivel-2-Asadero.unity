@@ -1497,8 +1497,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7569ad0afbceca4c84e0ff1100a9411, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NoiseObstacle
-  minimumPlayerVelocity: 1.5
-  minimumEnvironmentImpact: 2
+  minimumPlayerVelocity: 0.5
+  minimumEnvironmentImpact: 1
   noiseGenerated: 20
   bumpSound: {fileID: 8300000, guid: d5b4e057d61680f4fa165e4bfaeb0055, type: 3}
   volume: 0.495
@@ -4887,7 +4887,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: dbff3fb8520e3ab4ab6e9ba80dec5498, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1748055091}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: dbff3fb8520e3ab4ab6e9ba80dec5498, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1748055092}
   m_SourcePrefab: {fileID: 100100000, guid: dbff3fb8520e3ab4ab6e9ba80dec5498, type: 3}
+--- !u!4 &781747289 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: dbff3fb8520e3ab4ab6e9ba80dec5498, type: 3}
+  m_PrefabInstance: {fileID: 781747288}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &786827789
 GameObject:
   m_ObjectHideFlags: 0
@@ -7697,8 +7705,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7569ad0afbceca4c84e0ff1100a9411, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NoiseObstacle
-  minimumPlayerVelocity: 1.5
-  minimumEnvironmentImpact: 2
+  minimumPlayerVelocity: 0.5
+  minimumEnvironmentImpact: 1
   noiseGenerated: 20
   bumpSound: {fileID: 8300000, guid: d5b4e057d61680f4fa165e4bfaeb0055, type: 3}
   volume: 0.495
@@ -9880,6 +9888,25 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1748055092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1748055082}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 673eb173f1dc4dc59884f923304478cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChickenAppearanceTarget
+  chickenPrefab: {fileID: 315255584265284716, guid: ddf0bde2569746acacdfaca613d24d52, type: 3}
+  originalRenderers: []
+  visualAnchor: {fileID: 781747289}
+  positionOffset: {x: 0, y: 0, z: 0}
+  rotationOffset: {x: 0, y: 0, z: 0}
+  sizeMultiplier: 1
+  fitOriginalBounds: 1
 --- !u!1 &1761502328
 GameObject:
   m_ObjectHideFlags: 0

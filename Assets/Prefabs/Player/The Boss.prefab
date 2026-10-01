@@ -3275,7 +3275,7 @@ MonoBehaviour:
   m_RendererIndex: -1
   m_VolumeLayerMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 4294967295
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 1
@@ -5239,7 +5239,7 @@ GameObject:
   - component: {fileID: 38359685249615843}
   - component: {fileID: 5907853424062147153}
   - component: {fileID: 1493260218731281898}
-  m_Layer: 11
+  m_Layer: 8
   m_Name: Intoxication Volume
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6520,6 +6520,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5388465483606093471}
   - component: {fileID: 5944237445164298111}
+  - component: {fileID: 4073620384939000396}
   - component: {fileID: 1459621612734100894}
   - component: {fileID: 3945477474534677355}
   - component: {fileID: 8239354538988116444}
@@ -6595,6 +6596,25 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &4073620384939000396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6204769329206176087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3793f7a33e4a489c889db2e0f4e21f9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChickenEasterEgg
+  fadeToBlackSeconds: 0.8
+  thoughtSeconds: 3.5
+  fadeFromBlackSeconds: 1.2
+  revealText: 'Ugh... what did they give me?
+
+    What did I drink? Why do I feel
+    like this?'
 --- !u!114 &1459621612734100894
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6607,13 +6627,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a41f73a639d4355833e34da3532c939, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DrunkenVision
+  alcohol: {fileID: 2678379151339372264}
+  tracker: {fileID: 928124734793294221}
   intoxicationVolume: {fileID: 5907853424062147153}
   automaticWeight: 1
   transitionSeconds: 1.2
   soberWeight: 0
-  tipsyWeight: 0
-  drunkWeight: 0
-  wastedWeight: 1
+  tipsyWeight: 0.3
+  drunkWeight: 0.5
+  wastedWeight: 0.85
   easterEggWeight: 1
 --- !u!143 &3945477474534677355
 CharacterController:
@@ -6802,23 +6824,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovementV3
   perfilesEstado:
   - estado: 0
-    walkSpeed: 3
-    sprintSpeed: 4
+    walkSpeed: 4
+    sprintSpeed: 4.2
     driftAngleMax: 0
     strafeWeight: 1
   - estado: 1
-    walkSpeed: 1.8
-    sprintSpeed: 3.7
+    walkSpeed: 3.6
+    sprintSpeed: 4
     driftAngleMax: 20
     strafeWeight: 0.8
   - estado: 2
-    walkSpeed: 1.5
-    sprintSpeed: 3.3
+    walkSpeed: 3.3
+    sprintSpeed: 3.8
     driftAngleMax: 45
     strafeWeight: 0.9
   - estado: 3
-    walkSpeed: 1.2
-    sprintSpeed: 2.8
+    walkSpeed: 3
+    sprintSpeed: 3.5
     driftAngleMax: 75
     strafeWeight: 1
   cameraTransform: {fileID: 4442486345543110636}

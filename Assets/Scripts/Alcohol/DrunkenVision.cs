@@ -8,6 +8,11 @@ public sealed class DrunkenVision : MonoBehaviour
 {
     public const string VolumeLayer = "Intoxication";
 
+    [Header("Sistemas")]
+    [Tooltip("Arrastra aquí el objeto que tiene el AlcoholSystem (ej. el Player)")]
+    [SerializeField] private AlcoholSystem alcohol;
+    [SerializeField] private AdulteratedDrinkTracker tracker;
+
     [Header("Volume editable en la jerarquia")]
     [SerializeField] private Volume intoxicationVolume;
     [Tooltip("Desactivar para ajustar Weight manualmente, incluso durante Play.")]
@@ -16,16 +21,11 @@ public sealed class DrunkenVision : MonoBehaviour
 
     [Header("Peso del efecto por estado")]
     [SerializeField, Range(0f, 1f)] private float soberWeight;
-    [SerializeField, Range(0f, 1f)] private float tipsyWeight;
-    [SerializeField, Range(0f, 1f)] private float drunkWeight;
+    [SerializeField, Range(0f, 1f)] private float tipsyWeight = 0.3f; // Asegúrate de darles valores > 0
+    [SerializeField, Range(0f, 1f)] private float drunkWeight = 0.6f;
     [SerializeField, Range(0f, 1f)] private float wastedWeight = 1f;
     [Tooltip("El easter egg tiene prioridad sobre el estado de alcohol.")]
     [SerializeField, Range(0f, 1f)] private float easterEggWeight = 1f;
-
-    private AlcoholSystem alcohol;
-    private AdulteratedDrinkTracker tracker;
-    private float lastAutomaticWeight;
-    private bool wasAutomatic;
 
     public bool IsManualPreview => !automaticWeight;
     public bool IsIntoxicated => (tracker != null && tracker.IsTriggered) ||
@@ -36,7 +36,6 @@ public sealed class DrunkenVision : MonoBehaviour
     {
         if (!Application.isPlaying) return;
         automaticWeight = false;
-        wasAutomatic = false;
         if (intoxicationVolume != null) intoxicationVolume.weight = 1f;
     }
 
@@ -44,28 +43,39 @@ public sealed class DrunkenVision : MonoBehaviour
     public void ResumeAutomatic()
     {
         automaticWeight = true;
-        wasAutomatic = false;
     }
 
     private void Awake()
     {
-        alcohol = GetComponent<AlcoholSystem>();
-        tracker = GetComponent<AdulteratedDrinkTracker>();
+        // 1. Intentamos buscar las referencias si no fueron asignadas en el Inspector
+        if (alcohol == null) alcohol = FindObjectOfType<AlcoholSystem>();
+        if (tracker == null) tracker = FindObjectOfType<AdulteratedDrinkTracker>();
+
+        if (alcohol == null)
+            Debug.LogWarning("DrunkenVision no pudo encontrar un AlcoholSystem en la escena.", this);
+
+        // 2. Buscar el volumen si no está asignado
         if (intoxicationVolume == null)
         {
             int layer = LayerMask.NameToLayer(VolumeLayer);
             foreach (Volume candidate in GetComponentsInChildren<Volume>(true))
-                if (candidate.gameObject.layer == layer) { intoxicationVolume = candidate; break; }
+            {
+                if (candidate.gameObject.layer == layer)
+                {
+                    intoxicationVolume = candidate;
+                    break;
+                }
+            }
         }
+
         if (intoxicationVolume == null)
             Debug.LogWarning("Asigna el Global Volume de mareo en DrunkenVision. No se creara uno en runtime.", this);
         else if (automaticWeight)
             intoxicationVolume.weight = GetTargetWeight();
-        if (intoxicationVolume != null) lastAutomaticWeight = intoxicationVolume.weight;
-        wasAutomatic = automaticWeight;
     }
 
     private void OnEnable() => SceneManager.sceneLoaded += OnSceneLoaded;
+    private void OnDisable() => SceneManager.sceneLoaded -= OnSceneLoaded;
 
     private void Start()
     {
@@ -82,7 +92,7 @@ public sealed class DrunkenVision : MonoBehaviour
     private void ConfigurePlayerCameras()
     {
         foreach (Camera camera in GetComponentsInChildren<Camera>(true))
-            IntoxicationCamera.Ensure(camera);
+            IntoxicationCamera.Ensure(camera); // Asumo que este script existe en tu proyecto
     }
 
     private static void ConfigureSceneCameras(Scene scene)
@@ -97,6 +107,7 @@ public sealed class DrunkenVision : MonoBehaviour
     {
         if (tracker != null && tracker.IsTriggered) return easterEggWeight;
         if (alcohol == null) return soberWeight;
+
         switch (alcohol.CurrentState)
         {
             case NivelBorrachera.Tipsy: return tipsyWeight;
@@ -108,17 +119,13 @@ public sealed class DrunkenVision : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (intoxicationVolume == null) return;
-        // An Inspector edit takes ownership immediately instead of fighting this script.
-        if (automaticWeight && wasAutomatic &&
-            !Mathf.Approximately(intoxicationVolume.weight, lastAutomaticWeight))
-            automaticWeight = false;
-        if (!automaticWeight) { wasAutomatic = false; return; }
-        intoxicationVolume.weight = Mathf.MoveTowards(intoxicationVolume.weight, GetTargetWeight(),
-            Time.deltaTime / Mathf.Max(0.05f, transitionSeconds));
-        lastAutomaticWeight = intoxicationVolume.weight;
-        wasAutomatic = true;
-    }
+        if (intoxicationVolume == null || !automaticWeight) return;
 
-    private void OnDisable() => SceneManager.sceneLoaded -= OnSceneLoaded;
+        // Transición suave hacia el peso objetivo según el estado actual del alcohol
+        intoxicationVolume.weight = Mathf.MoveTowards(
+            intoxicationVolume.weight,
+            GetTargetWeight(),
+            Time.deltaTime / Mathf.Max(0.05f, transitionSeconds)
+        );
+    }
 }
