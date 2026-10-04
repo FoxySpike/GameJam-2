@@ -127,6 +127,15 @@ public partial class @NIS: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Screenshot"",
+                    ""type"": ""Button"",
+                    ""id"": ""b3033169-f27b-4619-9d34-1d05801a91e0"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -217,6 +226,17 @@ public partial class @NIS: IInputActionCollection2, IDisposable
                     ""action"": ""Sprint"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6ea4d774-4b41-4f8b-b6ec-d4d1fb24d16c"",
+                    ""path"": ""<Keyboard>/period"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Screenshot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -277,6 +297,15 @@ public partial class @NIS: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Screenshot"",
+                    ""type"": ""Button"",
+                    ""id"": ""1646d1a1-c5c9-4b6c-964a-3d63091097b7"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -411,6 +440,17 @@ public partial class @NIS: IInputActionCollection2, IDisposable
                     ""action"": ""RigVerticalMove"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9b34b231-7fa5-4180-8fdc-3c389fe15269"",
+                    ""path"": ""<Keyboard>/period"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Screenshot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -440,6 +480,15 @@ public partial class @NIS: IInputActionCollection2, IDisposable
                     ""name"": ""Exit"",
                     ""type"": ""Button"",
                     ""id"": ""d3db1d43-0103-4578-9720-fcab0be12319"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Screenshot"",
+                    ""type"": ""Button"",
+                    ""id"": ""dfd36c61-447b-4654-8c7c-b80a60224adf"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -501,6 +550,17 @@ public partial class @NIS: IInputActionCollection2, IDisposable
                     ""action"": ""Exit"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""20f54e76-5e50-4cd2-bf6c-7fe28437dbb7"",
+                    ""path"": ""<Keyboard>/period"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Screenshot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -513,6 +573,7 @@ public partial class @NIS: IInputActionCollection2, IDisposable
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
         m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
+        m_Player_Screenshot = m_Player.FindAction("Screenshot", throwIfNotFound: true);
         // Fridge
         m_Fridge = asset.FindActionMap("Fridge", throwIfNotFound: true);
         m_Fridge_HandMove = m_Fridge.FindAction("HandMove", throwIfNotFound: true);
@@ -521,11 +582,13 @@ public partial class @NIS: IInputActionCollection2, IDisposable
         m_Fridge_Exit = m_Fridge.FindAction("Exit", throwIfNotFound: true);
         m_Fridge_RigMove = m_Fridge.FindAction("RigMove", throwIfNotFound: true);
         m_Fridge_RigVerticalMove = m_Fridge.FindAction("RigVerticalMove", throwIfNotFound: true);
+        m_Fridge_Screenshot = m_Fridge.FindAction("Screenshot", throwIfNotFound: true);
         // Grill
         m_Grill = asset.FindActionMap("Grill", throwIfNotFound: true);
         m_Grill_Look = m_Grill.FindAction("Look", throwIfNotFound: true);
         m_Grill_HeatControl = m_Grill.FindAction("HeatControl", throwIfNotFound: true);
         m_Grill_Exit = m_Grill.FindAction("Exit", throwIfNotFound: true);
+        m_Grill_Screenshot = m_Grill.FindAction("Screenshot", throwIfNotFound: true);
     }
 
     ~@NIS()
@@ -612,6 +675,7 @@ public partial class @NIS: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Look;
     private readonly InputAction m_Player_Interact;
     private readonly InputAction m_Player_Sprint;
+    private readonly InputAction m_Player_Screenshot;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -639,6 +703,10 @@ public partial class @NIS: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/Sprint".
         /// </summary>
         public InputAction @Sprint => m_Wrapper.m_Player_Sprint;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/Screenshot".
+        /// </summary>
+        public InputAction @Screenshot => m_Wrapper.m_Player_Screenshot;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -677,6 +745,9 @@ public partial class @NIS: IInputActionCollection2, IDisposable
             @Sprint.started += instance.OnSprint;
             @Sprint.performed += instance.OnSprint;
             @Sprint.canceled += instance.OnSprint;
+            @Screenshot.started += instance.OnScreenshot;
+            @Screenshot.performed += instance.OnScreenshot;
+            @Screenshot.canceled += instance.OnScreenshot;
         }
 
         /// <summary>
@@ -700,6 +771,9 @@ public partial class @NIS: IInputActionCollection2, IDisposable
             @Sprint.started -= instance.OnSprint;
             @Sprint.performed -= instance.OnSprint;
             @Sprint.canceled -= instance.OnSprint;
+            @Screenshot.started -= instance.OnScreenshot;
+            @Screenshot.performed -= instance.OnScreenshot;
+            @Screenshot.canceled -= instance.OnScreenshot;
         }
 
         /// <summary>
@@ -743,6 +817,7 @@ public partial class @NIS: IInputActionCollection2, IDisposable
     private readonly InputAction m_Fridge_Exit;
     private readonly InputAction m_Fridge_RigMove;
     private readonly InputAction m_Fridge_RigVerticalMove;
+    private readonly InputAction m_Fridge_Screenshot;
     /// <summary>
     /// Provides access to input actions defined in input action map "Fridge".
     /// </summary>
@@ -778,6 +853,10 @@ public partial class @NIS: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Fridge/RigVerticalMove".
         /// </summary>
         public InputAction @RigVerticalMove => m_Wrapper.m_Fridge_RigVerticalMove;
+        /// <summary>
+        /// Provides access to the underlying input action "Fridge/Screenshot".
+        /// </summary>
+        public InputAction @Screenshot => m_Wrapper.m_Fridge_Screenshot;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -822,6 +901,9 @@ public partial class @NIS: IInputActionCollection2, IDisposable
             @RigVerticalMove.started += instance.OnRigVerticalMove;
             @RigVerticalMove.performed += instance.OnRigVerticalMove;
             @RigVerticalMove.canceled += instance.OnRigVerticalMove;
+            @Screenshot.started += instance.OnScreenshot;
+            @Screenshot.performed += instance.OnScreenshot;
+            @Screenshot.canceled += instance.OnScreenshot;
         }
 
         /// <summary>
@@ -851,6 +933,9 @@ public partial class @NIS: IInputActionCollection2, IDisposable
             @RigVerticalMove.started -= instance.OnRigVerticalMove;
             @RigVerticalMove.performed -= instance.OnRigVerticalMove;
             @RigVerticalMove.canceled -= instance.OnRigVerticalMove;
+            @Screenshot.started -= instance.OnScreenshot;
+            @Screenshot.performed -= instance.OnScreenshot;
+            @Screenshot.canceled -= instance.OnScreenshot;
         }
 
         /// <summary>
@@ -891,6 +976,7 @@ public partial class @NIS: IInputActionCollection2, IDisposable
     private readonly InputAction m_Grill_Look;
     private readonly InputAction m_Grill_HeatControl;
     private readonly InputAction m_Grill_Exit;
+    private readonly InputAction m_Grill_Screenshot;
     /// <summary>
     /// Provides access to input actions defined in input action map "Grill".
     /// </summary>
@@ -914,6 +1000,10 @@ public partial class @NIS: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Grill/Exit".
         /// </summary>
         public InputAction @Exit => m_Wrapper.m_Grill_Exit;
+        /// <summary>
+        /// Provides access to the underlying input action "Grill/Screenshot".
+        /// </summary>
+        public InputAction @Screenshot => m_Wrapper.m_Grill_Screenshot;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -949,6 +1039,9 @@ public partial class @NIS: IInputActionCollection2, IDisposable
             @Exit.started += instance.OnExit;
             @Exit.performed += instance.OnExit;
             @Exit.canceled += instance.OnExit;
+            @Screenshot.started += instance.OnScreenshot;
+            @Screenshot.performed += instance.OnScreenshot;
+            @Screenshot.canceled += instance.OnScreenshot;
         }
 
         /// <summary>
@@ -969,6 +1062,9 @@ public partial class @NIS: IInputActionCollection2, IDisposable
             @Exit.started -= instance.OnExit;
             @Exit.performed -= instance.OnExit;
             @Exit.canceled -= instance.OnExit;
+            @Screenshot.started -= instance.OnScreenshot;
+            @Screenshot.performed -= instance.OnScreenshot;
+            @Screenshot.canceled -= instance.OnScreenshot;
         }
 
         /// <summary>
@@ -1037,6 +1133,13 @@ public partial class @NIS: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnSprint(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Screenshot" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnScreenshot(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Fridge" which allows adding and removing callbacks.
@@ -1087,6 +1190,13 @@ public partial class @NIS: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnRigVerticalMove(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Screenshot" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnScreenshot(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Grill" which allows adding and removing callbacks.
@@ -1116,5 +1226,12 @@ public partial class @NIS: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnExit(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Screenshot" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnScreenshot(InputAction.CallbackContext context);
     }
 }
